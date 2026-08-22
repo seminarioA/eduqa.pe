@@ -73,7 +73,7 @@ export default async function Page() {
         <h2 className="text-sm font-semibold uppercase tracking-wide text-texto-tenue">
           Apariencia
         </h2>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-borde bg-superficie px-5 py-4">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-borde px-5 py-4">
           <div>
             <p className="text-sm font-medium">Tema</p>
             <p className="mt-0.5 text-sm text-texto-suave">
