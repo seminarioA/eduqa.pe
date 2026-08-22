@@ -2,7 +2,9 @@
 
 [![CI](https://github.com/seminarioA/eduqa-landing/actions/workflows/ci.yml/badge.svg)](https://github.com/seminarioA/eduqa-landing/actions/workflows/ci.yml)
 
-Plataforma educativa de [eduqa.pe](https://eduqa.pe): catálogo de cursos técnicos en vivo, matrícula con pago, aulas con contenido por sesión, certificados y panel de gestión.
+Plataforma educativa de EDUQA: catálogo de cursos técnicos en vivo, matrícula con pago, aulas con contenido por sesión, certificados y panel de gestión.
+
+**Sitio en producción:** [https://eduqa-pe.vercel.app](https://eduqa-pe.vercel.app)
 
 ## Stack
 
