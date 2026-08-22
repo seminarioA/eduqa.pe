@@ -98,11 +98,11 @@ export function Isla({
   return (
     <nav
       aria-label="Navegación principal"
-      className="fixed inset-y-4 left-4 z-30 hidden w-56 flex-col rounded-2xl border border-borde bg-superficie/90 p-3 shadow-lg backdrop-blur lg:flex"
+      className="fixed inset-y-4 left-4 z-30 hidden w-56 flex-col rounded-2xl border border-borde bg-fondo p-3 shadow-lg lg:flex"
     >
       <Link
         href={inicio}
-        className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-fondo"
+        className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-superficie"
       >
         <Llama className="h-8 w-auto shrink-0 text-rojo-acento" />
         <span className="text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
@@ -127,7 +127,7 @@ export function Isla({
                 className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
                   activo
                     ? "bg-rojo-tenue font-medium text-rojo-acento"
-                    : "text-texto-suave hover:bg-fondo hover:text-rojo-acento"
+                    : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
                 }`}
               >
                 <Icono size={17} className="shrink-0" />
@@ -147,7 +147,7 @@ export function Isla({
           <form action={onSalir}>
             <button
               type="submit"
-              className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-texto-suave transition-colors hover:bg-fondo hover:text-rojo-acento"
+              className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
             >
               <LogOut size={16} aria-hidden="true" />
               Salir
