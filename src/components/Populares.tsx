@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Flame, Users } from "lucide-react";
+import { ArrowRight, Flame, Users } from "lucide-react";
 import { Icono, type IconoNombre } from "./Iconos";
 
 export type CursoPopular = {
@@ -12,58 +12,51 @@ export type CursoPopular = {
 };
 
 /**
- * Los cursos con más matrículas.
+ * Tarjeta de un curso popular, para el inicio de la rejilla del catálogo.
  *
- * Muestra el número real junto a cada uno en lugar de un puesto: «12 inscritos»
- * se puede comprobar, «el más popular» no dice cuánto ni respecto a qué.
+ * Sigue la forma de las demás tarjetas de curso; lo que la distingue es la
+ * insignia con la llama y el número real de alumnos: «12 inscritos» se puede
+ * comprobar, «el más popular» no dice cuánto ni respecto a qué.
  */
-export function Populares({ cursos }: { cursos: CursoPopular[] }) {
-  if (cursos.length === 0) return null;
-
+export function TarjetaPopular({ curso }: { curso: CursoPopular }) {
   return (
-    <section className="mt-14">
-      <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-texto-tenue">
-        <Flame size={14} aria-hidden="true" />
-        Cursos populares
+    <Link
+      href={`/cursos/${curso.slug}/${curso.primeraLeccion}`}
+      className="group flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
+    >
+      <div className="flex items-start justify-between gap-3">
+        {curso.icono ? (
+          <Icono
+            nombre={curso.icono}
+            className="size-14 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
+          />
+        ) : (
+          <span aria-hidden="true" />
+        )}
+        <span className="flex shrink-0 items-center gap-1 rounded-full bg-rojo-tenue px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-rojo-acento ring-1 ring-inset ring-rojo-acento/30">
+          <Flame size={9} aria-hidden="true" />
+          {curso.matriculas}
+        </span>
+      </div>
+
+      <h2 className="mt-4 text-base font-semibold leading-snug group-hover:text-rojo-acento">
+        {curso.titulo}
       </h2>
-      <p className="mt-1.5 text-sm text-texto-suave">
-        Los que más alumnos han abierto hasta ahora.
+      <p className="mt-2 line-clamp-4 flex-1 text-sm leading-relaxed text-texto-suave">
+        {curso.resumen}
       </p>
 
-      <ul className="mt-4 divide-y divide-borde rounded-xl border border-borde">
-        {cursos.map((c, i) => (
-          <li key={c.slug}>
-            <Link
-              href={`/cursos/${c.slug}/${c.primeraLeccion}`}
-              className="group flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-superficie"
-            >
-              <span className="w-5 shrink-0 text-center font-mono text-xs text-texto-tenue">
-                {i + 1}
-              </span>
-              {c.icono ? (
-                <Icono
-                  nombre={c.icono}
-                  className="size-8 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
-                />
-              ) : (
-                <span className="size-8 shrink-0" aria-hidden="true" />
-              )}
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-medium group-hover:text-rojo-acento">
-                  {c.titulo}
-                </span>
-                <span className="mt-0.5 block truncate text-xs text-texto-tenue">
-                  {c.resumen}
-                </span>
-              </span>
-              <span className="flex shrink-0 items-center gap-1.5 text-xs text-texto-suave">
-                <Users size={13} aria-hidden="true" />
-                {c.matriculas}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+      <div className="mt-3 flex items-center justify-between border-t border-borde pt-2.5 text-xs text-texto-tenue">
+        <span className="flex items-center gap-1.5">
+          <Users size={13} aria-hidden="true" />
+          {curso.matriculas} {curso.matriculas === 1 ? "inscrito" : "inscritos"}
+        </span>
+        <ArrowRight
+          size={14}
+          aria-hidden="true"
+          className="opacity-0 transition-opacity group-hover:opacity-100"
+        />
+      </div>
+    </Link>
   );
 }

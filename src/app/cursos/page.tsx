@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Infinity as Infinito, LockKeyhole, UserRound } from "lucide-react";
+import { Infinity as Infinito, UserRound } from "lucide-react";
 import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { valoraciones } from "@/lib/valoraciones";
 import { rutas } from "@/lib/rutas";
 import { popularidad, ordenarPorPopularidad } from "@/lib/popularidad";
-import { Populares } from "@/components/Populares";
 import { misMatriculas, perfilActual, resumenPlan } from "@/lib/matriculas";
 import { precios } from "@/lib/precios";
 import { contarPorCurso, miProgreso } from "@/lib/progreso";
@@ -54,18 +53,14 @@ export default async function Page() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6 lg:pl-64 xl:pl-32 2xl:pl-6 py-14">
       <Listado
-        debajo={
-          <Populares
-            cursos={ordenarPorPopularidad(catalogo, cuentas).map((c) => ({
-              slug: c.slug,
-              titulo: tarifas.get(c.slug)?.titulo ?? c.titulo,
-              resumen: tarifas.get(c.slug)?.resumen ?? c.resumen,
-              primeraLeccion: c.lecciones[0].slug,
-              matriculas: cuentas.get(c.slug) ?? 0,
-              icono: c.icono,
-            }))}
-          />
-        }
+        populares={ordenarPorPopularidad(catalogo, cuentas).map((c) => ({
+          slug: c.slug,
+          titulo: tarifas.get(c.slug)?.titulo ?? c.titulo,
+          resumen: tarifas.get(c.slug)?.resumen ?? c.resumen,
+          primeraLeccion: c.lecciones[0].slug,
+          matriculas: cuentas.get(c.slug) ?? 0,
+          icono: c.icono,
+        }))}
         cabecera={
           <>
             <Link href="/cursos" className="flex shrink-0 items-center gap-2.5">

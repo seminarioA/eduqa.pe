@@ -5,6 +5,7 @@ import { Search, X } from "lucide-react";
 import { TarjetaCursoMatricula, type DatosCurso } from "./TarjetaCursoMatricula";
 import { Selector } from "@/components/Selector";
 import { TarjetaRuta, type DatosRuta } from "@/components/TarjetaRuta";
+import { TarjetaPopular } from "@/components/Populares";
 
 /**
  * `inscritoEn` es la fecha de inscripción en milisegundos, o null si el
@@ -38,15 +39,17 @@ const TODAS = "todas";
 export function Listado({
   cursos,
   rutas = [],
+  populares = [],
   alTope,
   esAdmin = false,
   cabecera,
-  debajo,
   acciones,
   entreBarraYRejilla,
 }: {
   cursos: CursoListado[];
   rutas?: DatosRuta[];
+  /** Los más matriculados: abren la rejilla, antes que las rutas. */
+  populares?: Parameters<typeof TarjetaPopular>[0]["curso"][];
   alTope: boolean;
   esAdmin?: boolean;
   /** Marca y tablero, a la izquierda de la barra de búsqueda. */
@@ -55,8 +58,6 @@ export function Listado({
   acciones?: ReactNode;
   /** Migas y título, entre la barra y la rejilla. */
   entreBarraYRejilla?: ReactNode;
-  /** Sección de populares, debajo de la rejilla. */
-  debajo?: ReactNode;
 }) {
   const [busqueda, setBusqueda] = useState("");
   const [area, setArea] = useState<string>(TODAS);
@@ -194,9 +195,11 @@ export function Listado({
         </p>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Las rutas abren la rejilla, pero solo cuando no se está buscando
-              nada concreto: quien escribe en el buscador quiere un curso, no
-              un itinerario. */}
+          {/* Los populares abren la rejilla y las rutas les siguen, pero solo
+              cuando no se está buscando nada concreto: quien escribe en el
+              buscador quiere un curso, no un escaparate. */}
+          {sinFiltrar &&
+            populares.map((c) => <TarjetaPopular key={c.slug} curso={c} />)}
           {sinFiltrar &&
             rutas.map((r) => (
               <TarjetaRuta
@@ -216,10 +219,6 @@ export function Listado({
           ))}
         </div>
       )}
-
-      {/* Debajo de la rejilla y solo sin filtros: con una búsqueda activa, una
-          lista de populares compite con lo que la persona vino a buscar. */}
-      {sinFiltrar && debajo}
     </>
   );
 }
