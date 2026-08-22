@@ -1,26 +1,288 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* next-themes pone la clase `dark` en <html>. Esta variante la conecta con Tailwind. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /*
+   * Identidad EDUQA.PE. `rojo` es la marca: nunca cambia entre temas, porque
+   * un logo o una cabecera que cambia de color según el modo del sistema deja
+   * de ser identidad. Va siempre con texto blanco encima (6.1:1).
+   */
+  --color-rojo: #c70724;
+  --color-rojo-hover: #a3061e;
+  --color-rojo-tenue: #fdf2f3;
+
+  /*
+   * `rojo-acento` es el rojo cuando hace de tinta: texto, bordes, anillos de
+   * foco sobre el fondo de la página. Ese sí se aclara en oscuro, porque
+   * #c70724 sobre #0b0b0d queda en 3.3:1 y no se lee.
+   */
+  --color-rojo-acento: #c70724;
+
+  --color-fondo: #ffffff;
+  --color-superficie: #fafafa;
+  --color-borde: #e4e4e7;
+  --color-borde-fuerte: #d4d4d8;
+
+  --color-texto: #18181b;
+  --color-texto-suave: #52525b;
+  --color-texto-tenue: #8b8b93;
+
+  /* Sobre el rojo */
+  --color-sobre-rojo: #ffffff;
+  --color-sobre-rojo-suave: #f7cdd3;
+
+  --color-exito: #15803d;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-cert: var(--font-exo2), ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/*
+ * Modo oscuro: se redefinen los mismos tokens, así ningún componente necesita
+ * variantes `dark:`. `--color-rojo` no está acá a propósito: la marca es la
+ * misma en ambos temas. Lo que se aclara es la tinta roja.
+ */
+.dark {
+  --color-rojo-acento: #ff6b7d;
+  --color-rojo-tenue: #2a1216;
+
+  --color-fondo: #0b0b0d;
+  --color-superficie: #151518;
+  --color-borde: #27272b;
+  --color-borde-fuerte: #3a3a41;
+
+  --color-texto: #f4f4f5;
+  --color-texto-suave: #b4b4bb;
+  --color-texto-tenue: #85858e;
+
+  --color-exito: #4ade80;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/*
+ * Modo monocromático: la marca deja de ser roja y pasa a ser un neutro.
+ *
+ * Va en un eje aparte del claro/oscuro, así que hay dos variantes. Se
+ * seleccionan con `html.mono`, que gana a `:root` por especificidad; cada
+ * bloque redefine el juego entero en lugar de heredar del otro, porque
+ * `html.mono` también le ganaría a `.dark` y los valores claros se colarían
+ * en el tema oscuro.
+ *
+ * Sin tono no hay jerarquía posible salvo por valor, así que el énfasis pasa
+ * a ser la tinta más fuerte de la escala y el texto corriente baja un peldaño.
+ * Sin ese hueco, un enlace y un párrafo quedarían del mismo color.
+ *
+ * El bloque de marca sigue siendo oscuro en ambas variantes: hay sitios que
+ * escriben `text-white` encima a mano, y aclararlo dejaría blanco sobre claro.
+ */
+html.mono {
+  --color-rojo: #1c1c1f;
+  --color-rojo-hover: #35353b;
+  --color-rojo-tenue: #f4f4f5;
+  --color-rojo-acento: #09090b;
+
+  --color-sobre-rojo: #ffffff;
+  --color-sobre-rojo-suave: #c9c9cf;
+
+  --color-texto: #2e2e33;
+
+  /* Acierto y error ya se distinguen por icono y palabra; el color solo
+     los realza, y en monocromo ese realce es el mismo para los dos. */
+  --color-exito: #09090b;
+}
+
+html.dark.mono {
+  --color-rojo: #52525b;
+  --color-rojo-hover: #6b6b75;
+  --color-rojo-tenue: #1f1f23;
+  --color-rojo-acento: #ffffff;
+
+  --color-sobre-rojo: #ffffff;
+  --color-sobre-rojo-suave: #d4d4d8;
+
+  --color-texto: #d4d4d8;
+
+  --color-exito: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Shiki genera ambos temas a la vez; aquí se elige cuál se pinta. El fondo se
+ * aplica solo al bloque: dárselo también a cada span pintaba un rectángulo
+ * por token, y como su color no coincide con el del contenedor el resultado
+ * era una banda subrayando el código.
+ */
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Animación de apertura y cierre de Radix Collapsible. */
+@keyframes desplegar {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+@keyframes plegar {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+.animar-colapsable[data-state="open"] {
+  animation: desplegar 180ms ease-out;
+}
+.animar-colapsable[data-state="closed"] {
+  animation: plegar 160ms ease-in;
+}
+
+/* Certificados: A4 apaisado, sin márgenes del navegador, con color exacto. */
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .certificado {
+    break-after: page;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/*
+ * Celebración al terminar una sesión.
+ *
+ * Tres animaciones encadenadas por retardo: el velo entra, la marca aparece
+ * con un rebote corto y dos anillos salen de ella. Todo se anula bajo
+ * prefers-reduced-motion, que ya está declarado más arriba en este archivo.
+ */
+@keyframes velo-entra {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes marca-entra {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes anillo-sale {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes texto-sube {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animar-velo {
+  animation: velo-entra 220ms ease-out both;
+}
+
+.animar-marca {
+  animation: marca-entra 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animar-anillo {
+  animation: anillo-sale 1.4s ease-out infinite;
+}
+
+.animar-texto {
+  animation: texto-sube 420ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animar-velo,
+  .animar-marca,
+  .animar-anillo,
+  .animar-texto {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * Latido de la marca mientras el curso se prepara. Es una pulsación lenta y
+ * de poco recorrido: tiene que leerse como "esto sigue trabajando" sin robar
+ * la atención de quien ya está leyendo.
+ */
+@keyframes latido {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+}
+
+.animar-latido {
+  animation: latido 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animar-latido {
+    animation: none;
+  }
 }

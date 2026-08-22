@@ -1,0 +1,1530 @@
+[
+  {
+    "slug": "sesion-1",
+    "numero": 1,
+    "titulo": "Python, NumPy, Pandas y tu primer ETL",
+    "bloques": [
+      {
+        "tipo": "teoria",
+        "contenido": "# Introducción a la Ingeniería de Datos\n## Sesión 1 — Python, NumPy, Pandas y tu primer ETL\n\nNo se necesita experiencia previa en programación.\n\n**Contenido**\n\n1. Variables y tipos de datos\n2. Listas\n3. Condicionales\n4. Loops\n5. Funciones\n6. NumPy\n7. Pandas\n8. Tu primer ETL\n\n**Mapa del curso**\n\n| Sesión | Tema |\n|--------|------|\n| 1 (hoy) | Python básico · NumPy · Pandas · primer ETL |\n| 2 | Pandas avanzado · limpieza de datos · transformaciones |\n| 3 | SQL · bases de datos · conectar Python con bases de datos |\n| 4 | Pipelines · orquestación · proyecto final |\n\nPara ejecutar una celda: selecciónala y presiona **Shift + Enter**."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 1. Variables y tipos de datos\n\nUna variable es un nombre que guarda un valor.\nPython tiene cuatro tipos básicos de datos.\n\nReferencia: https://docs.python.org/3/library/stdtypes.html"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "from os import putenv\n# int: números enteros\ncantidad = 10\naño = 2024\n\n\n# float: números con decimales -\nprecio = 29.00\ntasa = 0.18\n\n# str: texto, siempre entre comillas\nproducto = \"Laptop\"\nciudad = \"Lima\"\n\n# bool: solo puede ser True o False\nactivo = True\n\nprint(cantidad)\nprint(precio)\nprint(producto)\nprint(activo)",
+        "lenguaje": "python",
+        "salida": "10\n29.0\nLaptop\nTrue"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# type() muestra el tipo de una variable\n\nprint(type(cantidad))\nprint(type(precio))\nprint(type(producto))\nprint(type(activo))",
+        "lenguaje": "python",
+        "salida": "<class 'int'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Operaciones aritméticas\n\na = 20\nb = 3\n\nprint(a + b)   # suma\nprint(a - b)   # resta\nprint(a * b)   # multiplicación\nprint(a / b)   # división\nprint(a ** b)  # potencia",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# f-strings: incluir variables dentro de un texto\n# Se escribe f antes de las comillas y la variable va entre llaves\n\nnombre = \"Ana\"\nventas = 5000\n\nprint(f\"Vendedora: {nombre}\")\nprint(f\"Ventas del mes: {ventas}\")",
+        "lenguaje": "python",
+        "salida": "Vendedora: Ana\nVentas del mes: 5000"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nCrea estas variables e imprímelas con f-strings:\n- `nombre`: tu nombre\n- `ciudad`: tu ciudad\n- `precio`: el precio de cualquier producto\n- `igv`: el 18% del precio"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\nnombre = \"Carlos\"\nciudad = \"Lima\"\nprecio = 1200\nigv = precio * 0.18\n\nprint(f\"Nombre: {nombre}\")\nprint(f\"Ciudad: {ciudad}\")\nprint(f\"Precio: {precio}\")\nprint(f\"IGV: {igv}\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 2. Listas\n\nUna lista guarda varios valores en orden.\nSe escribe con corchetes `[]`.\n\nReferencia: https://docs.python.org/3/tutorial/datastructures.html"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "frutas = [\"Naranja\", \"Peras\", \"Uvas\"]\nprint(frutas)\n\nprint(len(frutas))\n\nnp.shape",
+        "lenguaje": "python",
+        "salida": "['Naranja', 'Peras', 'Uvas']\n3"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "ventas = [1200, 850, 1400, 990, 1750]\n\n\n\nprint(ventas)\nprint(len(ventas))   # cuántos elementos tiene",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Acceder a elementos por posición\n# La primera posición es 0\n\nprint(ventas[0])    # primer elemento\nprint(ventas[1])    # segundo elemento\nprint(ventas[-1])   # último elemento",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Operaciones útiles con listas numéricas\n\nprint(sum(ventas))\nprint(min(ventas))\nprint(max(ventas))",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Agregar un elemento al final\n\nventas.append(2000)\nprint(ventas)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nDada la lista de precios:\n1. Imprime el primer y último precio\n2. Imprime la suma y el promedio (suma dividida entre cantidad de elementos)"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "precios = [250, 89, 1200, 45, 670]\n\n# Tu código aquí",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\nprecios = [250, 89, 1200, 45, 670]\n\nprint(precios[0])\nprint(precios[-1])\nprint(sum(precios))\nprint(sum(precios) / len(precios))",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 3. Condicionales\n\nEjecutan código solo si se cumple una condición.\n\nReferencia: https://docs.python.org/3/tutorial/controlflow.html#if-statements"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "stock = 15\n\nif stock > 0:\n    print(\"hay stock\")\nelse:\n    print(\"sin stock\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# elif: cuando hay más de dos casos\n\nmonto = 750\n\nif monto < 500:\n    print(\"venta pequeña\")\nelif monto < 2000:\n    print(\"venta mediana\")\nelse:\n    print(\"venta grande\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nDado un precio, imprime si es \"económico\" (menos de 200),\n\"intermedio\" (entre 200 y 800) o \"premium\" (más de 800)."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "precio = 450\n\n# Tu código aquí",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\nprecio = 450\n\nif precio < 200:\n    print(\"económico\")\nelif precio <= 800:\n    print(\"intermedio\")\nelse:\n    print(\"premium\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 4. Loops\n\nUn loop repite código para cada elemento de una lista.\n\nReferencia: https://docs.python.org/3/tutorial/controlflow.html#for-statements"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "productos = [\"Laptop\", \"Mouse\", \"Monitor\"]\n\nfor producto in productos:\n    print(producto)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Operar sobre cada elemento\n\nprecios = [100, 250, 80, 430]\n\nfor precio in precios:\n    precio_con_igv = precio * 1.18\n    print(precio_con_igv)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Acumular resultados\n\nprecios = [100, 250, 80, 430]\ntotal = 0\n\nfor precio in precios:\n    total = total + precio\n\nprint(total)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nRecorre la lista de ventas e imprime cada una con su IGV (18%).\nAl final imprime la suma total."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "ventas = [1200, 850, 1400, 990, 1750]\n\n# Tu código aquí",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\nventas = [1200, 850, 1400, 990, 1750]\ntotal = 0\n\nfor venta in ventas:\n    igv = venta * 0.18\n    print(venta, igv)\n    total = total + venta\n\nprint(total)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 5. Funciones\n\nUna función es un bloque de código con nombre que se puede reutilizar.\nSe define con `def` y devuelve un resultado con `return`.\n\nReferencia: https://docs.python.org/3/tutorial/controlflow.html#defining-functions"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "def calcular_igv(precio):\n    igv = precio * 0.18\n    return igv\n\nresultado = calcular_igv(1000)\nprint(resultado)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Una función puede recibir varios parámetros\n\ndef calcular_total(cantidad, precio):\n    return cantidad * precio\n\nprint(calcular_total(3, 250))\nprint(calcular_total(10, 85))",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Usar una función dentro de un loop\n\nprecios = [100, 250, 80, 430]\n\nfor precio in precios:\n    igv = calcular_igv(precio)\n    print(precio, igv)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nEscribe una función `precio_final(precio)` que reciba un precio\ny devuelva el precio con IGV incluido.\n\nÚsala dentro de un loop para imprimir el precio final de cada elemento."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "precios = [500, 1200, 75, 340]\n\n# Tu función aquí\n\n# Tu loop aquí",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\ndef precio_final(precio):\n    return precio * 1.18\n\nprecios = [500, 1200, 75, 340]\n\nfor precio in precios:\n    print(precio_final(precio))",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 6. NumPy\n\nNumPy permite trabajar con listas de números de forma mucho más eficiente.\nSu estructura principal es el array.\n\nLa diferencia con una lista de Python es que sobre un array NumPy\npuedes hacer operaciones matemáticas directamente, sin usar un loop.\n\nReferencia: https://numpy.org/doc/stable/user/quickstart.html"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "#Se desea calcular el igv de una lista de productos (tipo de dato entero)\nimport numpy as np\n\nlista_prod = np.array([8, 12, 25, 40, 8, 12, 25, 90])\n\nprint(lista_prod.max())",
+        "lenguaje": "python",
+        "salida": "90"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Con un array puedes operar sobre todos los elementos a la vez\n\nprint(ventas * 1.18)   # IGV sobre todos los elementos\nprint(ventas + 100)    # sumar 100 a cada elemento",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Esto no funciona igual con una lista normal de Python\n# Con una lista, * repite la lista, no multiplica los elementos\n\nlista = [1200, 850, 1400]\nprint(lista * 2)      # repite la lista dos veces",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Estadísticas básicas\n\nprint(ventas.sum())\nprint(ventas.mean())\nprint(ventas.min())\nprint(ventas.max())\nprint(ventas.std())    # desviación estándar",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Filtrar elementos que cumplen una condición\n\nprint(ventas[ventas > 1000])   # solo ventas mayores a 1000",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nCrea un array con estos precios: `[200, 450, 130, 980, 75, 600]`\n\n1. Imprime los precios con IGV (multiplica por 1.18)\n2. Imprime el promedio\n3. Imprime los precios mayores a 300"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu código aquí",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\nimport numpy as np\n\nprecios = np.array([50, 450, 130, 980, 75, 600])\n\nprint(precios * 1.18)\nprint(precios.mean())\nprint(precios[precios > 300])",
+        "lenguaje": "python",
+        "salida": "[  59.   531.   153.4 1156.4   88.5  708. ]\n380.8333333333333\n[450 980 600]"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 7. Pandas\n\nPandas es la librería más usada para trabajar con datos tabulares en Python.\nUn DataFrame es una tabla con filas y columnas, similar a una hoja de Excel.\n\nReferencia: https://pandas.pydata.org/docs/user_guide/dsintro.html"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "import pandas as pd\n\n# Crear un DataFrame desde un diccionario\n# Cada clave es una columna, cada lista es los valores de esa columna\n\ndf = pd.DataFrame({\n    \"producto\":  [\"Laptop\", \"Mouse\", \"Monitor\", \"Teclado\", \"Audifonos\"],\n    \"categoria\": [\"Electronica\", \"Electronica\", \"Electronica\", \"Electronica\", \"Electronica\"],\n    \"precio\":    [2500, 85, 1200, 350, 220],\n    \"cantidad\":  [10, 50, 8, 25, 30],\n})\n\ndf",
+        "lenguaje": "python",
+        "salida": "    producto    categoria  precio  cantidad\n0     Laptop  Electronica    2500        10\n1      Mouse  Electronica      85        50\n2    Monitor  Electronica    1200         8\n3    Teclado  Electronica     350        25\n4  Audifonos  Electronica     220        30"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Información básica del DataFrame\n\nprint(df.shape)    # (filas, columnas)\nprint()\nprint(df.dtypes)   # tipo de dato de cada columna",
+        "lenguaje": "python",
+        "salida": "(5, 4)\n\nproducto     object\ncategoria    object\nprecio        int64\ncantidad      int64\ndtype: object"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# head() muestra las primeras filas\n# describe() muestra estadísticas de las columnas numéricas\n\ndf.head(1)",
+        "lenguaje": "python",
+        "salida": "  producto    categoria  precio  cantidad\n0   Laptop  Electronica    2500        10"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "df.describe()",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Acceder a una columna\n\nprint(df[\"categoria\"])",
+        "lenguaje": "python",
+        "salida": "0    Electronica\n1    Electronica\n2    Electronica\n3    Electronica\n4    Electronica\nName: categoria, dtype: object"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Agregar una columna calculada\n\ndf[\"total\"] = df[\"precio\"] * df[\"cantidad\"]\n\ndf",
+        "lenguaje": "python",
+        "salida": "    producto    categoria  precio  cantidad  total\n0     Laptop  Electronica    2500        10  25000\n1      Mouse  Electronica      85        50   4250\n2    Monitor  Electronica    1200         8   9600\n3    Teclado  Electronica     350        25   8750\n4  Audifonos  Electronica     220        30   6600"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Filtrar filas que cumplen una condición\n\ndf[df[\"precio\"] > 500]",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nA partir del DataFrame `df`:\n1. Agrega una columna `precio_con_igv` con el precio multiplicado por 1.18\n\n2. Muestra solo los productos cuyo precio es menor a 400"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu código aquí",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\ndf[\"precio_con_igv\"] = df[\"precio\"] * 1.18\n\nprint(df)",
+        "lenguaje": "python",
+        "salida": "    producto    categoria  precio  cantidad  total  precio_con_igv\n0     Laptop  Electronica    2500        10  25000          2950.0\n1      Mouse  Electronica      85        50   4250           100.3\n2    Monitor  Electronica    1200         8   9600          1416.0\n3    Teclado  Electronica     350        25   8750           413.0\n4  Audifonos  Electronica     220        30   6600           259.6"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 8. Tu primer ETL\n\nETL significa Extract, Transform, Load:\n\n- **Extract**: leer los datos desde alguna fuente\n- **Transform**: limpiar y preparar los datos\n- **Load**: guardar el resultado\n\nEs el patrón más básico en ingeniería de datos.\nVamos a construir uno con tres funciones simples."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "import pandas as pd\nimport io\n\n# Los datos fuente (en la práctica vendría de un archivo o base de datos)\n\ncsv_data = \"\"\"producto,categoria,precio,cantidad\nLaptop,Electronica,2500,10\nMouse,Electronica,85,50\nCuaderno,Utiles,8,200\nMonitor,Electronica,1200,8\nLapicero,Utiles,3,500\nTeclado,Electronica,350,25\n\"\"\"\n\nprint(csv_data)",
+        "lenguaje": "python",
+        "salida": "producto,categoria,precio,cantidad\nLaptop,Electronica,2500,10\nMouse,Electronica,85,50\nCuaderno,Utiles,8,200\nMonitor,Electronica,1200,8\nLapicero,Utiles,3,500\nTeclado,Electronica,350,25"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# EXTRACT: leer los datos\n\ndef extract(csv_texto):\n    df = pd.read_csv(io.StringIO(csv_texto))\n    print(f\"Extraídos: {len(df)} registros\")\n    return df\n\ndf_raw = extract(csv_data)\ndf_raw",
+        "lenguaje": "python",
+        "salida": "Extraídos: 6 registros\n\n   producto    categoria  precio  cantidad\n0    Laptop  Electronica    2500        10\n1     Mouse  Electronica      85        50\n2  Cuaderno       Utiles       8       200\n3   Monitor  Electronica    1200         8\n4  Lapicero       Utiles       3       500\n5   Teclado  Electronica     350        25"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# TRANSFORM: calcular columnas nuevas\ndef transform(df):\n    df[\"total\"]     = df[\"precio\"] * df[\"cantidad\"]\n    df[\"total_igv\"] = df[\"total\"] * 1.18\n    print(f\"Transformados: {df.shape[1]} columnas\")\n    return df\n\ndf_clean = transform(df_raw)\ndf_clean",
+        "lenguaje": "python",
+        "salida": "Transformados: 6 columnas\n\n   producto    categoria  precio  cantidad  total  total_igv\n0    Laptop  Electronica    2500        10  25000    29500.0\n1     Mouse  Electronica      85        50   4250     5015.0\n2  Cuaderno       Utiles       8       200   1600     1888.0\n3   Monitor  Electronica    1200         8   9600    11328.0\n4  Lapicero       Utiles       3       500   1500     1770.0\n5   Teclado  Electronica     350        25   8750    10325.0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# LOAD: guardar el resultado\n\ndef load(df, nombre_archivo):\n    df.to_csv(nombre_archivo, index=False)\n    print(f\"Guardado: {nombre_archivo}\")\n\nload(df_clean, \"ventas_procesadas.csv\")",
+        "lenguaje": "python",
+        "salida": "Guardado: ventas_procesadas.csv"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# El pipeline completo: las tres funciones en secuencia\n\ndf_raw   = extract(csv_data)\ndf_clean = transform(df_raw)\nload(df_clean, \"ventas_procesadas.csv\")",
+        "lenguaje": "python",
+        "salida": "Extraídos: 6 registros\nTransformados: 6 columnas\nGuardado: ventas_procesadas.csv"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Verificar el archivo guardado\n\nresultado = pd.read_csv(\"ventas_procesadas.csv\")\nresultado",
+        "lenguaje": "python",
+        "salida": "   producto    categoria  precio  cantidad  total  total_igv\n0    Laptop  Electronica    2500        10  25000    29500.0\n1     Mouse  Electronica      85        50   4250     5015.0\n2  Cuaderno       Utiles       8       200   1600     1888.0\n3   Monitor  Electronica    1200         8   9600    11328.0\n4  Lapicero       Utiles       3       500   1500     1770.0\n5   Teclado  Electronica     350        25   8750    10325.0"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## Resumen\n\n| Concepto | Para qué sirve |\n|----------|----------------|\n| Variables y tipos | Guardar valores: números, texto, booleanos |\n| Listas | Guardar varios valores en orden |\n| Condicionales | Ejecutar código según una condición |\n| Loops | Repetir código para cada elemento de una lista |\n| Funciones | Reutilizar bloques de código |\n| NumPy | Operar sobre listas numéricas sin loops |\n| Pandas | Trabajar con tablas de datos |\n| ETL | Leer, transformar y guardar datos |\n\n**Sesión 2:** Pandas avanzado — limpieza de datos, valores nulos, agrupaciones, merge.\n\nReferencias\n- Python: https://docs.python.org/3/tutorial/\n- NumPy: https://numpy.org/doc/stable/user/quickstart.html\n- Pandas: https://pandas.pydata.org/docs/user_guide/"
+      }
+    ],
+    "secciones": [
+      {
+        "id": "b0",
+        "titulo": "Introducción a la Ingeniería de Datos"
+      },
+      {
+        "id": "b1",
+        "titulo": "1. Variables y tipos de datos"
+      },
+      {
+        "id": "b8",
+        "titulo": "2. Listas"
+      },
+      {
+        "id": "b17",
+        "titulo": "3. Condicionales"
+      },
+      {
+        "id": "b23",
+        "titulo": "4. Loops"
+      },
+      {
+        "id": "b30",
+        "titulo": "5. Funciones"
+      },
+      {
+        "id": "b37",
+        "titulo": "6. NumPy"
+      },
+      {
+        "id": "b46",
+        "titulo": "7. Pandas"
+      },
+      {
+        "id": "b57",
+        "titulo": "8. Tu primer ETL"
+      },
+      {
+        "id": "b64",
+        "titulo": "Resumen"
+      }
+    ]
+  },
+  {
+    "slug": "sesion-2",
+    "numero": 2,
+    "titulo": "Pandas: Limpieza y Columnas Calculadas",
+    "bloques": [
+      {
+        "tipo": "teoria",
+        "contenido": "# Introducción a la Ingeniería de Datos\n## Sesión 2 — Pandas: Limpieza y Columnas Calculadas\n\n**Contenido de hoy**\n\n1. Cargar el DataFrame\n2. Explorar los datos\n3. Limpiar los datos\n4. Crear columnas nuevas\n5. ETL con todo lo aprendido\n\n**Mapa del curso**\n\n| Sesión | Tema |\n|--------|------|\n| 1 | Python básico · NumPy · Pandas · primer ETL |\n| **2 (hoy)** | **Limpieza · columnas calculadas** |\n| 3 | SQL · bases de datos · conectar Python con bases de datos |\n| 4 | Pipelines · orquestación · proyecto final |\n\nPara ejecutar una celda: selecciónala y presiona **Shift + Enter**."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## Repaso — Funciones, `for` y `while`\n\nAntes de entrar a Pandas, repasamos los bloques que más usaremos hoy.\nLa Sesión 1 los vio brevemente; aquí los consolidamos con ejemplos nuevos."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# FUNCIONES: bloque de código con nombre que se puede reutilizar\n# Se define con def y devuelve un resultado con return\n\ndef calcular_igv(precio):\n  igv = precio * 0.18\n  return igv\n\ndef calcular_total_igv(precio):\n  total_igv = precio * 1.18\n  return total_igv\n\n\nprint(calcular_igv(1000))\nprint(calcular_igv(500))\n\nprint(calcular_total_igv(1000))\nprint(calcular_total_igv(500))",
+        "lenguaje": "python",
+        "salida": "180.0\n90.0\n1180.0\n590.0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "print(type(\"Masculino\")) #String\nprint(type(0)) #Integer",
+        "lenguaje": "python",
+        "salida": "<class 'str'>\n<class 'int'>"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# FOR: repite código para cada elemento de una lista\n\nventas = [1200, 850, 1400, 990, 1750]\n\n\nfor venta in ventas:\n    igv = calcular_igv(venta)\n    print(\"Venta:\", venta)\n    print(\"IGV: \", igv)\n    print()",
+        "lenguaje": "python",
+        "salida": "Venta: 1200\nIGV:  216.0\n\nVenta: 850\nIGV:  153.0\n\nVenta: 1400\nIGV:  252.0\n\nVenta: 990\nIGV:  178.2\n\nVenta: 1750\nIGV:  315.0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# FOR acumulando un total\n\nventasProd = [1200, 850, 1400, 990, 1750]\n\ntotalFactura = 0 # VARIABLE ACUMULADOR\n\nfor venta in ventasProd:\n    totalFactura = totalFactura + venta\n    print(totalFactura)\n\nprint(\"Total de ventas:\", totalFactura)",
+        "lenguaje": "python",
+        "salida": "1200\n2050\n3450\n4440\n6190\nTotal de ventas: 6190"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Con NumPy hacemos lo mismo en una sola línea\n# No necesitamos el for ni la variable total\n\nprint(np.array([1200, 850, 1400, 990, 1750]).sum())",
+        "lenguaje": "python",
+        "salida": "6190"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# WHILE: repite mientras se cumpla una condición booleano (True or False)\n# Diferencia con for: no recorre una lista, repite hasta que algo cambia\n\nstockProd = 10\n\nwhile stockProd > 0:\n    print(\"Stock disponible:\", stockProd)\n    stockProd = stockProd - 1\n\nprint(\"Sin stock\")",
+        "lenguaje": "python",
+        "salida": "Stock disponible: 10\nStock disponible: 9\nStock disponible: 8\nStock disponible: 7\nStock disponible: 6\nStock disponible: 5\nStock disponible: 4\nStock disponible: 3\nStock disponible: 2\nStock disponible: 1\nSin stock"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio de repaso\n\n1. Escribe una función `precio_final(precio)` que devuelva el precio con IGV (×1.18)\n2. Usa `input()` para pedir el nombre del vendedor\n3. Usa un `for` para imprimir el precio final de cada producto de la lista"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "precios = [250, 89, 1200, 45, 670]\n\n# Tu función aquí\n\n\n# Tu for aquí",
+        "lenguaje": "python",
+        "salida": "Ingrese texto: Holaaa\nHolaaa"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\n# input(\"Texto guia/ Feedback\")\nprecios = [250, 89, 1200, 45, 670, 6111, 39402, 18374, 12938402, 38437209, 18272, 1392829]\nvendedor = input(\"Ingrese el nombre del vendedor: \")\n\ndef precio_final(precio):\n    return precio * 1.18\n\nprint(\"Reporte de: \" + vendedor)\nfor p in precios:\n    print(precio_final(p))",
+        "lenguaje": "python",
+        "salida": "Ingrese el nombre del vendedor: Alejandro\nReporte de: Alejandro\n295.0\n105.02\n1416.0\n53.099999999999994\n790.5999999999999\n7210.98\n46494.36\n21681.32\n15267314.36\n45355906.62\n21560.96\n1643538.22"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 1. Cargar el DataFrame\n\nEmpezamos creando el DataFrame, igual que en la Sesión 1.\nEsta vez los datos tienen errores a propósito para que podamos limpiarlos."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "import pandas as pd\nimport numpy as np\n\n# Creamos el DataFrame directamente, igual que en la Sesión 1\n# Los valores vacíos (None) simulan datos que faltan\n\ndf = pd.DataFrame({\n    \"id_venta\":  [1,  2,  3,  4,  5,  6,  7,  8,  9,  10,\n                  11, 12, 13, 14, 15, 16, 17, 18, 19, 20],\n    \"vendedor\":  [\"Ana Torres\", \"Luis Paz\", \"Ana Torres\", \"carlos ramos\",\n                  \"Luis Paz\", None, \"Maria Lopez\", \"Ana Torres\",\n                  \"carlos ramos\", \"Maria Lopez\", \"Luis Paz\", \"Ana Torres\",\n                  \"carlos ramos\", \"Maria Lopez\", \"Luis Paz\", \"Ana Torres\",\n                  \"Ana Torres\", \"carlos ramos\", \"Maria Lopez\", \"Luis Paz\"],\n    \"region\":    [\"Lima\", \"Arequipa\", \"Lima\", \"Lima\", \"Arequipa\",\n                  \"Trujillo\", \"Trujillo\", \"Lima\", \"Lima\", \"Trujillo\",\n                  \"Arequipa\", \"Lima\", \"Lima\", \"Trujillo\", \"Arequipa\",\n                  \"Lima\", \"Lima\", \"Lima\", \"Trujillo\", \"Arequipa\"],\n    \"producto\":  [\"Laptop\", \"Mouse\", \"Monitor\", \"Laptop\", \"Teclado\",\n                  \"Cuaderno\", \"Lapicero\", \"Monitor\", \"Audifonos\", \"Cuaderno\",\n                  \"Laptop\", \"Mouse\", \"Monitor\", \"Teclado\", \"Lapicero\",\n                  \"Laptop\", \"Laptop\", \"Audifonos\", \"Mouse\", \"Cuaderno\"],\n    \"categoria\": [\"Electronica\", \"Electronica\", \"Electronica\", \"Electronica\",\n                  \"Electronica\", \"Utiles\", \"Utiles\", \"Electronica\",\n                  \"Electronica\", \"Utiles\", \"Electronica\", \"Electronica\",\n                  \"Electronica\", \"Electronica\", \"Utiles\", \"Electronica\",\n                  \"Electronica\", \"Electronica\", \"Electronica\", \"Utiles\"],\n    \"precio\":    [2500, 85, 1200, 2500, 350, 8, 3, 1200, 220, 8,\n                  2500, 85, -1200, 350, 3, 2500, 2500, 220, 85, 8],\n    \"cantidad\":  [2, 10, 1, 3, 5, 100, 200, 2, 8, 150,\n                  1, 20, 1, 3, 300, 2, 2, 5, 15, 200],\n    \"descuento\": [0.10, None, 0.05, 0.15, 0.00, None, 0.00, 0.05,\n                  0.10, 0.00, 0.10, 0.05, 0.00, None, 0.00,\n                  0.15, 0.15, 0.10, 0.05, 0.00],\n})\n\ndf",
+        "lenguaje": "python",
+        "salida": "    id_venta      vendedor    region   producto    categoria  precio  \\\n0          1    Ana Torres      Lima     Laptop  Electronica    2500   \n1          2      Luis Paz  Arequipa      Mouse  Electronica      85   \n2          3    Ana Torres      Lima    Monitor  Electronica    1200   \n3          4  carlos ramos      Lima     Laptop  Electronica    2500   \n4          5      Luis Paz  Arequipa    Teclado  Electronica     350   \n5          6          None  Trujillo   Cuaderno       Utiles       8   \n6          7   Maria Lopez  Trujillo   Lapicero       Utiles       3   \n7          8    Ana Torres      Lima    Monitor  Electronica    1200   \n8          9  carlos ramos      Lima  Audifonos  Electronica     220   \n9         10   Maria Lopez  Trujillo   Cuaderno       Utiles       8   \n10        11      Luis Paz  Arequipa     Laptop  Electronica    2500   \n11        12    Ana Torres      Lima      Mouse  Electronica      85   \n12        13  carlos ramos      Lima    Monitor  Electronica   -1200   \n13        14   Maria Lopez  Trujillo    Teclado  Electronica     350   \n14        15      Luis Paz  Arequipa   Lapicero       Utiles       3   \n15        16    Ana Torres      Lima     Laptop  Electronica    2500   \n16        17    Ana Torres      Lima     Laptop  Electronica    2500   \n17        18  carlos ramos      Lima  Audifonos  Electronica     220   \n18        19   Maria Lopez  Trujillo      Mouse  Electronica      85   \n19        20      Luis Paz  Arequipa   Cuaderno       Utiles       8   \n\n    cantidad  descuento  \n0          2       0.10  \n1         10        NaN  \n2          1       0.05  \n3          3       0.15  \n4          5       0.00  \n5        100        NaN  \n6        200       0.00  \n7          2       0.05  \n8          8       0.10  \n9        150       0.00  \n10         1       0.10  \n11        20       0.05  \n12         1       0.00  \n13         3        NaN  \n14       300       0.00  \n15         2       0.15  \n16         2       0.15"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 2. Exploración y diagnóstico del DataFrame\n\nAntes de limpiar, necesitamos **entender** el estado actual de los datos.\nEstas funciones son las primeras que debes ejecutar siempre que recibes un dataset nuevo.\n\nReferencia: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.info.html"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# shape: cuántas filas y columnas\nforma = df.shape\n\nprint(forma)",
+        "lenguaje": "python",
+        "salida": "(20, 8)"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# info(): tipo de dato y valores no nulos por columna\ndf.info()",
+        "lenguaje": "python",
+        "salida": "<class 'pandas.core.frame.DataFrame'>\nRangeIndex: 20 entries, 0 to 19\nData columns (total 8 columns):\n #   Column     Non-Null Count  Dtype  \n---  ------     --------------  -----  \n 0   id_venta   20 non-null     int64  \n 1   vendedor   19 non-null     object \n 2   region     20 non-null     object \n 3   producto   20 non-null     object \n 4   categoria  20 non-null     object \n 5   precio     20 non-null     int64  \n 6   cantidad   20 non-null     int64  \n 7   descuento  17 non-null     float64\ndtypes: float64(1), int64(3), object(4)\nmemory usage: 1.4+ KB"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "df.describe()",
+        "lenguaje": "python",
+        "salida": "       id_venta       precio    cantidad  descuento\ncount  20.00000    20.000000   20.000000  17.000000\nmean   10.50000   756.250000   51.500000   0.061765\nstd     5.91608  1135.443427   88.950311   0.057362\nmin     1.00000 -1200.000000    1.000000   0.000000\n25%     5.75000     8.000000    2.000000   0.000000\n50%    10.50000   220.000000    5.000000   0.050000\n75%    15.25000  1525.000000   40.000000   0.100000\nmax    20.00000  2500.000000  300.000000   0.150000"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# isnull().sum(): contar valores nulos por columna\nprint(df.isnull().sum())",
+        "lenguaje": "python",
+        "salida": "id_venta     0\nvendedor     1\nregion       0\nproducto     0\ncategoria    0\nprecio       0\ncantidad     0\ndescuento    3\ndtype: int64"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# duplicated().sum(): detectar filas repetidas\nprint(\"Filas duplicadas:\", df.duplicated().sum())",
+        "lenguaje": "python",
+        "salida": "Filas duplicadas: 0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# value_counts(): ver los valores únicos de una columna categórica\nprint(\"Mejores vendedores del mes:\")\nprint(df[\"vendedor\"].value_counts(dropna=False))",
+        "lenguaje": "python",
+        "salida": "Mejores vendedores del mes:\nvendedor\nAna Torres      6\nLuis Paz        5\ncarlos ramos    4\nMaria Lopez     4\nNone            1\nName: count, dtype: int64"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\n1. Usa `value_counts()` para ver cuántas ventas hay por `region`\n2. Usa `value_counts()` para ver cuántas ventas hay por `categoria`\n3. ¿Cuál es el precio mínimo del dataset? (pista: `df[\"precio\"].min()`)"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu código aquí\nprint(df[\"region\"].value_counts())\n\nprint(df[\"categoria\"].value_counts())\n\nprint(\"Precio mínimo:\", df[\"precio\"].min())",
+        "lenguaje": "python",
+        "salida": "region\nLima        10\nArequipa     5\nTrujillo     5\nName: count, dtype: int64\ncategoria\nElectronica    15\nUtiles          5\nName: count, dtype: int64\nPrecio mínimo: -1200"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\nprint(df[\"region\"].value_counts())\nprint()\nprint(df[\"categoria\"].value_counts())\nprint()\nprint(\"Precio mínimo:\", df[\"precio\"].min())\n# El precio mínimo es -1200 → eso es un error en los datos",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 3. Limpieza de datos\n\nLos datos reales casi siempre tienen estos problemas:\n- **Valores nulos**: celdas vacías (NaN)\n- **Duplicados**: filas repetidas\n- **Valores inválidos**: precios negativos, cantidades imposibles\n- **Formatos inconsistentes**: `carlos ramos` vs `Carlos Ramos`\n\nReferencia: https://pandas.pydata.org/docs/user_guide/missing_data.html"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# fillna(): rellena los valores vacíos con un número\n# El descuento vacío lo tratamos como 0 (sin descuento)\n\ndf[\"descuento\"] = df[\"descuento\"].fillna(0)\n\nprint(df[\"descuento\"])",
+        "lenguaje": "python",
+        "salida": "0     0.10\n1     0.00\n2     0.05\n3     0.15\n4     0.00\n5     0.00\n6     0.00\n7     0.05\n8     0.10\n9     0.00\n10    0.10\n11    0.05\n12    0.00\n13    0.00\n14    0.00\n15    0.15\n16    0.15\n17    0.10\n18    0.05\n19    0.00\nName: descuento, dtype: float64"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# dropna(): elimina las filas que tienen un valor vacío en esa columna\n# Si no sabemos quién vendió, no podemos usar ese registro\n\nprint(\"Filas antes:\", len(df))\n\ndf = df.dropna(subset=[\"vendedor\"])\n\nprint(\"Filas después:\", len(df))",
+        "lenguaje": "python",
+        "salida": "Filas antes: 20\nFilas después: 19"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# drop_duplicates(): elimina filas repetidas\n\nprint(\"Filas antes:\", len(df))\ndf = df.drop_duplicates()\nprint(\"Filas después:\", len(df))",
+        "lenguaje": "python",
+        "salida": "Filas antes: 19\nFilas después: 19"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# str.title(): pone la primera letra de cada palabra en mayúscula\n# Corrige \"carlos ramos\" → \"carlos Ramos\"\n\ndf[\"vendedor\"] = df[\"vendedor\"].str.title()\n\ndf[\"vendedor\"] = df[\"vendedor\"].str.title()\n\nprint(df[\"vendedor\"].unique())",
+        "lenguaje": "python",
+        "salida": "['Ana Torres' 'Luis Paz' 'Carlos Ramos' 'Maria Lopez']"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Eliminar filas con precio negativo (dato inválido)\n\nprint(\"Antes:\", len(df))\n\ndf = df[df[\"precio\"] > 0]\n\nprint(\"Después:\", len(df))",
+        "lenguaje": "python",
+        "salida": "Antes: 19\nDespués: 18"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Verificar que ya no quedan valores nulos\nprint(df.isnull().sum())",
+        "lenguaje": "python",
+        "salida": "id_venta     0\nvendedor     0\nregion       0\nproducto     0\ncategoria    0\nprecio       0\ncantidad     0\ndescuento    0\ndtype: int64"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nEl DataFrame `df` ya está limpio.\nPractica usando lo que vimos:\n1. ¿Cuántos registros quedaron? (usa `len(df)`)\n2. ¿Cuántos valores nulos quedan en total? (usa `df.isnull().sum()`)\n3. Usa `input()` para pedir el nombre de un vendedor e imprímelo"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# 1.\nprint(len(df))",
+        "lenguaje": "python",
+        "salida": "18"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\nprint(df.isnull().sum())",
+        "lenguaje": "python",
+        "salida": "id_venta     0\nvendedor     0\nregion       0\nproducto     0\ncategoria    0\nprecio       0\ncantidad     0\ndescuento    0\ndtype: int64"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 4. Crear columnas nuevas\n\nEn Pandas podemos crear columnas nuevas haciendo operaciones\nsobre las columnas que ya existen, igual que en Excel.\n\nReferencia: https://pandas.pydata.org/docs/user_guide/indexing.html"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# subtotal = precio × cantidad\n\ndf[\"subtotal\"] = df[\"precio\"] * df[\"cantidad\"]\n\ndf[[\"producto\", \"precio\", \"cantidad\", \"subtotal\"]].head(3)",
+        "lenguaje": "python",
+        "salida": "  producto  precio  cantidad  subtotal\n0   Laptop    2500         2      5000\n1    Mouse      85        10       850\n2  Monitor    1200         1      1200"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# total = subtotal aplicando el descuento\n# Si el descuento es 0.10, el cliente paga el 90% → multiplicamos por (1 - descuento)\n\ndf[\"total\"] = df[\"subtotal\"] * (1 - df[\"descuento\"])\n\ndf[[\"producto\", \"subtotal\", \"descuento\", \"total\"]].head()",
+        "lenguaje": "python",
+        "salida": "  producto  subtotal  descuento   total\n0   Laptop      5000       0.10  4500.0\n1    Mouse       850       0.00   850.0\n2  Monitor      1200       0.05  1140.0\n3   Laptop      7500       0.15  6375.0\n4  Teclado      1750       0.00  1750.0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# igv = 18% del total\n\ndf[\"igv\"] = df[\"total\"] * 0.18\n\ndf[[\"producto\", \"total\", \"igv\"]].head()",
+        "lenguaje": "python",
+        "salida": "  producto   total     igv\n0   Laptop  4500.0   810.0\n1    Mouse   850.0   153.0\n2  Monitor  1140.0   205.2\n3   Laptop  6375.0  1147.5\n4  Teclado  1750.0   315.0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# total con igv\n\ndf[\"total_con_igv\"] = df[\"total\"] + df[\"igv\"]\n\ndf[[\"producto\", \"total\", \"igv\", \"total_con_igv\"]].head()",
+        "lenguaje": "python",
+        "salida": "  producto   total     igv  total_con_igv\n0   Laptop  4500.0   810.0         5310.0\n1    Mouse   850.0   153.0         1003.0\n2  Monitor  1140.0   205.2         1345.2\n3   Laptop  6375.0  1147.5         7522.5\n4  Teclado  1750.0   315.0         2065.0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Filtrar: ver solo las ventas mayores a 1000\n\ndf[df[\"total\"] > 1000]",
+        "lenguaje": "python",
+        "salida": "    id_venta      vendedor    region   producto    categoria  precio  \\\n0          1    Ana Torres      Lima     Laptop  Electronica    2500   \n2          3    Ana Torres      Lima    Monitor  Electronica    1200   \n3          4  Carlos Ramos      Lima     Laptop  Electronica    2500   \n4          5      Luis Paz  Arequipa    Teclado  Electronica     350   \n7          8    Ana Torres      Lima    Monitor  Electronica    1200   \n8          9  Carlos Ramos      Lima  Audifonos  Electronica     220   \n9         10   Maria Lopez  Trujillo   Cuaderno       Utiles       8   \n10        11      Luis Paz  Arequipa     Laptop  Electronica    2500   \n11        12    Ana Torres      Lima      Mouse  Electronica      85   \n13        14   Maria Lopez  Trujillo    Teclado  Electronica     350   \n15        16    Ana Torres      Lima     Laptop  Electronica    2500   \n16        17    Ana Torres      Lima     Laptop  Electronica    2500   \n18        19   Maria Lopez  Trujillo      Mouse  Electronica      85   \n19        20      Luis Paz  Arequipa   Cuaderno       Utiles       8   \n\n    cantidad  descuento  subtotal    total       igv  total_con_igv  \n0          2       0.10      5000  4500.00   810.000       5310.000  \n2          1       0.05      1200  1140.00   205.200       1345.200  \n3          3       0.15      7500  6375.00  1147.500       7522.500  \n4          5       0.00      1750  1750.00   315.000       2065.000  \n7          2       0.05      2400  2280.00   410.400       2690.400  \n8          8       0.10      1760  1584.00   285.120       1869.120  \n9        150       0.00      1200  1200.00   216.000       1416.000  \n10         1       0.10      2500  2250.00   405.000       2655.000  \n11        20       0.05      1700  1615.00   290.700       1905.700  \n13         3       0.00      1050  1050.00   189.000       1239.000  \n15         2       0.15      5000  4250.00   765.000       5015.000  \n16         2       0.15      5000  4250.00   765.000       5015.000  \n18        15       0.05      1275  1211.25   218.025       1429.275  \n19       200       0.00      1600  1600.00   288.000       1888.000"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio\n\nAgrega una columna `ganancia` al DataFrame.\nLa ganancia es el 20% del `total`."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu código aquí",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solución\n\ndf[\"ganancia\"] = df[\"total\"] * 0.20\n\ndf[[\"producto\", \"total\", \"ganancia\"]].head()",
+        "lenguaje": "python",
+        "salida": "  producto   total  ganancia\n0   Laptop  4500.0     900.0\n1    Mouse   850.0     170.0\n2  Monitor  1140.0     228.0\n3   Laptop  6375.0    1275.0\n4  Teclado  1750.0     350.0"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 6. ETL con todo lo aprendido\n\nAplicamos los mismos tres pasos de la Sesión 1,\npero ahora la fase Transform incluye limpieza real."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# EXTRACT: ya tenemos el DataFrame cargado\n# En la práctica vendría de un archivo o base de datos\n\n\ndf_raw = pd.DataFrame({\n    \"vendedor\":  [\"Ana Torres\", \"Luis Paz\", \"carlos ramos\", None, \"Ana Torres\"],\n    \"producto\":  [\"Laptop\", \"Mouse\", \"Monitor\", \"Teclado\", \"Laptop\"],\n    \"precio\":    [2500, 85, 1200, 350, 2500],\n    \"cantidad\":  [2, 10, 1, 5, 2],\n    \"descuento\": [0.10, None, 0.05, 0.00, 0.10],\n})\n\nprint(\"Registros cargados:\", len(df_raw))\ndf_raw",
+        "lenguaje": "python",
+        "salida": "Registros cargados: 5\n\n       vendedor producto  precio  cantidad  descuento\n0    Ana Torres   Laptop    2500         2       0.10\n1      Luis Paz    Mouse      85        10        NaN\n2  carlos ramos  Monitor    1200         1       0.05\n3          None  Teclado     350         5       0.00\n4    Ana Torres   Laptop    2500         2       0.10"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# TRANSFORM: limpiar y calcular\n\ndf_clean = df_raw.copy()\n\ndf_clean[\"descuento\"] = df_clean[\"descuento\"].fillna(0)\ndf_clean = df_clean.dropna(subset=[\"vendedor\"])\ndf_clean = df_clean.drop_duplicates()\ndf_clean[\"vendedor\"] = df_clean[\"vendedor\"].str.title()\ndf_clean[\"total\"]    = df_clean[\"precio\"] * df_clean[\"cantidad\"] * (1 - df_clean[\"descuento\"])\n\nprint(\"Registros limpios:\", len(df_clean))\ndf_clean",
+        "lenguaje": "python",
+        "salida": "Registros limpios: 3\n\n       vendedor producto  precio  cantidad  descuento   total\n0    Ana Torres   Laptop    2500         2       0.10  4500.0\n1      Luis Paz    Mouse      85        10       0.00   850.0\n2  Carlos Ramos  Monitor    1200         1       0.05  1140.0"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# LOAD: guardar el resultado\n\ndf.to_excel(\"nombre_archivo.xlsx\")\n\ndf_clean.to_csv(\"ventas_limpias.csv\", index=False)\nprint(\"Guardado: ventas_limpias.csv\")",
+        "lenguaje": "python",
+        "salida": "Guardado: ventas_limpias.csv"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## Resumen\n\n| Qué queremos hacer | Cómo se hace en Pandas |\n|--------------------|------------------------|\n| Ver tamaño del DataFrame | `df.shape` |\n| Ver tipos y nulos | `df.info()` |\n| Contar nulos por columna | `df.isnull().sum()` |\n| Rellenar nulos | `df[\"col\"].fillna(0)` |\n| Eliminar filas con nulos | `df.dropna(subset=[\"col\"])` |\n| Eliminar duplicados | `df.drop_duplicates()` |\n| Normalizar texto | `df[\"col\"].str.title()` |\n| Filtrar filas | `df[df[\"col\"] > valor]` |\n| Crear columna nueva | `df[\"nueva\"] = df[\"a\"] * df[\"b\"]` |\n\n**Sesión 3:** SQL · bases de datos · conectar Python con PostgreSQL."
+      }
+    ],
+    "secciones": [
+      {
+        "id": "b0",
+        "titulo": "Introducción a la Ingeniería de Datos"
+      },
+      {
+        "id": "b1",
+        "titulo": "Repaso — Funciones, for y while"
+      },
+      {
+        "id": "b11",
+        "titulo": "1. Cargar el DataFrame"
+      },
+      {
+        "id": "b13",
+        "titulo": "2. Exploración y diagnóstico del DataFrame"
+      },
+      {
+        "id": "b23",
+        "titulo": "3. Limpieza de datos"
+      },
+      {
+        "id": "b33",
+        "titulo": "4. Crear columnas nuevas"
+      },
+      {
+        "id": "b42",
+        "titulo": "6. ETL con todo lo aprendido"
+      },
+      {
+        "id": "b46",
+        "titulo": "Resumen"
+      }
+    ]
+  },
+  {
+    "slug": "sesion-3",
+    "numero": 3,
+    "titulo": "SQL y Python",
+    "bloques": [
+      {
+        "tipo": "teoria",
+        "contenido": "# Introduccion a la Ingenieria de Datos\n## Sesion 3 — SQL y Python\n\n| Sesion | Tema |\n|--------|------|\n| 1 | Python basico, NumPy, Pandas, primer ETL |\n| 2 | Pandas avanzado, limpieza, groupby, merge |\n| **3 (hoy)** | **SQL, bases de datos, Python + SQLite** |\n| 4 | Pipelines, orquestacion, proyecto final |\n\n**Contenido de hoy**\n\n1. Que es una base de datos y que es SQL\n2. Como conectar Python a una base de datos\n3. Crear tablas (DDL)\n4. Insertar, modificar y eliminar datos (DML)\n5. Consultar datos con SELECT\n6. Filtrar con WHERE\n7. Ordenar y limitar resultados\n8. Calculos y agrupaciones\n9. Unir tablas con JOIN\n10. Pipeline completo: CSV a base de datos\n\nReferencia de consulta durante la sesion: https://www.w3schools.com/sql/\n\nPara ejecutar una celda: Shift + Enter"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 1. Que es una base de datos y que es SQL\n\n### Base de datos\n\nUna base de datos es un sistema que almacena informacion de forma organizada en **tablas**.\nCada tabla tiene filas y columnas, igual que en Excel.\n\nLa diferencia con Excel:\n\n| Excel | Base de datos |\n|-------|---------------|\n| Se opera con el mouse | Se opera con instrucciones escritas en SQL |\n| Escala a miles de filas | Escala a millones de filas |\n| Un archivo a la vez | Multiples tablas relacionadas entre si |\n| Generalmente un usuario a la vez | Multiples usuarios consultando en paralelo |\n\n### SQL\n\nSQL significa *Structured Query Language*, lenguaje estructurado de consulta.\nEs el lenguaje que usamos para interactuar con una base de datos relacional.\n\nCon SQL puedes:\n- Crear tablas y definir su estructura\n- Insertar datos en esas tablas\n- Leer, filtrar y transformar datos\n- Modificar o eliminar datos\n\n### Que motor usamos hoy\n\nExisten varios motores de base de datos. Todos entienden SQL con pequeñas diferencias de sintaxis.\n\n| Motor | Donde se usa |\n|-------|--------------|\n| **SQLite** | Archivos locales, prototipado. Lo usamos hoy porque viene incluido en Python |\n| PostgreSQL | Proyectos de datos y aplicaciones |\n| MySQL | Sitios web y aplicaciones |\n| BigQuery / Redshift | Almacenes de datos en la nube |\n\nLo que aprendas hoy aplica en cualquiera de ellos."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 2. Las tres categorias de comandos SQL\n\nAntes de escribir codigo, conviene saber que tipo de instrucciones existen.\nLos comandos SQL se dividen en tres grupos:\n\n---\n\n### DDL — Data Definition Language (Lenguaje de definicion de datos)\n\nSon los comandos que **definen la estructura** de la base de datos.\nSirven para crear tablas, modificarlas o eliminarlas.\nEs como decidir cuantas columnas tendra tu tabla y de que tipo sera cada una, antes de escribir cualquier dato.\n\nComandos DDL que veremos: `CREATE TABLE`\n\n---\n\n### DML — Data Manipulation Language (Lenguaje de manipulacion de datos)\n\nSon los comandos que **trabajan con los datos** dentro de las tablas.\nSirven para agregar filas, modificarlas o eliminarlas.\nEs el equivalente a escribir, corregir o borrar filas en Excel.\n\nComandos DML que veremos: `INSERT`, `UPDATE`, `DELETE`\n\n---\n\n### DQL — Data Query Language (Lenguaje de consulta de datos)\n\nEs el comando que usas para **leer y consultar** los datos.\nEste es el que mas vas a usar en tu trabajo como analista o ingeniero de datos.\n\nComando DQL que veremos: `SELECT`\n\n---\n\n| Categoria | Para que sirve | Comandos principales |\n|-----------|---------------|---------------------|\n| DDL | Crear y definir la estructura | `CREATE TABLE`, `DROP TABLE` |\n| DML | Agregar, modificar o eliminar datos | `INSERT`, `UPDATE`, `DELETE` |\n| DQL | Consultar y leer datos | `SELECT` |"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 3. Como conectar Python a una base de datos\n\nPara trabajar con bases de datos en Python usamos el modulo `sqlite3`, que viene incluido.\nNo hay que instalar nada.\n\nHay tres elementos que aparecen en todo script de base de datos:\n\n---\n\n### connection — el objeto de conexion\n\n```python\nconn = sqlite3.connect('tienda.db')\n```\n\n`conn` es el objeto que representa la conexion activa entre Python y la base de datos.\nA traves de este objeto se controla la sesion: se crean cursores, se confirman cambios y se cierra la conexion.\n\n- Si el archivo `tienda.db` no existe, SQLite lo crea automaticamente.\n- Si usas `':memory:'` la base de datos existe solo en la memoria RAM y se pierde al terminar el proceso.\n\n---\n\n### cursor — el objeto cursor\n\n```python\ncursor = conn.cursor()\n```\n\n`cursor` es el objeto que mantiene el contexto de una operacion sobre la base de datos.\nLas instrucciones SQL se envian a traves del cursor.\n\n- `cursor.execute(sql)` — envia y ejecuta una instruccion SQL.\n- `cursor.executemany(sql, lista)` — ejecuta la misma instruccion para cada elemento de una lista, en una sola llamada.\n- `cursor.rowcount` — devuelve cuantas filas afecto la ultima instruccion ejecutada.\n\n---\n\n### conn.commit() — confirmar la transaccion\n\n```python\nconn.commit()\n```\n\nSQLite trabaja con transacciones. Cuando ejecutas `INSERT`, `UPDATE` o `DELETE`,\nlos cambios quedan en un estado pendiente dentro de la transaccion actual.\n`commit()` confirma esa transaccion y escribe los cambios de forma permanente en la base de datos.\nSi no llamas a `commit()` antes de cerrar la conexion, los cambios se descartan.\n\n`SELECT` no necesita `commit()` porque es una operacion de solo lectura, no modifica datos.\n\n---\n\nFlujo de trabajo tipico:\n\n```\n1. sqlite3.connect() -> crea el objeto de conexion\n2. conn.cursor() -> crea el objeto cursor\n3. cursor.execute() -> envia la instruccion SQL\n4. conn.commit() -> confirma la transaccion\n5. conn.close() -> cierra la conexion\n```"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Conectamos"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "import sqlite3\nimport pandas as pd\n\nprint('Librerias importadas')",
+        "lenguaje": "python",
+        "salida": "Librerias importadas"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Crear la conexion en memoria\nconn = sqlite3.connect(':memory:')\n\nprint('Conexion lista')\nprint('Version de SQLite:', sqlite3.sqlite_version)",
+        "lenguaje": "python",
+        "salida": "Conexion lista\nVersion de SQLite: 3.37.2"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Crear el cursor\ncursor = conn.cursor()\n\nprint('Cursor listo. Ya podemos enviar comandos SQL.')",
+        "lenguaje": "python",
+        "salida": "Cursor listo. Ya podemos enviar comandos SQL."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 4. DDL — Crear tablas con CREATE TABLE\n\nAntes de guardar cualquier dato hay que definir la estructura de la tabla:\ncuantas columnas tendra y de que tipo sera cada una.\n\nLa sintaxis es:\n\n```sql\nCREATE TABLE nombre_tabla (\n columna1 TIPO restricciones,\n columna2 TIPO restricciones\n)\n```\n\n### Tipos de datos\n\nLe decimos a la base de datos que tipo de informacion guardara cada columna.\n\n| Tipo | Que guarda | Ejemplo |\n|------|-----------|--------|\n| `INTEGER` | Numeros enteros | 1, 42, 1000 |\n| `REAL` | Numeros con decimales | 3.14, 1500.50 |\n| `TEXT` | Texto | 'Lima', 'Ana Garcia' |\n\n### Restricciones\n\nSon reglas que aplicamos a cada columna para garantizar que los datos sean correctos.\n\n| Restriccion | Que significa |\n|-------------|---------------|\n| `PRIMARY KEY` | Es el identificador unico de cada fila. No puede repetirse. |\n| `AUTOINCREMENT` | El valor se asigna solo: 1, 2, 3... No tenemos que indicarlo. |\n| `NOT NULL` | El campo no puede estar vacio. Es obligatorio. |\n| `DEFAULT valor` | Si no indicamos un valor, se usa este por defecto. |\n| `FOREIGN KEY` | Indica que esta columna apunta al id de otra tabla. |\n\nReferencia: https://www.w3schools.com/sql/sql_create_table.asp"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Creamos la tabla vendedores\n\nCada vendedor tendra: un id, un nombre, una region y una meta de ventas."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "cursor.execute('''\n    CREATE TABLE IF NOT EXISTS vendedores (\n        id      INTEGER  PRIMARY KEY AUTOINCREMENT,\n        nombre  TEXT     NOT NULL,\n        region  TEXT     NOT NULL,\n        meta    REAL     DEFAULT 0\n    )\n''')\n\nprint('Tabla vendedores creada')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Que hace cada parte\n\n- `CREATE TABLE IF NOT EXISTS` — crea la tabla solo si no existe. Si ya existe, no da error.\n- `id INTEGER PRIMARY KEY AUTOINCREMENT` — columna de identificador unico. Se asigna automaticamente: el primer vendedor sera 1, el segundo 2, y asi.\n- `nombre TEXT NOT NULL` — texto obligatorio. No se puede guardar un vendedor sin nombre.\n- `region TEXT NOT NULL` — texto obligatorio.\n- `meta REAL DEFAULT 0` — numero con decimales. Si no indicamos meta, se guarda 0."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Guardamos los cambios\nconn.commit()\n\nprint('Cambios guardados')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Creamos la tabla ventas\n\nCada venta tendra: un id, el id del vendedor que la hizo, el producto, la categoria, la cantidad, el precio y la fecha."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "cursor.execute('''\n    CREATE TABLE IF NOT EXISTS ventas (\n        id          INTEGER  PRIMARY KEY AUTOINCREMENT,\n        vendedor_id INTEGER  NOT NULL,\n        producto    TEXT     NOT NULL,\n        categoria   TEXT     NOT NULL,\n        cantidad    INTEGER  NOT NULL,\n        precio      REAL     NOT NULL,\n        fecha       TEXT     NOT NULL,\n        FOREIGN KEY (vendedor_id) REFERENCES vendedores(id)\n    )\n''')\n\nprint('Tabla ventas creada')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Que es la FOREIGN KEY\n\nLa columna `vendedor_id` en la tabla ventas apunta al `id` de la tabla vendedores.\nA esto se le llama **llave foranea** o FOREIGN KEY.\n\nSirve para conectar las dos tablas. Gracias a esto podemos saber, por ejemplo,\nque la venta numero 5 la hizo el vendedor numero 3, y luego ir a la tabla vendedores\npara ver su nombre, region y meta.\n\nTambien garantiza integridad: no puedes registrar una venta de un vendedor que no existe."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "conn.commit()\n\nprint('Tabla ventas guardada')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 5. DML — Insertar datos con INSERT INTO\n\nCon `INSERT INTO` agregamos filas a una tabla.\n\nLa sintaxis es:\n\n```sql\nINSERT INTO nombre_tabla (columna1, columna2, columna3)\nVALUES (valor1, valor2, valor3)\n```\n\n- Primero escribimos el nombre de las columnas.\n- Luego escribimos los valores en el mismo orden.\n\nEn Python usamos `?` como marcador de posicion en lugar de escribir los valores directamente.\nEsto evita errores y es la forma segura y recomendada.\n\nReferencia: https://www.w3schools.com/sql/sql_insert.asp"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Insertar un registro"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Insertar a Ana Garcia\n# Los valores van en el mismo orden que las columnas\ncursor.execute('''\n    INSERT INTO vendedores (nombre, region, meta)\n    VALUES (?, ?, ?)\n''', ('Ana Garcia', 'Norte', 15000))\n\nprint('Ana Garcia insertada')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "conn.commit()\n\nprint('Guardado')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Insertar varios registros a la vez con executemany\n\n`executemany()` ejecuta el mismo INSERT para cada fila de una lista.\nEs mucho mas eficiente que llamar `execute()` una vez por cada fila."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Preparamos la lista de vendedores\n# Cada tupla es un vendedor: (nombre, region, meta)\nvendedores_data = [\n    ('Luis Perez',    'Sur',   12000),\n    ('Rosa Mendoza',  'Norte', 18000),\n    ('Carlos Torres', 'Este',  10000),\n    ('Maria Lopez',   'Oeste', 14000),\n]\n\nprint('Vendedores preparados:', len(vendedores_data))",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "cursor.executemany(\n    'INSERT INTO vendedores (nombre, region, meta) VALUES (?, ?, ?)',\n    vendedores_data\n)\n\nconn.commit()\nprint('Todos los vendedores insertados')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Insertar las ventas"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Cada tupla es una venta:\n# (vendedor_id, producto, categoria, cantidad, precio, fecha)\nventas_data = [\n    (1, 'Laptop',    'Electronica', 2, 2500.0, '2024-01-10'),\n    (1, 'Mouse',     'Accesorios',  5,   45.0, '2024-01-12'),\n    (2, 'Teclado',   'Accesorios',  3,   80.0, '2024-01-15'),\n    (2, 'Monitor',   'Electronica', 1, 1200.0, '2024-01-18'),\n    (3, 'Laptop',    'Electronica', 4, 2500.0, '2024-01-20'),\n    (3, 'Audifonos', 'Accesorios',  6,  150.0, '2024-02-05'),\n    (4, 'Tablet',    'Electronica', 2,  800.0, '2024-02-10'),\n    (5, 'Laptop',    'Electronica', 3, 2500.0, '2024-02-15'),\n    (5, 'Mouse',     'Accesorios', 10,   45.0, '2024-02-20'),\n    (1, 'Impresora', 'Oficina',     1,  350.0, '2024-03-01'),\n    (3, 'Silla',     'Oficina',     2,  600.0, '2024-03-05'),\n    (4, 'Monitor',   'Electronica', 2, 1200.0, '2024-03-08'),\n]\n\nprint('Ventas preparadas:', len(ventas_data))",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "cursor.executemany(\n    'INSERT INTO ventas (vendedor_id, producto, categoria, cantidad, precio, fecha) VALUES (?,?,?,?,?,?)',\n    ventas_data\n)\n\nconn.commit()\nprint('Ventas insertadas')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## UPDATE — Modificar datos existentes\n\nCon `UPDATE` cambiamos el valor de una o mas columnas en filas que ya existen.\n\nLa sintaxis es:\n\n```sql\nUPDATE nombre_tabla\nSET columna = nuevo_valor\nWHERE condicion\n```\n\n- `SET` indica que columna queremos cambiar y cual es el nuevo valor.\n- `WHERE` indica en que filas aplicar el cambio.\n\n**Regla importante:** siempre escribe el `WHERE`.\nSi olvidas el `WHERE`, el UPDATE se aplica a TODAS las filas de la tabla.\n\nReferencia: https://www.w3schools.com/sql/sql_update.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Cambiar la meta de Rosa Mendoza a 20000\ncursor.execute('''\n    UPDATE vendedores\n    SET meta = 20000\n    WHERE nombre = 'Rosa Mendoza'\n''')\n\n# cursor.rowcount dice cuantas filas fueron afectadas\nprint('Filas modificadas:', cursor.rowcount)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "conn.commit()\n\nprint('Cambio guardado')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## DELETE — Eliminar filas\n\nCon `DELETE` eliminamos filas de una tabla.\n\nLa sintaxis es:\n\n```sql\nDELETE FROM nombre_tabla\nWHERE condicion\n```\n\nLa misma regla que en UPDATE: **siempre usa WHERE**.\nSin WHERE eliminas todas las filas de la tabla.\n\nReferencia: https://www.w3schools.com/sql/sql_delete.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Ejemplo de DELETE\n# Eliminaria la venta con id igual a 1\n# Descomenta la linea si quieres probar\n\n# cursor.execute('DELETE FROM ventas WHERE id = 1')\n# conn.commit()\n\nprint('DELETE funciona igual que UPDATE: siempre con WHERE')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 6. DQL — Consultar datos con SELECT\n\nSELECT es el comando para leer datos de una tabla. Es el mas importante y el que mas vas a usar.\n\nLa forma mas basica:\n\n```sql\nSELECT columnas\nFROM nombre_tabla\n```\n\n- `SELECT` indica que columnas quieres ver.\n- `FROM` indica de que tabla.\n- Si escribes `*` en lugar de columnas, trae todas.\n\nReferencia: https://www.w3schools.com/sql/sql_select.asp\n\nVamos a usar `pd.read_sql_query()` para que el resultado aparezca como un DataFrame de Pandas.\nEsto nos permite aprovechar todo lo que ya aprendimos en las sesiones anteriores."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Esta funcion ejecuta una consulta SQL y devuelve el resultado como DataFrame\ndef query(sql):\n    return pd.read_sql_query(sql, conn)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### SELECT * — traer todas las columnas"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# El asterisco * significa 'todas las columnas'\nquery('SELECT * FROM vendedores')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Seleccionar solo algunas columnas\n\nEn lugar del asterisco escribimos los nombres de las columnas que queremos ver, separados por comas."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "query('SELECT nombre, region FROM vendedores')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "query('SELECT nombre, region, meta FROM vendedores')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 7. WHERE — Filtrar filas\n\nWHERE nos permite traer solo las filas que cumplan una condicion.\nEs el equivalente a un filtro en Excel.\n\n```sql\nSELECT columnas\nFROM tabla\nWHERE condicion\n```\n\nLos operadores de comparacion que puedes usar:\n\n| Operador | Significado | Ejemplo |\n|----------|------------|--------|\n| `=` | Igual a | `WHERE region = 'Norte'` |\n| `<>` o `!=` | Distinto de | `WHERE region <> 'Sur'` |\n| `>` | Mayor que | `WHERE meta > 10000` |\n| `<` | Menor que | `WHERE precio < 500` |\n| `>=` | Mayor o igual | `WHERE meta >= 15000` |\n| `<=` | Menor o igual | `WHERE precio <= 100` |\n\nReferencia: https://www.w3schools.com/sql/sql_where.asp"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Filtrar por un valor de texto"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solo los vendedores de la region Norte\n# Los textos siempre van entre comillas simples\nquery(\"SELECT * FROM vendedores WHERE region = 'Norte'\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Filtrar por un valor numerico"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Vendedores con meta mayor a 13000\n# Los numeros no llevan comillas\nquery('SELECT * FROM vendedores WHERE meta > 13000')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### AND y OR — combinar condiciones\n\nPuedes combinar varias condiciones:\n\n- `AND` — se deben cumplir TODAS las condiciones.\n- `OR` — se debe cumplir AL MENOS UNA condicion.\n\nReferencia: https://www.w3schools.com/sql/sql_and_or.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Vendedores de la region Norte Y con meta mayor o igual a 15000\n# Con AND ambas condiciones deben cumplirse\nquery(\"SELECT * FROM vendedores WHERE region = 'Norte' AND meta >= 15000\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Vendedores de la region Norte O de la region Sur\n# Con OR basta con que se cumpla una\nquery(\"SELECT * FROM vendedores WHERE region = 'Norte' OR region = 'Sur'\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio 1\nMuestra todas las ventas de la categoria Electronica."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu codigo aqui",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solucion\nquery(\"SELECT * FROM ventas WHERE categoria = 'Electronica'\")",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 8. ORDER BY y LIMIT — Ordenar y limitar resultados\n\n### ORDER BY — ordenar\n\nCon `ORDER BY` ordenamos los resultados por una columna.\n\n```sql\nSELECT columnas\nFROM tabla\nORDER BY columna ASC\n```\n\n- `ASC` significa ascendente: de menor a mayor (es el orden por defecto).\n- `DESC` significa descendente: de mayor a menor.\n\nReferencia: https://www.w3schools.com/sql/sql_orderby.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Ordenar vendedores por meta de mayor a menor\nquery('SELECT nombre, region, meta FROM vendedores ORDER BY meta DESC')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Ordenar ventas por precio de menor a mayor (orden por defecto)\nquery('SELECT producto, precio FROM ventas ORDER BY precio ASC')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### LIMIT — limitar la cantidad de resultados\n\nCon `LIMIT` le decimos cuantas filas queremos ver como maximo.\nEs muy util cuando la tabla tiene miles de filas y solo quieres ver las primeras.\n\nReferencia: https://www.w3schools.com/sql/sql_top.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Los 3 vendedores con mayor meta\nquery('SELECT nombre, meta FROM vendedores ORDER BY meta DESC LIMIT 3')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio 2\nMuestra las 5 ventas con el precio mas alto. Solo muestra producto, precio y fecha."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu codigo aqui",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solucion\nquery('SELECT producto, precio, fecha FROM ventas ORDER BY precio DESC LIMIT 5')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 9. Funciones de agregacion — calcular sobre muchas filas\n\nLas funciones de agregacion calculan un resultado a partir de muchas filas.\nSon el equivalente SQL de las funciones de resumen que usamos en Pandas.\n\n| Funcion SQL | Equivalente en Pandas | Que calcula |\n|-------------|----------------------|-------------|\n| `COUNT(*)` | `len(df)` | Cuantas filas hay |\n| `SUM(columna)` | `df['col'].sum()` | La suma de los valores |\n| `AVG(columna)` | `df['col'].mean()` | El promedio |\n| `MAX(columna)` | `df['col'].max()` | El valor mas alto |\n| `MIN(columna)` | `df['col'].min()` | El valor mas bajo |\n\nReferencia: https://www.w3schools.com/sql/sql_aggregate_functions.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Resumen general de la tabla ventas\nquery('''\n    SELECT\n        COUNT(*)               AS total_registros,\n        SUM(cantidad * precio) AS ventas_totales,\n        AVG(precio)            AS precio_promedio,\n        MAX(precio)            AS precio_maximo,\n        MIN(precio)            AS precio_minimo\n    FROM ventas\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### AS — ponerle nombre al resultado\n\n`AS` nos permite darle un nombre a una columna calculada.\nSin `AS`, la columna apareceria con el nombre de la formula, lo cual es dificil de leer.\n\n```sql\nSELECT SUM(cantidad * precio) AS ventas_totales\n```"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### GROUP BY — calcular por grupo\n\nCon `GROUP BY` agrupamos las filas por una columna y calculamos metricas para cada grupo.\nEs lo mismo que el `groupby()` de Pandas.\n\n```sql\nSELECT columna_grupo, SUM(otra_columna)\nFROM tabla\nGROUP BY columna_grupo\n```\n\nReferencia: https://www.w3schools.com/sql/sql_groupby.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Total vendido por categoria\nquery('''\n    SELECT\n        categoria,\n        COUNT(*)               AS num_ventas,\n        SUM(cantidad * precio) AS total_soles\n    FROM ventas\n    GROUP BY categoria\n    ORDER BY total_soles DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### HAVING — filtrar los grupos\n\nCuando usamos GROUP BY, no podemos usar WHERE para filtrar los grupos resultantes.\nPara eso existe HAVING.\n\nLa diferencia:\n- `WHERE` filtra filas **antes** de agrupar.\n- `HAVING` filtra grupos **despues** de agrupar.\n\n```sql\nSELECT categoria, SUM(cantidad * precio) AS total\nFROM ventas\nGROUP BY categoria\nHAVING total > 5000\n```\n\nReferencia: https://www.w3schools.com/sql/sql_having.asp"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solo las categorias que vendieron mas de 5000 soles en total\nquery('''\n    SELECT\n        categoria,\n        SUM(cantidad * precio) AS total\n    FROM ventas\n    GROUP BY categoria\n    HAVING total > 5000\n    ORDER BY total DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio 3\nCuantas ventas hizo cada vendedor_id? Muestra vendedor_id y el total de ventas."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu codigo aqui",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solucion\nquery('''\n    SELECT\n        vendedor_id,\n        COUNT(*) AS num_ventas\n    FROM ventas\n    GROUP BY vendedor_id\n    ORDER BY num_ventas DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 10. JOIN — Unir dos tablas\n\nEn el ejercicio anterior vemos `vendedor_id` pero no el nombre del vendedor.\nPara ver el nombre tenemos que unir la tabla `ventas` con la tabla `vendedores`.\nEso se hace con `JOIN`.\n\nJOIN une dos tablas usando una columna que tienen en comun.\nEn nuestro caso: `ventas.vendedor_id` corresponde a `vendedores.id`.\n\nEs exactamente lo mismo que el `pd.merge()` que usamos en la Sesion 2.\n\n```sql\nSELECT columnas\nFROM tabla1\nJOIN tabla2 ON tabla1.columna_comun = tabla2.columna_comun\n```\n\nReferencia: https://www.w3schools.com/sql/sql_join.asp"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### INNER JOIN — solo filas que coinciden en ambas tablas\n\nEs el tipo de JOIN mas comun. Devuelve unicamente las filas que tienen coincidencia en las dos tablas.\nSi una fila de la tabla izquierda no tiene ninguna fila correspondiente en la tabla derecha, no aparece en el resultado.\n\nEn la consulta se pueden definir alias para las tablas con el fin de acortar la escritura:\n\n```sql\nFROM ventas vt\n```\n\nAqui `vt` es un alias para la tabla `ventas`. Luego puedes escribir `vt.producto` en lugar de `ventas.producto`.\nLos alias no cambian la tabla, solo son nombres cortos dentro de esa consulta."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Unir ventas con vendedores para ver el nombre en cada venta\nquery('''\n    SELECT\n        v.nombre     AS vendedor,\n        v.region,\n        vt.producto,\n        vt.categoria,\n        vt.cantidad * vt.precio AS subtotal,\n        vt.fecha\n    FROM ventas vt\n    INNER JOIN vendedores v ON vt.vendedor_id = v.id\n    ORDER BY vt.fecha\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### JOIN combinado con GROUP BY\n\nPodemos combinar JOIN con GROUP BY para hacer reportes completos en una sola consulta."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Reporte: cuanto vendio cada vendedor vs su meta\nquery('''\n    SELECT\n        v.nombre,\n        v.region,\n        v.meta,\n        SUM(vt.cantidad * vt.precio) AS total_vendido,\n        ROUND(\n            SUM(vt.cantidad * vt.precio) * 100.0 / v.meta, 1\n        ) AS cumplimiento_pct\n    FROM ventas vt\n    INNER JOIN vendedores v ON vt.vendedor_id = v.id\n    GROUP BY v.id, v.nombre, v.region, v.meta\n    ORDER BY cumplimiento_pct DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### LEFT JOIN — incluir todos aunque no tengan coincidencia\n\nCon INNER JOIN solo aparecen los vendedores que tienen al menos una venta registrada.\nSi un vendedor no tiene ninguna venta, no aparece en el resultado.\n\nCon LEFT JOIN aparecen todos los vendedores. Los que no tienen ventas muestran NULL en las columnas de ventas.\n\nCuando decimos LEFT nos referimos a la tabla de la izquierda, es decir, la que viene despues de FROM.\nEsa tabla aparece siempre completa aunque no tenga coincidencias."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "query('''\n    SELECT\n        v.nombre,\n        COUNT(vt.id) AS num_ventas\n    FROM vendedores v\n    LEFT JOIN ventas vt ON vt.vendedor_id = v.id\n    GROUP BY v.id, v.nombre\n    ORDER BY num_ventas DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Ejercicio 4\nCual es el producto mas vendido por cantidad total? Muestra producto, categoria y unidades vendidas."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Tu codigo aqui",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Solucion\nquery('''\n    SELECT\n        producto,\n        categoria,\n        SUM(cantidad) AS unidades_vendidas\n    FROM ventas\n    GROUP BY producto, categoria\n    ORDER BY unidades_vendidas DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## 11. Pipeline completo: CSV a base de datos\n\nAhora juntamos todo lo que aprendimos: Pandas para limpiar y SQL para guardar y consultar.\n\nEste es el patron basico de la ingenieria de datos:\n\n```\n1. Leer datos de una fuente (CSV, Excel, API)\n2. Limpiar con Pandas\n3. Guardar en la base de datos\n4. Consultar con SQL\n```"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Paso 1 — Leer el CSV\n\nLlega un archivo con ventas nuevas. Tiene una fila con datos invalidos a proposito\npara practicar la limpieza."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "import io\n\ncsv_raw = '''vendedor,region,producto,categoria,cantidad,precio,fecha\nAna Garcia,Norte,Laptop,Electronica,1,2500,2024-04-01\nLuis Perez,Sur,Mouse,Accesorios,3,45,2024-04-02\nRosa Mendoza,Norte,Monitor,Electronica,2,1200,2024-04-03\nCarlos Torres,Este,Teclado,Accesorios,4,80,2024-04-05\nINVALIDO,,Laptop,Electronica,-1,2500,2024-04-06\nMaria Lopez,Oeste,Silla,Oficina,1,600,2024-04-07\n'''\n\ndf_nuevo = pd.read_csv(io.StringIO(csv_raw))\nprint('Datos leidos:')\nprint(df_nuevo)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Paso 2 — Limpiar con Pandas"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Eliminar filas sin vendedor o sin region (la fila INVALIDO)\ndf_limpio = df_nuevo.dropna(subset=['vendedor', 'region'])\n\nprint('Antes:', len(df_nuevo), 'filas')\nprint('Despues de eliminar nulos:', len(df_limpio), 'filas')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Eliminar filas con cantidad o precio negativo\ndf_limpio = df_limpio.query('cantidad > 0 and precio > 0')\n\nprint('Despues de filtrar invalidos:', len(df_limpio), 'filas')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Normalizar nombres\ndf_limpio['vendedor'] = df_limpio['vendedor'].str.title()\n\nprint('Datos limpios:')\nprint(df_limpio)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Paso 3 — Resolver los IDs de vendedores\n\nEl CSV tiene nombres de vendedores, pero la tabla ventas necesita el `vendedor_id`.\nUsamos merge para cruzar los nombres con los IDs que ya tenemos en la base de datos."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Traemos los vendedores de la base de datos\nvendedores_df = query('SELECT id, nombre FROM vendedores')\nprint(vendedores_df)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Cruzamos por nombre para obtener el id\ndf_con_id = df_limpio.merge(\n    vendedores_df,\n    left_on='vendedor',\n    right_on='nombre',\n    how='inner'\n)\n\nprint(df_con_id[['vendedor', 'id', 'producto', 'cantidad', 'precio']])",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Quedarnos solo con las columnas que necesita la tabla ventas\ndf_para_insertar = df_con_id[['id', 'producto', 'categoria', 'cantidad', 'precio', 'fecha']].copy()\ndf_para_insertar.columns = ['vendedor_id', 'producto', 'categoria', 'cantidad', 'precio', 'fecha']\n\nprint('Listo para insertar:')\nprint(df_para_insertar)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Paso 4 — Cargar en la base de datos\n\n`to_sql()` carga el DataFrame completo a la tabla de una sola vez.\n\n- `if_exists='append'` agrega las filas sin borrar lo que ya existe.\n- `if_exists='replace'` borraria la tabla y la crearia de nuevo.\n- `index=False` evita que Pandas agregue su propio indice como columna extra."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "df_para_insertar.to_sql(\n    name='ventas',\n    con=conn,\n    if_exists='append',\n    index=False\n)\n\nprint(len(df_para_insertar), 'registros cargados en la base de datos')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "### Paso 5 — Verificar con SQL"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Cuantas ventas hay ahora en total\nquery('SELECT COUNT(*) AS total_ventas FROM ventas')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "# Reporte final\nquery('''\n    SELECT\n        v.nombre,\n        v.region,\n        COUNT(vt.id)                 AS num_ventas,\n        SUM(vt.cantidad * vt.precio) AS total_vendido\n    FROM ventas vt\n    JOIN vendedores v ON vt.vendedor_id = v.id\n    GROUP BY v.id\n    ORDER BY total_vendido DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "---\n## Resumen de la Sesion 3\n\n### Objetos de conexion en Python\n\n| Elemento | Que es y que hace |\n|----------|-------------------|\n| `sqlite3.connect()` | Crea y devuelve el objeto de conexion a la base de datos |\n| `conn.cursor()` | Crea y devuelve un objeto cursor asociado a la conexion |\n| `cursor.execute(sql)` | Envia y ejecuta una instruccion SQL |\n| `cursor.executemany(sql, lista)` | Ejecuta la misma instruccion para cada elemento de la lista |\n| `cursor.rowcount` | Numero de filas afectadas por la ultima instruccion |\n| `conn.commit()` | Confirma la transaccion actual y escribe los cambios en la base de datos |\n| `conn.close()` | Cierra la conexion |\n\n### Comandos SQL\n\n| Categoria | Comando | Que hace |\n|-----------|---------|----------|\n| DDL | `CREATE TABLE` | Define la estructura de una tabla |\n| DML | `INSERT INTO ... VALUES` | Inserta una fila nueva |\n| DML | `UPDATE ... SET ... WHERE` | Modifica filas que cumplan la condicion |\n| DML | `DELETE FROM ... WHERE` | Elimina filas que cumplan la condicion |\n| DQL | `SELECT columnas FROM tabla` | Lee y devuelve datos |\n| DQL | `WHERE condicion` | Filtra filas segun una condicion |\n| DQL | `ORDER BY columna ASC/DESC` | Ordena el resultado |\n| DQL | `LIMIT n` | Limita el numero de filas devueltas |\n| DQL | `COUNT`, `SUM`, `AVG`, `MAX`, `MIN` | Funciones de agregacion |\n| DQL | `GROUP BY columna` | Agrupa filas por el valor de una columna |\n| DQL | `HAVING condicion` | Filtra grupos resultantes del GROUP BY |\n| DQL | `INNER JOIN ... ON` | Une tablas devolviendo solo filas con coincidencia en ambas |\n| DQL | `LEFT JOIN ... ON` | Une tablas devolviendo todas las filas de la tabla izquierda |\n\n### Equivalencias Pandas y SQL\n\n| Pandas | SQL |\n|--------|-----|\n| `df.head(5)` | `SELECT * FROM tabla LIMIT 5` |\n| `df[df['col'] > 10]` | `WHERE col > 10` |\n| `df.sort_values('col', ascending=False)` | `ORDER BY col DESC` |\n| `df.groupby('col').sum()` | `GROUP BY col` con `SUM()` |\n| `pd.merge(df1, df2, how='inner')` | `INNER JOIN` |\n| `pd.merge(df1, df2, how='left')` | `LEFT JOIN` |\n| `df.to_sql('tabla', conn)` | Insercion masiva equivalente a multiples INSERT |\n| `pd.read_sql_query(sql, conn)` | Ejecuta SELECT y devuelve el resultado como DataFrame |\n\nSesion 4: Pipelines, automatizacion y proyecto final.\n\nReferencias:\n- W3Schools SQL: https://www.w3schools.com/sql/\n- SQLite en Python: https://docs.python.org/3/library/sqlite3.html"
+      }
+    ],
+    "secciones": [
+      {
+        "id": "b0",
+        "titulo": "Introduccion a la Ingenieria de Datos"
+      },
+      {
+        "id": "b1",
+        "titulo": "1. Que es una base de datos y que es SQL"
+      },
+      {
+        "id": "b2",
+        "titulo": "2. Las tres categorias de comandos SQL"
+      },
+      {
+        "id": "b3",
+        "titulo": "3. Como conectar Python a una base de datos"
+      },
+      {
+        "id": "b8",
+        "titulo": "4. DDL — Crear tablas con CREATE TABLE"
+      },
+      {
+        "id": "b17",
+        "titulo": "5. DML — Insertar datos con INSERT INTO"
+      },
+      {
+        "id": "b27",
+        "titulo": "UPDATE — Modificar datos existentes"
+      },
+      {
+        "id": "b30",
+        "titulo": "DELETE — Eliminar filas"
+      },
+      {
+        "id": "b32",
+        "titulo": "6. DQL — Consultar datos con SELECT"
+      },
+      {
+        "id": "b39",
+        "titulo": "7. WHERE — Filtrar filas"
+      },
+      {
+        "id": "b50",
+        "titulo": "8. ORDER BY y LIMIT — Ordenar y limitar resultados"
+      },
+      {
+        "id": "b58",
+        "titulo": "9. Funciones de agregacion — calcular sobre muchas filas"
+      },
+      {
+        "id": "b68",
+        "titulo": "10. JOIN — Unir dos tablas"
+      },
+      {
+        "id": "b78",
+        "titulo": "11. Pipeline completo: CSV a base de datos"
+      },
+      {
+        "id": "b94",
+        "titulo": "Resumen de la Sesion 3"
+      }
+    ]
+  },
+  {
+    "slug": "sesion-4",
+    "numero": 4,
+    "titulo": "Proyecto Integrador ETL, SQL y KPIs",
+    "bloques": [
+      {
+        "tipo": "teoria",
+        "contenido": "# Introducción a la Ingeniería de Datos\n# Sesión 4 — Proyecto Integrador ETL, SQL y KPIs\n\n## Objetivos de aprendizaje\n\nAl finalizar esta sesión el estudiante será capaz de:\n\n- Comprender el ciclo ETL (Extract, Transform, Load).\n- Identificar problemas comunes de calidad de datos.\n- Construir un pipeline ETL básico utilizando Pandas.\n- Cargar información en SQLite.\n- Utilizar SQL para generar métricas de negocio.\n- Interpretar KPIs desde una perspectiva empresarial.\n- Comprender cómo este flujo escala hacia arquitecturas empresariales."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# ¿Qué es la Ingeniería de Datos?\n\nLa Ingeniería de Datos es la disciplina encargada de diseñar, construir y mantener sistemas que permiten mover, transformar, almacenar y disponibilizar datos para su consumo por analistas, científicos de datos, aplicaciones e iniciativas de inteligencia artificial.\n\nUn ingeniero de datos no solamente mueve información entre sistemas. También garantiza que los datos sean:\n\n- Correctos\n- Consistentes\n- Disponibles\n- Escalables\n- Auditables\n\nEn la práctica, gran parte del trabajo gira alrededor de la construcción de pipelines ETL y ELT."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# ETL: Extract, Transform, Load\n\nETL es uno de los conceptos fundamentales de la Ingeniería de Datos.\n\nSu propósito es convertir datos dispersos y heterogéneos en información útil para el análisis y la toma de decisiones.\n\n## Extract (Extracción)\n\nConsiste en obtener información desde sistemas fuente.\n\nEjemplos:\n\n- Archivos CSV\n- Excel\n- APIs REST\n- PostgreSQL\n- Sistemas ERP\n- Sistemas CRM\n- Sensores IoT\n\n### Desafíos\n\n- Diferentes formatos\n- Gran volumen de información\n- Datos incompletos\n- Sistemas distribuidos\n\n---\n\n## Transform (Transformación)\n\nEs la etapa donde se genera la mayor parte del valor.\n\nLas transformaciones permiten convertir datos crudos en información confiable.\n\nActividades típicas:\n\n### Limpieza\n\n- Eliminación de nulos\n- Eliminación de duplicados\n- Corrección de errores\n\n### Estandarización\n\n- Fechas\n- Monedas\n- Unidades de medida\n\n### Reglas de negocio\n\nEjemplos:\n\nprecio_final = precio * 1.18\n\nimporte = cantidad * precio\n\n### Enriquecimiento\n\nCombinar múltiples fuentes para obtener información más útil.\n\n---\n\n## Load (Carga)\n\nConsiste en almacenar los datos procesados en un sistema destino.\n\nDestinos comunes:\n\n- PostgreSQL\n- MySQL\n- Snowflake\n- BigQuery\n- Redshift\n- Data Lake\n\n---\n\n## ETL vs ELT\n\n### ETL\n\nExtract → Transform → Load\n\nLa transformación ocurre antes de almacenar los datos.\n\n### ELT\n\nExtract → Load → Transform\n\nLa transformación ocurre dentro del sistema de almacenamiento.\n\nActualmente muchas plataformas cloud modernas favorecen ELT debido a su capacidad de cómputo distribuido."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# Pipeline que construiremos hoy\n\nCSV\n↓\nPandas\n↓\nLimpieza\n↓\nTransformación\n↓\nSQLite\n↓\nConsultas SQL\n↓\nKPIs\n↓\nReporte Ejecutivo\n\nEste pipeline representa una versión simplificada de los procesos utilizados en empresas reales."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# 1. Librerías"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nimport pandas as pd\nimport numpy as np\nimport sqlite3\nimport io",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# 2. Simulación de llegada de datos"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\ncsv_ventas = '''\nfecha,vendedor,region,producto,categoria,cantidad,precio\n2025-01-01,Ana Garcia,Norte,Laptop,Electronica,1,2500\n2025-01-01,Luis Perez,Sur,Mouse,Accesorios,5,45\n2025-01-02,Carlos Ruiz,Centro,Monitor,Electronica,2,850\n2025-01-03,Ana Garcia,Norte,Teclado,Accesorios,3,120\n2025-01-03,,Sur,Laptop,Electronica,1,2500\n2025-01-04,INVALIDO,Centro,Monitor,Electronica,-1,850\n'''\ndf = pd.read_csv(io.StringIO(csv_ventas))\ndf",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# Calidad de Datos\n\nLa calidad de datos es una de las responsabilidades principales de un Ingeniero de Datos.\n\nLos errores más comunes son:\n\n- Valores nulos\n- Registros duplicados\n- Valores inválidos\n- Formatos inconsistentes\n\nSi estos errores llegan a dashboards, modelos de Machine Learning o reportes ejecutivos, las decisiones tomadas pueden ser incorrectas."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# 3. Exploración inicial\n\nEDA"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "df.info()",
+        "lenguaje": "python",
+        "salida": "NameError: name 'df' is not defined"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "df.describe(include='all')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# 4. Limpieza de datos"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\ndf_limpio = df.dropna(subset=['vendedor'])\ndf_limpio = df_limpio.query('cantidad > 0')\ndf_limpio['vendedor'] = df_limpio['vendedor'].str.title()\ndf_limpio",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# 5. Transformaciones\n\nDurante la fase de transformación generaremos nuevos atributos derivados.\n\nEsto permite enriquecer los datos para futuros análisis.\n\nCrearemos:\n\n- importe\n- año\n- mes"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\ndf_limpio['importe'] = df_limpio['cantidad'] * df_limpio['precio']\ndf_limpio['anio'] = pd.to_datetime(df_limpio['fecha']).dt.year\ndf_limpio['mes'] = pd.to_datetime(df_limpio['fecha']).dt.month\ndf_limpio",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# 6. Carga a SQLite"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nconn = sqlite3.connect(':memory:')\n\ndf_limpio.to_sql(\n    'ventas',\n    conn,\n    if_exists='replace',\n    index=False\n)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# SQL para análisis de datos\n\nSQL es el lenguaje predominante para consultar y analizar información estructurada.\n\nLas operaciones más utilizadas son:\n\n- SELECT\n- WHERE\n- GROUP BY\n- ORDER BY\n- JOIN\n\nLa mayoría de dashboards empresariales se alimentan de consultas SQL similares a las utilizadas en esta sesión."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\ndef query(sql):\n    return pd.read_sql_query(sql, conn)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# KPI 1 — Ventas Totales"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "## ¿Qué mide este KPI?\n\nLas ventas totales representan la suma de todos los ingresos generados por la organización durante un periodo determinado.\n\n### Pregunta de negocio\n\n¿Cuánto dinero generó la empresa?\n\n### Aplicaciones\n\n- Seguimiento de ingresos\n- Planeamiento financiero\n- Comparación entre periodos\n- Evaluación de crecimiento\n\n### Métrica utilizada\n\nSUM(importe)"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nquery('''\nSELECT ROUND(SUM(importe),2) AS ventas_totales\nFROM ventas\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# KPI 2 — Ventas por Región"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "## ¿Qué mide este KPI?\n\nPermite identificar qué zonas geográficas generan más ingresos.\n\n### Pregunta de negocio\n\n¿Qué regiones venden más?\n\n### Aplicaciones\n\n- Expansión comercial\n- Asignación de presupuesto\n- Apertura de sucursales\n- Planeamiento estratégico\n\n### Interpretación\n\nLas regiones con mejor desempeño suelen recibir más inversión y recursos."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nquery('''\nSELECT region,\nROUND(SUM(importe),2) AS total\nFROM ventas\nGROUP BY region\nORDER BY total DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# KPI 3 — Top Vendedores"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "## ¿Qué mide este KPI?\n\nPermite identificar qué colaboradores generan la mayor contribución económica para la organización.\n\nNo siempre el vendedor con más operaciones es el que genera más ingresos.\n\nPor esta razón es común evaluar el desempeño utilizando facturación acumulada.\n\n### Pregunta de negocio\n\n¿Qué vendedores generan más ingresos?\n\n### Aplicaciones\n\n- Evaluación de desempeño\n- Bonificaciones\n- Programas de incentivos\n- Detección de mejores prácticas comerciales\n- Planes de capacitación\n\n### Métrica utilizada\n\nIngresos por vendedor = SUM(importe)\n\n### Interpretación\n\nSi uno o pocos vendedores concentran gran parte de la facturación, la organización podría analizar sus estrategias y replicarlas en otros equipos."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nquery('''\nSELECT vendedor,\nROUND(SUM(importe),2) AS total_vendido\nFROM ventas\nGROUP BY vendedor\nORDER BY total_vendido DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# KPI 4 — Top Productos"
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "## ¿Qué mide este KPI?\n\nPermite identificar los productos con mayor demanda dentro del catálogo.\n\n### Pregunta de negocio\n\n¿Qué productos se venden más?\n\n### Aplicaciones\n\n- Gestión de inventario\n- Planeamiento de compras\n- Pronóstico de demanda\n- Estrategias de marketing\n\n### Interpretación\n\nLos productos con alta demanda suelen requerir mayor capacidad de abastecimiento para evitar quiebres de stock."
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nquery('''\nSELECT producto,\nSUM(cantidad) AS unidades\nFROM ventas\nGROUP BY producto\nORDER BY unidades DESC\n''')",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# Reporte Ejecutivo"
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nreporte = query('''\nSELECT\nregion,\nCOUNT(*) AS operaciones,\nROUND(SUM(importe),2) AS ventas\nFROM ventas\nGROUP BY region\n''')\n\nreporte",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "codigo",
+        "contenido": "\nreporte.plot(\n    x='region',\n    y='ventas',\n    kind='bar'\n)",
+        "lenguaje": "python",
+        "salida": null
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# Referencias Oficiales\n\nPandas User Guide:\nhttps://pandas.pydata.org/docs/user_guide/\n\nSQLite Documentation:\nhttps://sqlite.org/docs.html\n\nEstas referencias constituyen la documentación oficial utilizada por profesionales de datos para consulta y aprendizaje continuo."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# De este Notebook a una Arquitectura Empresarial\n\nLo que construimos hoy es una versión simplificada de un pipeline de producción.\n\nArquitectura típica:\n\nERP / CRM / APIs\n↓\nAirflow\n↓\nSpark\n↓\nData Lake\n↓\nData Warehouse\n↓\nSQL\n↓\nPower BI / Tableau\n↓\nToma de decisiones\n\nLos principios son exactamente los mismos; únicamente cambia la escala y complejidad."
+      },
+      {
+        "tipo": "teoria",
+        "contenido": "# Resumen Final\n\nDurante el curso aprendimos:\n\n## Python\n\n- Variables\n- Funciones\n- Estructuras de control\n\n## Pandas\n\n- DataFrames\n- Limpieza\n- Transformación\n\n## SQL\n\n- SELECT\n- WHERE\n- GROUP BY\n- ORDER BY\n\n## Ingeniería de Datos\n\n- ETL\n- Calidad de datos\n- KPIs\n- Bases de datos\n- Reportes\n\nEste notebook integra todos los conceptos vistos durante el curso en un flujo completo de ingeniería de datos."
+      }
+    ],
+    "secciones": [
+      {
+        "id": "b0",
+        "titulo": "Introducción a la Ingeniería de Datos"
+      },
+      {
+        "id": "b1",
+        "titulo": "¿Qué es la Ingeniería de Datos?"
+      },
+      {
+        "id": "b2",
+        "titulo": "ETL: Extract, Transform, Load"
+      },
+      {
+        "id": "b3",
+        "titulo": "Pipeline que construiremos hoy"
+      },
+      {
+        "id": "b4",
+        "titulo": "1. Librerías"
+      },
+      {
+        "id": "b6",
+        "titulo": "2. Simulación de llegada de datos"
+      },
+      {
+        "id": "b8",
+        "titulo": "Calidad de Datos"
+      },
+      {
+        "id": "b9",
+        "titulo": "3. Exploración inicial"
+      },
+      {
+        "id": "b12",
+        "titulo": "4. Limpieza de datos"
+      },
+      {
+        "id": "b14",
+        "titulo": "5. Transformaciones"
+      },
+      {
+        "id": "b16",
+        "titulo": "6. Carga a SQLite"
+      },
+      {
+        "id": "b18",
+        "titulo": "SQL para análisis de datos"
+      },
+      {
+        "id": "b20",
+        "titulo": "KPI 1 — Ventas Totales"
+      },
+      {
+        "id": "b21",
+        "titulo": "¿Qué mide este KPI?"
+      },
+      {
+        "id": "b23",
+        "titulo": "KPI 2 — Ventas por Región"
+      },
+      {
+        "id": "b26",
+        "titulo": "KPI 3 — Top Vendedores"
+      },
+      {
+        "id": "b29",
+        "titulo": "KPI 4 — Top Productos"
+      },
+      {
+        "id": "b32",
+        "titulo": "Reporte Ejecutivo"
+      },
+      {
+        "id": "b35",
+        "titulo": "Referencias Oficiales"
+      },
+      {
+        "id": "b36",
+        "titulo": "De este Notebook a una Arquitectura Empresarial"
+      },
+      {
+        "id": "b37",
+        "titulo": "Resumen Final"
+      }
+    ]
+  }
+]
