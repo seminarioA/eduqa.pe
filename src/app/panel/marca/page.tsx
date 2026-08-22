@@ -63,7 +63,9 @@ export default async function Page() {
         para que sigan cambiando de tono con el tema claro y oscuro.
       </p>
 
-      <div className="mt-8 space-y-4">
+      {/* Dos por fila: cuatro tarjetas apiladas obligaban a mucho scroll
+          para algo que se quiere ver de un vistazo. */}
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {RANURAS_MARCA.map((clave) => (
           <div
             key={clave}
