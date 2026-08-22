@@ -81,6 +81,7 @@ export function SelectorTema({
   // El tema real solo se conoce en el cliente: hasta montar, el servidor no
   // puede saber qué prefiere el sistema. Sin esto habría un desajuste de
   // hidratación entre lo que renderiza el servidor y lo que ve el navegador.
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- marca de montaje para evitar desajuste de hidratación
   useEffect(() => setMontado(true), []);
 
   const marco =
@@ -138,6 +139,7 @@ export function SelectorTemaCompacto() {
   const [montado, setMontado] = useState(false);
   const [abierto, setAbierto] = useState(false);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- marca de montaje para evitar desajuste de hidratación
   useEffect(() => setMontado(true), []);
 
   useEffect(() => {

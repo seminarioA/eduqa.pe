@@ -56,6 +56,7 @@ function Tarjeta({ esAdmin, onCerrar }: { esAdmin: boolean; onCerrar: () => void
 
   useEffect(() => {
     textoRef.current?.focus();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- contexto del navegador solo existe en el cliente
     setCtx({
       ruta: window.location.pathname + window.location.hash,
       navegador: `${navigator.userAgent} · ${window.innerWidth}x${window.innerHeight}`,

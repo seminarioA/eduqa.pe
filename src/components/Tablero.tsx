@@ -28,6 +28,7 @@ export function Tablero({ avisos }: { avisos: Aviso[] }) {
     // localStorage solo existe en el cliente, y el primer render es del
     // servidor: leerlo en un efecto evita el desajuste de hidratación.
     const visto = Number(window.localStorage.getItem(CLAVE_VISTO) ?? 0);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lectura de localStorage pos-hidratación
     setSinLeer(avisos.filter((a) => new Date(a.creado_en).getTime() > visto).length);
   }, [avisos]);
 
