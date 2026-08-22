@@ -14,10 +14,11 @@ import {
   Megaphone,
   Receipt,
   Settings,
+  Stamp,
   UserRoundPlus,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import { Llama } from "@/components/Llama";
+import { MarcaInline } from "@/components/LlamaMarca";
 import { SelectorTemaCompacto } from "@/components/Tema";
 
 type Enlace = {
@@ -40,12 +41,15 @@ export function Isla({
   autenticado,
   esAdmin,
   esInterno = false,
+  marcaSidebar = null,
   onSalir,
 }: {
   autenticado: boolean;
   esAdmin: boolean;
   /** Profesores, gestores, desarrolladores y agentes, además de administradores. */
   esInterno?: boolean;
+  /** SVG personalizado de la marca para la barra lateral; null usa la llama original. */
+  marcaSidebar?: string | null;
   onSalir: () => void;
 }) {
   const ruta = usePathname();
@@ -87,6 +91,7 @@ export function Isla({
               { href: "/panel", etiqueta: "Panel", Icono: LayoutDashboard },
               { href: "/panel/avisos", etiqueta: "Avisos", Icono: Megaphone },
               { href: "/panel/reportes", etiqueta: "Reportes", Icono: Bug },
+              { href: "/panel/marca", etiqueta: "Marca", Icono: Stamp },
             ]
           : []),
       ]
@@ -104,7 +109,7 @@ export function Isla({
         href={inicio}
         className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-superficie"
       >
-        <Llama className="h-8 w-auto shrink-0 text-rojo-acento" />
+        <MarcaInline svg={marcaSidebar} className="h-8 w-auto text-rojo-acento" />
         <span className="text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
           EDUQA.PE
         </span>

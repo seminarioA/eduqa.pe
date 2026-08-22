@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Llama } from "@/components/Llama";
+import { marcaActual } from "@/lib/marca";
+import { MarcaInline } from "@/components/LlamaMarca";
 import { MenuPerfil } from "@/components/MenuPerfil";
 
 /**
@@ -9,7 +10,7 @@ import { MenuPerfil } from "@/components/MenuPerfil";
  * variaciones: cuando había una copia por página, cambiar el destino del logo
  * obligaba a tocarlas todas y alguna se quedaba atrás.
  */
-export function CabeceraApp({
+export async function CabeceraApp({
   nombre,
   correo,
   foto,
@@ -21,10 +22,14 @@ export function CabeceraApp({
   /** Sin esto no se dibuja el menú: no tiene sentido ofrecer salir sin acción. */
   onSalir?: () => void;
 }) {
+  // La cabecera pinta la marca personalizada si la hay; la lectura está
+  // cacheada por request y ya se pidió para la barra lateral.
+  const { cabecera } = await marcaActual();
+
   return (
     <div className="flex items-start justify-between gap-4">
       <Link href="/cursos" className="flex items-center gap-3">
-      <Llama className="h-12 w-auto shrink-0 text-rojo-acento" />
+      <MarcaInline svg={cabecera ?? null} className="h-12 w-auto shrink-0 text-rojo-acento" />
       <span className="flex flex-col leading-tight">
         {nombre && (
           <span className="text-sm text-texto-suave">

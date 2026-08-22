@@ -10,6 +10,7 @@ import { cerrarSesion } from "@/app/acceder/acciones";
 import { perfilActual } from "@/lib/matriculas";
 import { esInterno } from "@/lib/roles";
 import { usuarioActual } from "@/lib/supabase/servidor";
+import { marcaActual } from "@/lib/marca";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -24,6 +25,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_PE",
   },
+  icons: {
+    // Sirve el SVG de la marca si hay uno guardado; si no, la llama original.
+    icon: [{ url: "/icono-marca", type: "image/svg+xml" }],
+  },
 };
 
 export default async function RootLayout({
@@ -35,6 +40,9 @@ export default async function RootLayout({
   // atribuir el reporte ni con quién seguir la conversación.
   const usuario = await usuarioActual();
   const perfil = usuario ? await perfilActual() : null;
+  // La barra lateral pinta la marca personalizada si la hay; una sola lectura
+  // por request porque `marcaActual` está cacheada.
+  const { sidebar } = await marcaActual();
   return (
     <html
       lang="es-PE"
@@ -51,6 +59,7 @@ export default async function RootLayout({
             autenticado={Boolean(usuario)}
             esAdmin={perfil?.es_admin ?? false}
             esInterno={esInterno(perfil)}
+            marcaSidebar={sidebar ?? null}
             onSalir={cerrarSesion}
           />
           {children}

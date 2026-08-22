@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { marcarVista } from "./acciones";
-import { Llama } from "@/components/Llama";
+import { MarcaInline } from "@/components/LlamaMarca";
 import { Boton } from "@/components/ui";
 
 /**
@@ -26,6 +26,7 @@ export function AvanceLeccion({
   tituloLeccion,
   siguiente,
   volverA,
+  marcaCierre = null,
 }: {
   curso: string;
   leccion: string;
@@ -35,6 +36,8 @@ export function AvanceLeccion({
   siguiente?: { slug: string; titulo: string };
   /** Destino cuando el curso se ha terminado. */
   volverA: string;
+  /** SVG personalizado de la marca para el cierre; null usa la llama original. */
+  marcaCierre?: string | null;
 }) {
   const [celebrando, setCelebrando] = useState(false);
   const centinela = useRef<HTMLDivElement>(null);
@@ -73,6 +76,7 @@ export function AvanceLeccion({
           siguiente={siguiente}
           curso={curso}
           volverA={volverA}
+          marcaCierre={marcaCierre}
           onCerrar={() => setCelebrando(false)}
         />
       )}
@@ -85,12 +89,15 @@ function Celebracion({
   siguiente,
   curso,
   volverA,
+  marcaCierre = null,
   onCerrar,
 }: {
   tituloLeccion: string;
   siguiente?: { slug: string; titulo: string };
   curso: string;
   volverA: string;
+  /** SVG personalizado de la marca para el cierre; null usa la llama original. */
+  marcaCierre?: string | null;
   onCerrar: () => void;
 }) {
   // El foco entra en la capa para que quien navegue con teclado no se quede
@@ -127,7 +134,7 @@ function Celebracion({
             style={{ animationDelay: "0.45s" }}
             className="animar-anillo absolute inset-0 rounded-full border-2 border-rojo"
           />
-          <Llama className="animar-marca relative h-24 w-auto text-rojo" />
+          <MarcaInline svg={marcaCierre} className="animar-marca relative h-24 w-auto text-rojo" />
         </div>
 
         <p

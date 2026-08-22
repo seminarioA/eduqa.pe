@@ -15,6 +15,7 @@ import { esAccesoLibre } from "@/lib/precios";
 import { vistasDe } from "@/lib/progreso";
 import { AvanceLeccion } from "./AvanceLeccion";
 import { usuarioActual } from "@/lib/supabase/servidor";
+import { marcaActual } from "@/lib/marca";
 import { Boton } from "@/components/ui";
 import { BarraLateral } from "@/components/curso/BarraLateral";
 import { BloqueCodigo } from "@/components/curso/BloqueCodigo";
@@ -173,6 +174,8 @@ export default async function Page({
 
   // Sin sesión no hay progreso que guardar: el botón no se pinta.
   const vistas = usuario ? await vistasDe(cursoSlug) : new Set<string>();
+  // La pantalla de cierre pinta la marca personalizada si la hay.
+  const marca = await marcaActual();
 
   return (
     <div className="flex min-h-dvh">
@@ -253,6 +256,7 @@ export default async function Page({
                 siguiente ? { slug: siguiente.slug, titulo: siguiente.titulo } : undefined
               }
               volverA="/cursos"
+              marcaCierre={marca.cierre ?? null}
             />
           )}
 
