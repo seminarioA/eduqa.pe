@@ -49,6 +49,8 @@ export const cursos: Curso[] = [
   cargarCurso("conjuntos"),
   // El contenido vive en src/content/vectorial/*.md.
   cargarCurso("vectorial"),
+  // El contenido vive en src/content/transformers-atencionales/*.md.
+  cargarCurso("transformers-atencionales"),
   // El contenido vive en src/content/docker/*.md.
   cargarCurso("docker"),
   // El contenido vive en src/content/docker-intermedio/*.md.
