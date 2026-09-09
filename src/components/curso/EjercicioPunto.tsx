@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { Check, ChevronDown, Lightbulb, Play, X } from "lucide-react";
 import { ejecutarPython, estadoPython, suscribirsePython } from "@/lib/pyodide";
+import { ejecutarFortran } from "@/lib/fortran-web";
 import type { Ejercicio } from "@/lib/cursos";
 
 const HUECO = "___";
@@ -34,27 +35,35 @@ export function EjercicioPunto({
   } | null>(null);
   const [comprobando, setComprobando] = useState(false);
   const [pista, setPista] = useState(false);
+  const controlador = useRef<AbortController | null>(null);
+  useEffect(() => () => controlador.current?.abort(), []);
 
   const [antes, despues] = ejercicio.plantilla.split(HUECO);
 
   const comprobar = async () => {
-    if (!respuesta.trim()) return;
+    if (!respuesta.trim() || comprobando) return;
+    controlador.current = new AbortController();
     setComprobando(true);
     setResultado(null);
 
-    const { salida, error } = await ejecutarPython(
+    const codigo = ejercicio.plantilla.replace(HUECO, () => respuesta);
+    const { salida, error } = ejercicio.lenguaje === "fortran"
+      ? await ejecutarFortran(codigo, { signal: controlador.current.signal })
+      : await ejecutarPython(
       // La respuesta se inserta con una función y no como cadena: en el
       // texto de reemplazo de replace(), `$$` significa un `$` literal y
       // `$&` el trozo encontrado, así que una respuesta con `$` se
       // deformaba antes de llegar al intérprete.
-      ejercicio.plantilla.replace(HUECO, () => respuesta),
+      codigo,
       // Aislado: lo que definió un ejercicio no debe resolverle el siguiente.
       { aislado: true, paquetes, preludio },
     );
 
     setComprobando(false);
     setResultado({
-      acierto: !error && salida.trim() === ejercicio.esperado.trim(),
+      acierto: !error && (ejercicio.lenguaje === "fortran"
+        ? salida.trim().replace(/\s+/g, " ") === ejercicio.esperado.trim().replace(/\s+/g, " ")
+        : salida.trim() === ejercicio.esperado.trim()),
       salida,
     });
   };
@@ -64,7 +73,7 @@ export function EjercicioPunto({
     estadoPython,
     () => "sin-empezar" as const,
   );
-  const preparando = comprobando && preparacion !== "listo";
+  const preparando = comprobando && ejercicio.lenguaje !== "fortran" && preparacion !== "listo";
 
   return (
     <Collapsible.Root className="group/ejp my-6 rounded-lg border border-borde bg-superficie">
@@ -98,6 +107,7 @@ export function EjercicioPunto({
             {antes}
             <input
               value={respuesta}
+              disabled={comprobando}
               onChange={(e) => setRespuesta(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -119,6 +129,9 @@ export function EjercicioPunto({
           </pre>
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
+            {comprobando && ejercicio.lenguaje === "fortran" && (
+              <button type="button" onClick={() => controlador.current?.abort()} className="rounded border border-borde-fuerte px-3 py-1 text-xs">Detener</button>
+            )}
             <button
               type="button"
               onClick={comprobar}

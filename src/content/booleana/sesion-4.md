@@ -200,7 +200,7 @@ True
 izquierda: a
 derecha: b
 resalta: izquierda
-pie: La absorción a ∨ (a ∧ b) = a: la intersección está contenida en a, así que unirla no añade nada
+pie: "La absorción a ∨ (a ∧ b) = a: la intersección está contenida en a, así que unirla no añade nada"
 ```
 
 La absorción es la primera ley que **acorta** una expresión sin condiciones: la

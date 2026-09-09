@@ -126,7 +126,7 @@ False
 izquierda: a
 derecha: b
 resalta: interseccion
-pie: La conjunción a ∧ b corresponde a la intersección: los elementos que están en los dos conjuntos a la vez
+pie: "La conjunción a ∧ b corresponde a la intersección: los elementos que están en los dos conjuntos a la vez"
 ```
 
 > Nota: el nombre `∧` procede de la notación de conjuntos para la
@@ -158,7 +158,7 @@ False
 izquierda: a
 derecha: b
 resalta: union
-pie: La disyunción a ∨ b corresponde a la unión: los elementos que están en alguno de los dos conjuntos
+pie: "La disyunción a ∨ b corresponde a la unión: los elementos que están en alguno de los dos conjuntos"
 ```
 
 > Nota: es la disyunción **inclusiva**: `True or True` da `True`. La

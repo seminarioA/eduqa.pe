@@ -68,7 +68,9 @@ function renderSecciones(secciones: Seccion[], op: Opciones = {}) {
               salida={b.salida}
               docs={b.docs}
               nota={b.nota}
-              ejecutable={ejecutable && !b.sinConsola}
+              ejecutable={(b.lenguaje === "fortran" || ejecutable) && !b.sinConsola}
+              entrada={b.entrada}
+              archivos={b.archivos}
               paquetes={op.paquetes}
               preludio={op.preludio}
             />

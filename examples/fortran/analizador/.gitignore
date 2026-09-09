@@ -1,0 +1,5 @@
+*.o
+*.mod
+/analizador
+/pruebas
+/consumidor

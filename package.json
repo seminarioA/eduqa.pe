@@ -8,9 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test:iconos": "node scripts/validar-iconos-cursos.cjs",
+    "test:iconos": "node scripts/validar-iconos-cursos.mjs",
     "test:fortran:introduccion": "node scripts/verificar-fortran.mjs --curso=fortran-fundamentos",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:catalogo": "node scripts/validar-catalogo-local.mjs",
+    "test:fortran": "node scripts/verificar-fortran.mjs --curso=fortran-fundamentos && node scripts/verificar-fortran.mjs --curso=fortran-calculo-cientifico && node scripts/verificar-fortran.mjs --curso=fortran-avanzado && node scripts/verificar-fortran.mjs --curso=fortran-ingenieria-software && python3 scripts/verificar-proyecto-fortran.py",
+    "test:fortran:web": "node scripts/verificar-fortran-web.mjs"
   },
   "dependencies": {
     "@radix-ui/react-collapsible": "^1.1.20",
@@ -39,6 +42,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "husky": "^9.1.7",
+    "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

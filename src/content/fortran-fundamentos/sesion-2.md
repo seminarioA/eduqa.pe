@@ -15,7 +15,7 @@ Fortran dispone de suma (`+`), resta (`-`), multiplicación (`*`), división (`/
 
 Los paréntesis deben comunicar la fórmula incluso cuando la precedencia ya produzca el resultado deseado. Una expresión legible permite comparar el código con la ecuación científica y reduce errores durante el mantenimiento.
 
-```fortran !sin-consola
+```fortran
 program distancia_acelerada
   implicit none
   real :: aceleracion_m_s2
@@ -42,7 +42,7 @@ El operador de potencia es asociativo por la derecha: `a**b**c` se interpreta co
 
 Una operación entre dos valores `integer` produce un resultado entero. La división entera descarta la parte fraccionaria y trunca hacia cero. El tipo de la variable receptora no modifica una operación que ya ocurrió: asignar `muestras_validas / muestras_totales` a una variable real conserva primero el cociente entero.
 
-```fortran !sin-consola
+```fortran
 program fraccion_valida
   implicit none
   integer :: muestras_validas
@@ -73,7 +73,7 @@ Un valor `real` ocupa un número finito de bits. Muchos números decimales no ti
 
 La igualdad exacta (`==`) rara vez es la prueba adecuada para resultados reales calculados. Una comparación numérica suele aceptar una tolerancia absoluta, relativa o una combinación de ambas según la escala y el modelo físico. La tolerancia debe derivarse del problema; no existe una constante universal que sustituya ese análisis.
 
-```fortran !sin-consola
+```fortran
 program comparacion_aproximada
   implicit none
   real :: valor_calculado
@@ -105,7 +105,7 @@ Cuando una misma operación combina un entero y un real, Fortran convierte el en
 
 Las conversiones explícitas hacen visible una decisión. `real` convierte a real; `int` trunca un real hacia cero; `nint` devuelve el entero más cercano; `floor` devuelve el mayor entero no superior al argumento; y `ceiling`, el menor entero no inferior al argumento.
 
-```fortran !sin-consola
+```fortran
 program discretizacion_temporal
   implicit none
   real :: duracion_s
@@ -136,7 +136,7 @@ El parámetro de clase, llamado *kind*, distingue representaciones dentro de un 
 
 `selected_real_kind(p, r)` solicita una clase real con al menos `p` dígitos decimales de precisión y un rango de exponentes decimales de al menos `r`. La función devuelve un valor negativo si el procesador no ofrece una clase que satisfaga los requisitos. Definir el resultado como constante con nombre permite usar la misma clase en variables, literales y conversiones.
 
-```fortran !sin-consola
+```fortran
 program caida_con_precision
   implicit none
   integer, parameter :: rk = selected_real_kind(p=12, r=100)
@@ -165,7 +165,7 @@ El sufijo `_rk` asigna la clase elegida a cada literal real. Declarar una variab
 
 Las funciones intrínsecas de consulta describen la representación del argumento. `precision` informa los dígitos decimales de precisión; `range`, el rango decimal de exponentes; `huge`, el mayor número finito positivo; `tiny`, el menor número positivo normal; y `epsilon`, la precisión relativa cerca de uno.
 
-```fortran !sin-consola
+```fortran
 program propiedades_reales
   implicit none
   integer, parameter :: rk = selected_real_kind(p=12, r=100)
@@ -196,7 +196,7 @@ Estas consultas evitan atribuir a una clase propiedades recordadas de otra plata
 
 Una conversión puede recibir el argumento nombrado `kind`. `real(conteo, kind=rk)` convierte un entero directamente a la clase `rk`. Del mismo modo, las constantes reales empleadas en una expresión de alta precisión deben llevar el sufijo de clase.
 
-```fortran !sin-consola
+```fortran
 program promedio_mediciones
   implicit none
   integer, parameter :: rk = selected_real_kind(p=12, r=100)
@@ -226,7 +226,7 @@ Una función intrínseca recibe argumentos entre paréntesis y devuelve un valor
 
 El dominio forma parte del contrato: `sqrt` requiere un argumento real no negativo si se espera un resultado real; `log` y `log10` requieren un argumento positivo. Las funciones trigonométricas estándar reciben radianes, de modo que los grados deben convertirse antes.
 
-```fortran !sin-consola
+```fortran
 program componentes_vector
   implicit none
   integer, parameter :: rk = selected_real_kind(p=12, r=100)
@@ -259,7 +259,7 @@ end program componentes_vector
 
 Muchas intrínsecas son genéricas: el compilador selecciona una versión compatible con el tipo y la clase de los argumentos. `abs` devuelve un entero cuando recibe un entero y un real de la clase correspondiente cuando recibe un real. `min` y `max` exigen argumentos compatibles; mezclar clases sin intención explícita dificulta razonar sobre el resultado.
 
-```fortran !sin-consola
+```fortran
 program error_acotado
   implicit none
   real :: medicion
@@ -294,7 +294,7 @@ Antes de fijar `p` y `r`, identifica cuántas cifras significativas necesita el 
 
 Calcula la proporción de tres muestras válidas entre ocho muestras totales. Convierte los operandos antes de dividir. La solución comprueba el resultado con una tolerancia absoluta de una millonésima, suficiente para este cálculo acotado. El formato `F5.3` reserva cinco caracteres y muestra tres decimales.
 
-```fortran !sin-consola
+```fortran
 program practica_fraccion
   implicit none
   integer :: validas, total
@@ -315,6 +315,30 @@ end program practica_fraccion
 > Doc: [Fortran-lang: división entera](https://fortran-lang.org/learn/best_practices/integer_division/)
 
 Comprueba que retirar las conversiones hace fallar el programa. Declarar `proporcion` como real no modifica retroactivamente la división entera.
+
+# Ejercicio en el navegador
+
+Completa el programa y pulsa «Comprobar». El código se compila y ejecuta en tu navegador; cada intento comienza desde cero.
+
+```ejercicio fortran
+# Enunciado
+Completa la operación que falta para que el programa cumpla las comprobaciones de esta sesión.
+# Plantilla
+program practica_fraccion
+  implicit none
+  integer :: validas, total
+  real :: proporcion
+  validas = 3
+  total = 8
+  proporcion = ___
+  if (abs(proporcion - 0.375) > 1.e-6) error stop 'Se perdio la fraccion'
+  write(*,'(F5.3)') proporcion
+end program practica_fraccion
+# Esperado
+0.375
+# Pista
+Revisa la práctica resuelta de esta sesión y las condiciones que comprueba antes de imprimir la salida.
+```
 
 # Cierre
 

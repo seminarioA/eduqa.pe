@@ -6,8 +6,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Cómo se escriben los cursos
 
-Un curso es Markdown, no código. Vive en `src/content/<curso>/` y se publica
-con una sola línea en `src/lib/cursos.ts`.
+Un curso es Markdown, no código. Se publica desde `/panel/cursos` en Supabase,
+sin modificar TypeScript ni volver a desplegar. Las carpetas con `curso.md`
+en `src/content/<curso>/` se descubren automáticamente como respaldo local;
+los cambios en ese respaldo sí requieren un despliegue.
 
 - `src/content/FORMATO-CURSO.md` — el formato: qué va en la ficha, cómo se
   marcan código, salidas, notas, citas y ejercicios.

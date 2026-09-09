@@ -330,11 +330,13 @@ export async function crearCurso(
   const titulo = String(formData.get("titulo") ?? "").trim();
   const area = String(formData.get("area") ?? "").trim();
   const nivel = String(formData.get("nivel") ?? "INTRODUCCIÓN").trim();
+  const icono = String(formData.get("icono") ?? "").trim();
   const horas = Number(formData.get("horas") ?? 16);
   const precio = Number(formData.get("precio") ?? 20);
 
   if (titulo.length < 4) return { ok: false, error: "El título es muy corto." };
   if (!area) return { ok: false, error: "Elige un área." };
+  if (!esIconoCurso(icono)) return { ok: false, error: "Elige un icono válido para el curso." };
   if (!Number.isFinite(horas) || horas <= 0) return { ok: false, error: "Las horas no son válidas." };
   if (!Number.isFinite(precio) || precio < 0) return { ok: false, error: "El precio no es válido." };
 
@@ -376,6 +378,7 @@ export async function crearCurso(
     `area: ${JSON.stringify(area)}`,
     `nivel: ${JSON.stringify(nivel)}`,
     `horas: ${horas}`,
+    `icono: ${icono}`,
     "---",
     "",
   ].join("\n");

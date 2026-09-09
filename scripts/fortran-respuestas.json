@@ -1,0 +1,98 @@
+[
+  {
+    "curso": "fortran-avanzado",
+    "archivo": "sesion-1.md",
+    "respuesta": "ventana = ventana + 1",
+    "incorrecta": "ventana = ventana + 2"
+  },
+  {
+    "curso": "fortran-avanzado",
+    "archivo": "sesion-2.md",
+    "respuesta": "ajustado = ajustado + desplazamiento",
+    "incorrecta": "ajustado = ajustado - desplazamiento"
+  },
+  {
+    "curso": "fortran-avanzado",
+    "archivo": "sesion-3.md",
+    "respuesta": "salida = 2 * este%factor * valor",
+    "incorrecta": "salida = 3 * este%factor * valor"
+  },
+  {
+    "curso": "fortran-avanzado",
+    "archivo": "sesion-4.md",
+    "respuesta": "velocidad(cuerpo)**2",
+    "incorrecta": "velocidad(cuerpo)**3"
+  },
+  {
+    "curso": "fortran-calculo-cientifico",
+    "archivo": "sesion-1.md",
+    "respuesta": "serie(4:1:-1)",
+    "incorrecta": "serie(1:4)"
+  },
+  {
+    "curso": "fortran-calculo-cientifico",
+    "archivo": "sesion-2.md",
+    "respuesta": "allocate(mediciones(cantidad)",
+    "incorrecta": "allocate(mediciones(cantidad+1)"
+  },
+  {
+    "curso": "fortran-calculo-cientifico",
+    "archivo": "sesion-3.md",
+    "respuesta": "celsius + 273.15",
+    "incorrecta": "celsius - 273.15"
+  },
+  {
+    "curso": "fortran-calculo-cientifico",
+    "archivo": "sesion-4.md",
+    "respuesta": "estado /= 0",
+    "incorrecta": "estado == 0"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "respuesta": "minutos * 60",
+    "incorrecta": "minutos * 100"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "respuesta": "real(validas) / real(total)",
+    "incorrecta": "validas / total"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "respuesta": "mediciones(indice) > 20",
+    "incorrecta": "mediciones(indice) >= 20"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "respuesta": "sum(valores)",
+    "incorrecta": "size(valores)"
+  },
+  {
+    "curso": "fortran-ingenieria-software",
+    "archivo": "sesion-1.md",
+    "respuesta": "size(valores) < 1",
+    "incorrecta": "size(valores) < 0"
+  },
+  {
+    "curso": "fortran-ingenieria-software",
+    "archivo": "sesion-2.md",
+    "respuesta": "real(size(valores), real64)",
+    "incorrecta": "real(size(valores)+1, real64)"
+  },
+  {
+    "curso": "fortran-ingenieria-software",
+    "archivo": "sesion-3.md",
+    "respuesta": "cantidad = cantidad + 1",
+    "incorrecta": "cantidad = cantidad + 2"
+  },
+  {
+    "curso": "fortran-ingenieria-software",
+    "archivo": "sesion-4.md",
+    "respuesta": "real(resultado_local, c_double)",
+    "incorrecta": "real(resultado_local + 1.0_real64, c_double)"
+  }
+]

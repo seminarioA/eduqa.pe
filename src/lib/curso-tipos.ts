@@ -32,6 +32,9 @@ export type Bloque =
        * dos veces.
        */
       sinConsola?: boolean;
+      /** Datos de entrada y archivos virtuales de una ejecución Fortran. */
+      entrada?: string;
+      archivos?: Record<string, string>;
     }
   | {
       /**
@@ -90,6 +93,8 @@ export const REGIONES_VENN: RegionVenn[] = [
  * escribirla.
  */
 export type Ejercicio = {
+  /** Python por omisión; Fortran se compila a WebAssembly en el navegador. */
+  lenguaje?: "python" | "fortran";
   enunciado: string;
   plantilla: string;
   esperado: string;

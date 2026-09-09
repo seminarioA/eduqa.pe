@@ -1,5 +1,5 @@
 /**
- * Registro de cursos publicados.
+ * Cursos antiguos y respaldo Markdown descubierto automáticamente.
  *
  * Los tipos y las utilidades viven en `curso-tipos.ts` y se reexportan desde
  * aquí, para que el resto de la aplicación siga importando de un solo sitio.
@@ -11,7 +11,7 @@ import { leccionesPython } from "@/content/python";
 import { leccionesSqlite } from "@/content/sqlite";
 import { leccionesRedis, PRELUDIO_REDIS } from "@/content/redis";
 import { leccionesBio } from "@/content/bioingenieria";
-import { cargarCurso } from "@/lib/curso-markdown";
+import { cargarCursosLocales } from "@/lib/curso-markdown";
 import type { Curso, Leccion } from "@/lib/curso-tipos";
 
 export const cursos: Curso[] = [
@@ -37,25 +37,6 @@ export const cursos: Curso[] = [
     horas: 16,
     lecciones: leccionesSqlite,
   },
-  // El contenido y la ficha viven en src/content/ia-generativa/*.md.
-  cargarCurso("ia-generativa"),
-  cargarCurso("farmacologia"),
-  // El contenido vive en src/content/polars/*.md.
-  cargarCurso("polars"),
-  // El contenido vive en src/content/algebra/*.md.
-  cargarCurso("algebra"),
-  // El contenido vive en src/content/conjuntos/*.md.
-  cargarCurso("conjuntos"),
-  // El contenido vive en src/content/vectorial/*.md.
-  cargarCurso("vectorial"),
-  // El contenido vive en src/content/transformers-atencionales/*.md.
-  cargarCurso("transformers-atencionales"),
-  // El contenido vive en src/content/docker/*.md.
-  cargarCurso("docker"),
-  // El contenido vive en src/content/docker-intermedio/*.md.
-  cargarCurso("docker-intermedio"),
-  // Ruta de Fortran: introducción, intermedio, avanzado y software aplicado.
-  cargarCurso("fortran-fundamentos"),
   {
     slug: "python-bioingenieria",
     icono: "python",
@@ -94,6 +75,7 @@ export const cursos: Curso[] = [
     icono: "pandas",
     lecciones: leccionesDataEng as Leccion[],
   },
+  ...cargarCursosLocales(),
 ];
 
 export function buscarCurso(slug: string) {

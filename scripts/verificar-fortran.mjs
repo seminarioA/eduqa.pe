@@ -11,7 +11,7 @@ const compilador = process.env.FC ?? "gfortran";
 assert.equal(spawnSync(compilador, ["--version"]).status, 0, "Se necesita GNU Fortran");
 const temporal = mkdtempSync(join(tmpdir(), "eduqa-fortran-ejecucion-"));
 const directorio = join(process.cwd(), "src/content", carpeta);
-const patron = /```fortran !sin-consola\n([\s\S]*?)\n```(?:\n\n```salida\n([\s\S]*?)\n```)?/g;
+const patron = /```fortran(?: !sin-consola)?\n([\s\S]*?)\n```(?:\n\n```salida\n([\s\S]*?)\n```)?/g;
 const resultados = [];
 let negativos = 0;
 
@@ -70,7 +70,7 @@ try {
         negativos++;
       }
       if (!actualizar || actual === "") return bloque;
-      return `\`\`\`fortran !sin-consola\n${codigo}\n\`\`\`\n\n\`\`\`salida\n${actual}\n\`\`\``;
+      return `\`\`\`fortran${bloque.startsWith("```fortran !sin-consola") ? " !sin-consola" : ""}\n${codigo}\n\`\`\`\n\n\`\`\`salida\n${actual}\n\`\`\``;
     });
     if (actualizar) writeFileSync(ruta, texto);
   }

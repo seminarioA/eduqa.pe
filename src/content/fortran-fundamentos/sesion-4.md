@@ -15,7 +15,7 @@ Un arreglo reúne elementos del mismo tipo y clase. Su rango es el número de di
 
 Los subíndices predeterminados comienzan en uno. Una declaración puede fijar otros límites, como `integer :: desfase(-3:3)`. `lbound` consulta el límite inferior, `ubound` el superior y `size` el número de elementos. Acceder fuera de esos límites constituye un error; durante el desarrollo, las comprobaciones de límites del compilador deben permanecer activas.
 
-```fortran !sin-consola
+```fortran
 program limites_arreglo
   implicit none
   integer :: desfase(-3:3)
@@ -43,7 +43,7 @@ El segundo argumento de `lbound` y `ubound` selecciona la dimensión consultada.
 
 Un constructor de arreglo se delimita con corchetes (`[` y `]`) y enumera elementos separados por comas. La cantidad de valores debe concordar con la entidad que recibe la asignación. Una asignación escalar a un arreglo completo replica el escalar en todos sus elementos.
 
-```fortran !sin-consola
+```fortran
 program calibracion_sensores
   implicit none
   real :: ganancia(4)
@@ -70,7 +70,7 @@ Los cuatro valores del constructor corresponden, en orden, a los cuatro elemento
 
 Las operaciones intrínsecas sobre arreglos completos se aplican elemento por elemento. Dos arreglos son conformables cuando tienen la misma forma; un escalar también puede combinarse con cada elemento de un arreglo. La multiplicación `*` entre matrices sigue siendo elemental: la multiplicación matricial se expresa con la intrínseca `matmul`.
 
-```fortran !sin-consola
+```fortran
 program conversion_temperaturas
   implicit none
   real :: temperatura_c(5)
@@ -95,7 +95,7 @@ El escalar `273.15` se suma a cada elemento. La forma del resultado coincide con
 
 Una sección selecciona parte de un arreglo mediante un triplete `inicio:fin:paso`. Los dos primeros valores son inclusivos y el paso predeterminado es uno. El signo de dos puntos (`:`) por sí solo selecciona todos los índices de una dimensión.
 
-```fortran !sin-consola
+```fortran
 program ventanas_de_senal
   implicit none
   real :: senal(10)
@@ -125,7 +125,7 @@ Fortran almacena los arreglos de rango dos por columnas: el primer subíndice va
 
 `reshape(fuente, forma)` reorganiza una secuencia en la forma solicitada siguiendo ese orden por columnas. La forma se proporciona como un arreglo entero con la extensión de cada dimensión.
 
-```fortran !sin-consola
+```fortran
 program campo_bidimensional
   implicit none
   integer :: fila
@@ -157,7 +157,7 @@ Los tres primeros valores del constructor llenan la primera columna y los tres s
 
 `sum` suma elementos; `product` los multiplica; `minval` y `maxval` devuelven extremos; `count` cuenta elementos verdaderos de un arreglo lógico; `any` comprueba si alguno es verdadero; y `all`, si todos son verdaderos. Muchas reducciones aceptan un argumento `dim` para operar por dimensión y un argumento `mask` para incluir solo elementos seleccionados.
 
-```fortran !sin-consola
+```fortran
 program resumen_serie
   implicit none
   real :: lecturas(6)
@@ -195,7 +195,7 @@ Colocar procedimientos internos después de `contains` ofrece una interfaz expl�
 
 En un argumento ficticio, `intent(in)` indica que el procedimiento recibe un valor y no puede definirlo; `intent(out)` indica que debe producirlo; `intent(inout)` indica que recibe un valor existente y puede reemplazarlo. Declarar la intención de todos los argumentos convierte la interfaz en un contrato comprobable.
 
-```fortran !sin-consola
+```fortran
 program convertir_coordenadas
   implicit none
   real :: radio
@@ -236,7 +236,7 @@ Los nombres `r`, `theta`, `x_cart` y `y_cart` son argumentos ficticios de la sub
 
 Un argumento declarado con dos puntos, como `real, intent(in) :: datos(:)`, toma su extensión del arreglo real asociado. Es un arreglo de forma asumida y requiere una interfaz explícita. Dentro del procedimiento se consulta con `size`, `lbound` y `ubound` en lugar de repetir una longitud separada que podría contradecirlo.
 
-```fortran !sin-consola
+```fortran
 program normalizar_serie
   implicit none
   real :: serie(5)
@@ -272,7 +272,7 @@ La asignación de arreglo completo modifica todos los elementos. `intent(inout)`
 
 Una función devuelve un resultado que participa en una expresión. `result(nombre)` asigna un nombre explícito al resultado y evita confundirlo con el nombre de la función. Una función orientada al cálculo debe evitar efectos laterales inesperados: sus argumentos de entrada no deben modificarse ni debería depender de estado global mutable.
 
-```fortran !sin-consola
+```fortran
 program energia_resorte
   implicit none
   real :: rigidez_n_m
@@ -312,7 +312,7 @@ Un módulo reúne constantes, datos derivados y procedimientos relacionados. El 
 
 Dentro de un módulo, `private` establece acceso privado por omisión y `public :: nombre` expone la interfaz elegida. Los procedimientos colocados después de `contains` tienen interfaz explícita para las unidades que usan el módulo.
 
-```fortran !sin-consola
+```fortran
 module conversion_unidades
   implicit none
   private
@@ -355,7 +355,7 @@ El módulo precede al programa en este archivo fuente para que el compilador pue
 
 Combinar módulos con argumentos de forma asumida produce componentes reutilizables y comprobables. El módulo define la precisión una sola vez y la misma constante de clase forma parte de la interfaz de sus procedimientos.
 
-```fortran !sin-consola
+```fortran
 module estadistica_basica
   implicit none
   private
@@ -412,7 +412,7 @@ Mantén privados los detalles que no formen parte de la interfaz del módulo. Im
 
 Define una función interna que reciba un arreglo entero y devuelva su suma. Pruébala con tres elementos y con un arreglo vacío. La suma del arreglo vacío es cero; esa propiedad no significa que su promedio esté definido.
 
-```fortran !sin-consola
+```fortran
 program practica_resumen
   implicit none
   integer :: muestras(3)
@@ -438,6 +438,35 @@ end program practica_resumen
 > Doc: [GNU Fortran: SUM](https://gcc.gnu.org/onlinedocs/gfortran/SUM.html)
 
 El constructor `[integer ::]` declara explícitamente el tipo de un arreglo sin elementos. La solución incorrecta que devuelve su tamaño debe fallar para la serie de tres elementos. Para cerrar el curso, compila este archivo desde una carpeta nueva: la función debe estar incluida después de `contains` y no depender de módulos generados en otra práctica.
+
+# Ejercicio en el navegador
+
+Completa el programa y pulsa «Comprobar». El código se compila y ejecuta en tu navegador; cada intento comienza desde cero.
+
+```ejercicio fortran
+# Enunciado
+Completa la operación que falta para que el programa cumpla las comprobaciones de esta sesión.
+# Plantilla
+program practica_resumen
+  implicit none
+  integer :: muestras(3)
+  muestras = [4, 7, 9]
+  if (total(muestras) /= 20) error stop 'Suma incorrecta'
+  if (total([integer ::]) /= 0) error stop 'Caso vacio incorrecto'
+  write(*,'(I0)') total(muestras)
+contains
+  pure function total(valores) result(acumulado)
+    implicit none
+    integer, intent(in) :: valores(:)
+    integer :: acumulado
+    acumulado = ___
+  end function total
+end program practica_resumen
+# Esperado
+20
+# Pista
+Revisa la práctica resuelta de esta sesión y las condiciones que comprueba antes de imprimir la salida.
+```
 
 # Cierre
 

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { resolverIconoCurso } from "@/lib/iconos-curso";
@@ -181,6 +181,20 @@ function leerSesion(texto: string, donde: string): ResultadoSesion {
       const [valla, siguiente] = leerValla(lineas, i);
       i = siguiente;
 
+      if (valla.lenguaje === "entrada" || valla.lenguaje === "archivo") {
+        const bloque = ultimo();
+        if (!bloque || bloque.tipo !== "codigo" || bloque.lenguaje !== "fortran") {
+          throw new Error(`Datos de entrada sin programa Fortran delante, en ${donde}.`);
+        }
+        if (valla.lenguaje === "entrada") bloque.entrada = valla.contenido + "\n";
+        else {
+          const nombre = valla.modificadores[0];
+          if (!nombre || !/^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/.test(nombre)) throw new Error(`Nombre de archivo inválido en ${donde}.`);
+          bloque.archivos = { ...bloque.archivos, [nombre]: valla.contenido + "\n" };
+        }
+        continue;
+      }
+
       if (valla.lenguaje === "salida") {
         const bloque = ultimo();
         if (!bloque || bloque.tipo !== "codigo") {
@@ -204,7 +218,10 @@ function leerSesion(texto: string, donde: string): ResultadoSesion {
             `Dos ejercicios para la misma sección (${seccionActual}) en ${donde}.`,
           );
         }
-        ejercicios[seccionActual] = leerEjercicio(valla.contenido, donde);
+        ejercicios[seccionActual] = {
+          ...leerEjercicio(valla.contenido, donde),
+          ...(valla.modificadores.includes("fortran") ? { lenguaje: "fortran" as const } : {}),
+        };
         continue;
       }
 
@@ -362,12 +379,21 @@ export function construirCurso(
 }
 
 /** Carga un curso desde su carpeta en el repositorio. */
-export function cargarCurso(carpeta: string): Curso {
-  const dir = join(RAIZ, carpeta);
+export function cargarCurso(carpeta: string, raiz = RAIZ): Curso {
+  const dir = join(raiz, carpeta);
   const archivos = new Map(
     readdirSync(dir)
       .filter((f) => f.endsWith(".md"))
       .map((f) => [f, readFileSync(join(dir, f), "utf8")] as const),
   );
   return construirCurso(carpeta, archivos);
+}
+
+/** Descubre carpetas con ficha; agregar Markdown no requiere editar un registro. */
+export function cargarCursosLocales(raiz = RAIZ): Curso[] {
+  return readdirSync(raiz, { withFileTypes: true })
+    .filter((entrada) => entrada.isDirectory() && existsSync(join(raiz, entrada.name, "curso.md")))
+    .map((entrada) => entrada.name)
+    .sort()
+    .map((carpeta) => cargarCurso(carpeta, raiz));
 }

@@ -11,7 +11,7 @@ Al terminar la sesión podrás reconocer las partes de una unidad de programa, g
 
 # Preparar el entorno
 
-Necesitas un editor de texto, una terminal y GNU Fortran. Sigue la instalación correspondiente a tu sistema en la documentación enlazada y ejecuta `gfortran --version` para comprobar que la terminal encuentra el compilador. La consola de EDUQA ejecuta Python; estos programas se compilan en tu equipo.
+Necesitas un editor de texto, una terminal y GNU Fortran. Sigue la instalación correspondiente a tu sistema en la documentación enlazada y ejecuta `gfortran --version` para comprobar que la terminal encuentra el compilador. Puedes ejecutar y editar Fortran en EDUQA. El compilador se carga la primera vez que pulsas «Ejecutar» o «Comprobar»; las siguientes ejecuciones reutilizan la descarga. Los bloques marcados «ejecución local» requieren GNU Fortran.
 
 > Doc: [Fortran-lang: instalar GNU Fortran](https://fortran-lang.org/learn/os_setup/install_gfortran/)
 
@@ -31,7 +31,7 @@ Un diagnóstico del compilador no es una salida científica del programa. Primer
 
 Una unidad principal puede comenzar con `program nombre` y termina con `end program nombre`. Entre ambas sentencias se distinguen una parte de especificación y una parte de ejecución. La parte de especificación contiene `implicit none` y las declaraciones; la parte ejecutable contiene asignaciones, entrada, salida y llamadas. Una sentencia ejecutable no puede preceder a una declaración de la misma unidad.
 
-```fortran !sin-consola
+```fortran
 program energia_cinetica
   implicit none
   real :: masa_kg
@@ -62,7 +62,7 @@ En el formato libre de los archivos `.f90`, una sentencia puede comenzar en cual
 
 El signo ampersand (`&`) al final de una línea continúa una sentencia en la línea siguiente. Si la continuación divide una constante de caracteres, se coloca también un ampersand al inicio de la parte continuada. Una línea fuente no debe dividirse por su apariencia visual si la división oculta la estructura de la expresión.
 
-```fortran !sin-consola
+```fortran
 program alcance_proyectil
   implicit none
   real, parameter :: gravedad_m_s2 = 9.80665
@@ -97,7 +97,7 @@ Un diccionario de datos breve documenta qué representa cada variable y en qué 
 
 `integer` representa enteros; `real`, números de punto flotante; `complex`, números con parte real e imaginaria; `logical`, valores lógicos; y `character`, texto. Esta sesión utiliza las formas básicas. La precisión y los parámetros de clase, llamados *kind*, se estudian en la sesión siguiente.
 
-```fortran !sin-consola
+```fortran
 program estado_experimento
   implicit none
   integer :: muestras
@@ -132,7 +132,7 @@ Los puntos forman parte de las constantes lógicas `.true.` y `.false.`. En `cha
 
 El atributo `parameter` convierte una entidad en constante con nombre. La expresión que la inicializa se evalúa en la declaración y el programa no puede asignarle otro valor. Las constantes con nombre eliminan números sin explicación y mantienen una decisión física en un solo lugar.
 
-```fortran !sin-consola
+```fortran
 program periodo_pendulo
   implicit none
   real, parameter :: pi = acos(-1.0)
@@ -161,7 +161,7 @@ Sin una sentencia que lo impida, Fortran conserva reglas históricas de tipado i
 
 `implicit none` se escribe en la parte de especificación, después de las sentencias `use` cuando existan y antes de las declaraciones. Debe aparecer en cada unidad de programa: programa principal, módulo, subrutina o función. Esta disciplina convierte numerosos errores de escritura en errores de compilación localizables.
 
-```fortran !sin-consola
+```fortran
 program balance_termico
   implicit none
   real :: energia_entrada_j
@@ -188,7 +188,7 @@ Si la última asignación escribiera por error `energia_saldia_j`, el compilador
 
 `read (*, *)` lee valores desde la unidad de entrada predeterminada y `print *` o `write (*, *)` escribe en la unidad de salida predeterminada. Los asteriscos (`*`) solicitan la unidad predeterminada y un formato elegido por el procesador. Esta modalidad resulta adecuada para aprendizaje y comprobaciones rápidas; no garantiza una disposición idéntica entre compiladores.
 
-```fortran !sin-consola
+```fortran
 program densidad_material
   implicit none
   real :: masa_kg
@@ -207,6 +207,10 @@ end program densidad_material
  Densidad en kg/m3:   5.00000000
 ```
 
+```entrada
+10 2
+```
+
 > Doc: [Tipos y variables](https://fortran-lang.org/learn/quickstart/variables/)
 
 Para reproducir el ejemplo, escribe `10 2` y pulsa Enter cuando el programa solicite la entrada. El primer valor representa la masa y el segundo, el volumen.
@@ -223,7 +227,7 @@ Durante el desarrollo, conserva `-Wall -Wextra -fcheck=all` con GNU Fortran. Las
 
 Declara una cantidad entera de minutos, conviértela a segundos y comprueba el resultado antes de imprimirlo. Usa siete minutos como entrada. La solución incorpora una comprobación que termina con `error stop` si el cálculo es incorrecto. `if` ejecuta esa comprobación condicional; se estudia en detalle en la sesión 3. El formato `I0` representa un entero con el ancho mínimo necesario.
 
-```fortran !sin-consola
+```fortran
 program practica_conversion
   implicit none
   integer :: minutos, segundos
@@ -242,6 +246,28 @@ end program practica_conversion
 > Doc: [GNU Fortran: entrada y salida](https://fortran-lang.org/learn/quickstart/variables/#standard-input-output)
 
 El comentario `verificar-error` documenta la alteración que utiliza el verificador del curso. Sustituir el factor 60 por 100 debe producir un error; después de restaurarlo, el programa debe terminar normalmente. No copies la respuesta numérica en la asignación: conserva la conversión a partir de `minutos`.
+
+# Ejercicio en el navegador
+
+Completa el programa y pulsa «Comprobar». El código se compila y ejecuta en tu navegador; cada intento comienza desde cero.
+
+```ejercicio fortran
+# Enunciado
+Completa la operación que falta para que el programa cumpla las comprobaciones de esta sesión.
+# Plantilla
+program practica_conversion
+  implicit none
+  integer :: minutos, segundos
+  minutos = 7
+  segundos = ___
+  if (segundos /= 420) error stop 'Conversion incorrecta'
+  write(*,'(I0)') segundos
+end program practica_conversion
+# Esperado
+420
+# Pista
+Revisa la práctica resuelta de esta sesión y las condiciones que comprueba antes de imprimir la salida.
+```
 
 # Cierre
 

@@ -15,7 +15,7 @@ El tipo `logical` almacena `.true.` o `.false.`. Una expresión relacional compa
 
 Fortran también admite las grafías históricas `.eq.`, `.ne.`, `.lt.`, `.le.`, `.gt.` y `.ge.`. En código nuevo, las formas simbólicas suelen mostrar mejor la relación matemática. Los dos operandos deben ser comparables; una cadena no se compara numéricamente con un entero.
 
-```fortran !sin-consola
+```fortran
 program relaciones_presion
   implicit none
   real :: presion_pa
@@ -58,7 +58,7 @@ Fortran no garantiza evaluación con cortocircuito. Si una segunda condición di
 
 La precedencia lógica coloca primero las relaciones, luego `.not.`, después `.and.`, a continuación `.or.` y finalmente `.eqv.` o `.neqv.`. Los paréntesis deben conservarse cuando hagan visible la condición científica o de seguridad.
 
-```fortran !sin-consola
+```fortran
 program ventana_operativa
   implicit none
   real :: temperatura_c
@@ -92,7 +92,7 @@ Los límites inferior y superior se escriben por separado: Fortran no interpreta
 
 El bloque `if` ejecuta su cuerpo solo cuando la expresión entre paréntesis es verdadera. La palabra clave `then` introduce el bloque y `end if` lo cierra. La sangría no modifica el significado, pero permite reconocer los límites de la rama.
 
-```fortran !sin-consola
+```fortran
 program advertencia_esfuerzo
   implicit none
   real :: esfuerzo_mpa
@@ -118,7 +118,7 @@ Cuando la condición es falsa, la ejecución continúa después de `end if`. El 
 
 Una cadena `if` evalúa condiciones de arriba hacia abajo. Se ejecuta el bloque de la primera condición verdadera y se omiten los restantes. `else` recibe todos los casos no capturados antes. Por tanto, el orden forma parte del algoritmo cuando los intervalos se solapan.
 
-```fortran !sin-consola
+```fortran
 program clasificacion_residuo
   implicit none
   real :: residuo
@@ -153,7 +153,7 @@ Las condiciones avanzan del intervalo más restrictivo al más amplio. Si la seg
 
 `case default` procesa valores no contemplados. Aunque es opcional en la sintaxis, incluirlo hace visible la política para entradas inválidas o estados nuevos.
 
-```fortran !sin-consola
+```fortran
 program regimen_bomba
   implicit none
   integer :: codigo_modo
@@ -189,7 +189,7 @@ El bucle contado adopta la forma `do indice = inicio, fin, paso`. Inicio, fin y 
 
 El índice debe ser entero en código moderno y no se modifica dentro del cuerpo. Después de `end do`, no se debe depender de su valor. El cuerpo puede ejecutarse cero veces si los parámetros no describen un recorrido válido.
 
-```fortran !sin-consola
+```fortran
 program suma_trabajo
   implicit none
   integer :: intervalo
@@ -241,6 +241,8 @@ end program barrido_descendente
            2
 ```
 
+> Nota: Esta construcción no reproduce todavía la salida correcta con el compilador web fijado. Ejecuta este ejemplo con GNU Fortran en tu equipo; el ejercicio de la sesión sí se puede resolver en el navegador.
+
 > Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
 
 El límite final se incluye cuando el índice lo alcanza exactamente. Este bucle visita una secuencia descendente porque el incremento es `-2`; con un incremento positivo no ejecutaría ninguna iteración.
@@ -249,7 +251,7 @@ El límite final se incluye cuando el índice lo alcanza exactamente. Este bucle
 
 `do while (condicion)` comprueba la condición antes de cada iteración. Si comienza falsa, el cuerpo se ejecuta cero veces. Alguna operación del cuerpo debe modificar los datos de los que depende la condición; de otro modo, el bucle puede no terminar.
 
-```fortran !sin-consola
+```fortran
 program enfriamiento_iterativo
   implicit none
   integer :: iteracion
@@ -282,7 +284,7 @@ El límite de iteraciones evita una espera ilimitada si el modelo deja de acerca
 
 Un `do` sin parámetros repite su cuerpo hasta que una sentencia transfiere el control. `exit` termina el bucle más interno y continúa después de `end do`. Esta forma resulta clara cuando la condición de terminación se calcula en medio del cuerpo. El ejemplo siguiente conserva un bucle contado para imponer además un máximo; `exit` funciona tanto en bucles contados como indefinidos.
 
-```fortran !sin-consola
+```fortran
 program aproximacion_raiz
   implicit none
   integer :: iteracion
@@ -315,7 +317,7 @@ La sentencia `if` lógica de una línea ejecuta aquí únicamente `exit`. No sus
 
 `cycle` abandona el resto de la iteración actual y vuelve al control del bucle para iniciar la siguiente. No termina el bucle completo. Conviene usarlo para descartar un dato antes de ejecutar cálculos que presuponen su validez.
 
-```fortran !sin-consola
+```fortran
 program promedio_lecturas_validas
   implicit none
   integer :: posicion
@@ -353,7 +355,7 @@ La constante centinela se compara de forma exacta porque proviene de un código 
 
 Un nombre seguido de dos puntos (`:`) puede identificar un constructo. `exit nombre` termina el bucle nombrado y `cycle nombre` inicia la siguiente iteración de ese bucle. Los nombres eliminan ambigüedad cuando existen bucles anidados.
 
-```fortran !sin-consola
+```fortran
 program localizar_umbral
   implicit none
   integer :: fila
@@ -394,7 +396,7 @@ end program localizar_umbral
 
 Recorre cuatro mediciones y cuenta solo las que superan estrictamente 20. El caso de frontera, una medición igual a 20, permite distinguir `>` de `>=`. Mantén la comprobación después del bucle para verificar ambas variantes.
 
-```fortran !sin-consola
+```fortran
 program practica_umbral
   implicit none
   integer :: mediciones(4), indice, superiores
@@ -416,6 +418,31 @@ end program practica_umbral
 > Doc: [Fortran-lang: control de flujo](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
 
 La solución inicializa el contador una vez y lo incrementa solo dentro de la condición. Si se inicializara dentro del bucle, se perdería el conteo anterior. La sesión siguiente desarrolla los arreglos empleados para reunir las mediciones.
+
+# Ejercicio en el navegador
+
+Completa el programa y pulsa «Comprobar». El código se compila y ejecuta en tu navegador; cada intento comienza desde cero.
+
+```ejercicio fortran
+# Enunciado
+Completa la operación que falta para que el programa cumpla las comprobaciones de esta sesión.
+# Plantilla
+program practica_umbral
+  implicit none
+  integer :: mediciones(4), indice, superiores
+  mediciones = [18, 20, 22, 25]
+  superiores = 0
+  do indice = 1, size(mediciones)
+    if (___) superiores = superiores + 1
+  end do
+  if (superiores /= 2) error stop 'El limite se conto incorrectamente'
+  write(*,'(I0)') superiores
+end program practica_umbral
+# Esperado
+2
+# Pista
+Revisa la práctica resuelta de esta sesión y las condiciones que comprueba antes de imprimir la salida.
+```
 
 # Cierre
 

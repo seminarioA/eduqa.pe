@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // La detección de carpetas es dinámica: incluir el contenido también en Vercel.
+  outputFileTracingIncludes: {
+    "/*": ["./src/content/**/*.md"],
+  },
 
   /*
    * Las rutas quedaron todas en español. `/courses` fue la única en inglés y

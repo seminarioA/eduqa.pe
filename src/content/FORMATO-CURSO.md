@@ -12,14 +12,14 @@ src/content/ia-generativa/
 └── sesion-4.md
 ```
 
-Para publicarlo, se añade una línea en `src/lib/cursos.ts`:
+Para publicarlo, sube `curso.md` y sus sesiones desde `/panel/cursos` y elige
+el estado público. El contenido se guarda en Supabase y aparece sin modificar
+TypeScript ni volver a desplegar la aplicación. El icono es obligatorio.
 
-```ts
-cargarCurso("ia-generativa"),
-```
-
-Esa es la única línea de TypeScript que un curso necesita. Todo lo demás es
-Markdown.
+Las carpetas del repositorio que contienen `curso.md` se descubren
+automáticamente. Sirven como respaldo local: tampoco necesitan una entrada
+en `src/lib/cursos.ts`, aunque sus cambios sí requieren un despliegue.
+Si un curso existe en ambos sitios, se utiliza la versión de Supabase.
 
 Las reglas de redacción están en `LINEAMIENTOS.md`, en la raíz.
 
@@ -264,3 +264,26 @@ complemento dibujan además el marco del conjunto universal, porque «todo lo qu
 no está en a» no significa nada sin un borde respecto del cual esté fuera. Un valor
 que no esté en esa lista rompe la carga del curso a propósito, para que no
 salga un diagrama vacío que nadie note. `pie` es opcional.
+
+## Fortran en el navegador
+
+Una valla `fortran` activa el editor y la ejecución mediante LFortran compilado
+a WebAssembly. No requiere registrar el curso ni la sesión en TypeScript.
+`fortran !sin-consola` conserva la salida de referencia y señala ejecución local;
+úsalo si la comparación real con GNU Fortran detecta una incompatibilidad.
+
+Para un ejercicio de completado utiliza `ejercicio fortran`, con las mismas
+secciones Enunciado, Plantilla, Esperado y Pista del formato de ejercicios.
+La plantilla debe contener un solo hueco `___` y un programa completo. Comprueba
+una respuesta correcta y otra incorrecta en el navegador antes de publicarlo.
+
+Después de un bloque Fortran puedes añadir una valla `entrada` con los datos
+para la entrada estándar, o una valla `archivo nombre.dat` con el contenido de
+un archivo virtual. Estas vallas se asocian al programa anterior. El alumno puede
+editar sus datos desde «Datos de entrada»; cada ejecución reconstruye el entorno
+sin conservar los archivos escritos por un intento anterior.
+
+El motor se descarga al primer uso. «Detener» cancela el proceso; la ejecución
+tiene un límite de tiempo y de salida. Las fuentes del alumno permanecen en su
+navegador. Consulta `public/vendor/xlfortran/README.md` para las versiones,
+licencias, comprobaciones y limitaciones conocidas del motor.

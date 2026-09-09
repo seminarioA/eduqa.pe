@@ -1,9 +1,11 @@
-const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
-const ts = require('typescript');
-const React = require('react');
-const { renderToStaticMarkup } = require('react-dom/server');
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import ts from 'typescript';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
 const cache = new Map();
 function cargar(archivo) {
   if (cache.has(archivo)) return cache.get(archivo);
@@ -46,3 +48,4 @@ const ficha = fs.readFileSync('src/content/fortran-fundamentos/curso.md','utf8')
 const antiguo=construirCurso('fortran-fundamentos',new Map([['curso.md',ficha]]),[{numero:1,titulo:'Sesión protegida',slug:'sesion-1'}]);
 assert.equal(antiguo.icono,'fortran');
 console.log(`${ICONOS_CURSO.length} iconos renderizados; ficha antigua, icono Fortran y cuatro sesiones validados.`);
+export { cargar };

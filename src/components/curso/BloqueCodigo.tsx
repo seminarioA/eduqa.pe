@@ -5,6 +5,7 @@ import { BotonCopiar } from "./BotonCopiar";
 import { Citas } from "./Citas";
 import { NotaTecnica } from "./NotaTecnica";
 import { Consola } from "./Consola";
+import { ConsolaFortran } from "./ConsolaFortran";
 
 /** Nombres editoriales que Shiki registra con otro identificador. */
 const LENGUAJES_SHIKI: Record<string, string> = {
@@ -27,6 +28,8 @@ export async function BloqueCodigo({
   ejecutable = false,
   paquetes,
   preludio,
+  entrada,
+  archivos,
 }: {
   codigo: string;
   lenguaje: string;
@@ -37,6 +40,8 @@ export async function BloqueCodigo({
   ejecutable?: boolean;
   paquetes?: string[];
   preludio?: string;
+  entrada?: string;
+  archivos?: Record<string, string>;
 }) {
   // Dos temas a la vez: Shiki emite variables CSS y globals.css decide cuál pinta.
   const html = await codeToHtml(codigo, {
@@ -45,14 +50,14 @@ export async function BloqueCodigo({
     defaultColor: "light",
   });
 
-  const tendraConsola = ejecutable && lenguaje === "python";
+  const tendraConsola = ejecutable && (lenguaje === "python" || lenguaje === "fortran");
 
   return (
     <div className="my-6">
       <div className="overflow-hidden rounded-xl border border-borde-fuerte">
         <div className="flex items-center justify-between gap-3 bg-superficie px-3 py-2">
           <span className="font-mono text-xs uppercase tracking-wide text-texto-tenue">
-            {lenguaje}
+            {lenguaje}{lenguaje === "fortran" && !ejecutable ? " · ejecución local" : ""}
           </span>
           <BotonCopiar texto={codigo} />
         </div>
@@ -77,7 +82,8 @@ export async function BloqueCodigo({
             </pre>
           </div>
         )}
-        {tendraConsola && (
+        {tendraConsola && lenguaje === "fortran" && <ConsolaFortran key={codigo} codigo={codigo} entrada={entrada} archivos={archivos} />}
+        {tendraConsola && lenguaje === "python" && (
           <Consola codigo={codigo} paquetes={paquetes} preludio={preludio} />
         )}
       </div>

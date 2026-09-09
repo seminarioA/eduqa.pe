@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { Plus } from "lucide-react";
 import { AREAS } from "@/lib/curso-tipos";
+import { ICONOS_CURSO } from "@/lib/iconos-curso";
 import { crearCurso, type EstadoPublicacion } from "./acciones";
 
 const NIVELES = ["INTRODUCCIÓN", "INTERMEDIO", "AVANZADO", "HARDMODE"];
@@ -78,6 +79,21 @@ export function CrearCurso() {
               <option key={n} value={n}>
                 {n}
               </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="block text-xs font-medium text-texto-suave">
+          Icono del curso
+          <select
+            name="icono"
+            required
+            defaultValue=""
+            className="mt-1 w-full rounded-lg border border-borde bg-fondo px-3 py-2 text-sm text-texto outline-none focus:border-rojo-acento"
+          >
+            <option value="" disabled>Elige un logotipo o símbolo</option>
+            {ICONOS_CURSO.map((icono) => (
+              <option key={icono} value={icono}>{icono.charAt(0).toUpperCase() + icono.slice(1)}</option>
             ))}
           </select>
         </label>
