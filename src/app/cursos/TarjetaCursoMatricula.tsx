@@ -59,14 +59,10 @@ export function TarjetaCursoMatricula({
   const cabecera = (
     <>
       <div className="flex items-start justify-between gap-3">
-        {curso.icono ? (
-          <Icono
+        <Icono
             nombre={curso.icono}
             className="size-14 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
           />
-        ) : (
-          <span aria-hidden="true" />
-        )}
         <div className="flex shrink-0 flex-col items-end gap-1.5">
           <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900">
             {curso.nivel}

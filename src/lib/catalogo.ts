@@ -44,8 +44,8 @@ export type Curso = {
   nivel: Nivel;
   horas: number;
   express?: boolean;
-  /** Solo logos reales. Si el curso no es sobre un producto, se omite. */
-  icono?: IconoNombre;
+  /** Icono obligatorio para cada curso del catálogo. */
+  icono: IconoNombre;
 };
 
 export type Area = {
@@ -87,8 +87,8 @@ export const areas: Area[] = [
       { id: "DK02", nombre: "Docker intermedio", nivel: "INTERMEDIO", horas: 4, icono: "docker" },
       { id: "DK03", nombre: "Docker avanzado", nivel: "AVANZADO", horas: 4, icono: "docker" },
       { id: "GA01A", nombre: "GitHub Actions", nivel: "INTERMEDIO", horas: 3, express: true, icono: "githubactions" },
-      { id: "DP01", nombre: "Despliegue de aplicaciones", nivel: "INTERMEDIO", horas: 4 },
-      { id: "DP02", nombre: "Despliegue de aplicaciones avanzado", nivel: "AVANZADO", horas: 4 },
+      { id: "DP01", nombre: "Despliegue de aplicaciones", nivel: "INTERMEDIO", horas: 4, icono: "nube" },
+      { id: "DP02", nombre: "Despliegue de aplicaciones avanzado", nivel: "AVANZADO", horas: 4, icono: "nube" },
     ],
   },
   {
@@ -96,9 +96,9 @@ export const areas: Area[] = [
     nombre: "Ingeniería de Datos",
     descripcion: "Mover datos de un lado a otro sin que se rompa a las 3 de la mañana.",
     cursos: [
-      { id: "DE01", nombre: "Fundamentos de ETL", nivel: "INTRODUCCIÓN", horas: 4 },
+      { id: "DE01", nombre: "Fundamentos de ETL", nivel: "INTRODUCCIÓN", horas: 4, icono: "datos" },
       { id: "DE02", nombre: "ETL intermedio", nivel: "INTERMEDIO", horas: 4, icono: "pandas" },
-      { id: "DE03", nombre: "ETL avanzado", nivel: "AVANZADO", horas: 4 },
+      { id: "DE03", nombre: "ETL avanzado", nivel: "AVANZADO", horas: 4, icono: "datos" },
     ],
   },
   {

@@ -6,6 +6,11 @@ import { Citas } from "./Citas";
 import { NotaTecnica } from "./NotaTecnica";
 import { Consola } from "./Consola";
 
+/** Nombres editoriales que Shiki registra con otro identificador. */
+const LENGUAJES_SHIKI: Record<string, string> = {
+  fortran: "fortran-free-form",
+};
+
 /**
  * Resaltado con Shiki (el mismo motor que VS Code y la documentación de Next).
  * Corre en el servidor: al cliente solo llega HTML ya coloreado, sin JS de resaltado.
@@ -35,7 +40,7 @@ export async function BloqueCodigo({
 }) {
   // Dos temas a la vez: Shiki emite variables CSS y globals.css decide cuál pinta.
   const html = await codeToHtml(codigo, {
-    lang: lenguaje,
+    lang: LENGUAJES_SHIKI[lenguaje] ?? lenguaje,
     themes: { light: "github-light", dark: "github-dark" },
     defaultColor: "light",
   });

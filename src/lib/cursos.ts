@@ -13,7 +13,6 @@ import { leccionesRedis, PRELUDIO_REDIS } from "@/content/redis";
 import { leccionesBio } from "@/content/bioingenieria";
 import { cargarCurso } from "@/lib/curso-markdown";
 import type { Curso, Leccion } from "@/lib/curso-tipos";
-import type { IconoNombre } from "@/components/Iconos";
 
 export const cursos: Curso[] = [
   {
@@ -55,6 +54,8 @@ export const cursos: Curso[] = [
   cargarCurso("docker"),
   // El contenido vive en src/content/docker-intermedio/*.md.
   cargarCurso("docker-intermedio"),
+  // Ruta de Fortran: introducción, intermedio, avanzado y software aplicado.
+  cargarCurso("fortran-fundamentos"),
   {
     slug: "python-bioingenieria",
     icono: "python",

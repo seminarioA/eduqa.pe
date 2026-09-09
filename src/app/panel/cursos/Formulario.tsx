@@ -47,6 +47,7 @@ export function FormularioCurso() {
         </p>
         <p className="mt-1 text-xs text-texto-suave">
           La ficha <code className="font-mono">curso.md</code> y una sesión por archivo.
+          El icono es obligatorio. La ficha también puede publicar precio, estado y ruta.
         </p>
         <input
           ref={entrada}

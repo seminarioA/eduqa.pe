@@ -25,14 +25,10 @@ export function TarjetaPopular({ curso }: { curso: CursoPopular }) {
       className="group flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
     >
       <div className="flex items-start justify-between gap-3">
-        {curso.icono ? (
-          <Icono
+        <Icono
             nombre={curso.icono}
             className="size-14 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
           />
-        ) : (
-          <span aria-hidden="true" />
-        )}
         <span className="flex shrink-0 items-center gap-1 rounded-full bg-rojo-tenue px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-rojo-acento ring-1 ring-inset ring-rojo-acento/30">
           <Flame size={9} aria-hidden="true" />
           {curso.matriculas}

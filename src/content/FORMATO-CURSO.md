@@ -37,6 +37,17 @@ nivel: INTRODUCCIÓN
 horas: 16
 icono: gemini
 paquetes: ["google-genai"]
+precio: 20
+estado: borrador
+acceso_libre: false
+orden: 99
+ruta:
+  slug: inteligencia-artificial
+  nombre: "Inteligencia artificial"
+  descripcion: "De los fundamentos a aplicaciones que se pueden evaluar."
+  orden: 4
+  posicion: 1
+  requisitos: []
 ---
 
 ```preludio
@@ -54,8 +65,20 @@ client = genai.Client(api_key="clave-de-practica")
 | `area` | sí | Una de las de `AREAS` en `src/lib/cursos.ts` |
 | `nivel` | sí | `INTRODUCCIÓN`, `INTERMEDIO`, `AVANZADO` o `HARDMODE` |
 | `horas` | sí | Duración total |
-| `icono` | no | Solo logotipos reales de producto. Si el curso no trata sobre uno, se omite |
+| `icono` | sí | Logotipo del producto o símbolo de la materia. Se valida contra `src/lib/iconos-curso.ts`; Fortran usa `fortran` |
 | `paquetes` | no | Paquetes de PyPI que hacen falta para ejecutar el código |
+| `precio` | no | Precio en soles. Al actualizar, si se omite conserva el precio existente; en un curso nuevo usa 20 |
+| `estado` | no | `borrador`, `publico` o `archivado`. Al actualizar, si se omite conserva el estado existente |
+| `acceso_libre` | no | `true` permite matricularse sin pago; `false` exige compra o acceso administrativo |
+| `orden` | no | Posición del curso en el catálogo; usa 99 por omisión en cursos nuevos |
+| `ruta` | no | Objeto que crea o actualiza una ruta y coloca el curso dentro de ella |
+
+Dentro de `ruta`, `slug`, `nombre`, `orden` y `posicion` son obligatorios para
+una ruta nueva. `descripcion` puede omitirse. `requisitos` es una lista de slugs
+de cursos que deben existir antes de publicar esta ficha. Cuando `curso.md`
+declara estos datos, el formulario de `/panel/cursos` actualiza la ficha, la
+ruta, la posición y los prerrequisitos junto con el contenido. No hace falta
+editar TypeScript, escribir SQL ni volver a desplegar.
 
 El bloque **`preludio`** es código que se ejecuta una vez antes que cualquier
 otro, para dejar preparado lo que las sesiones dan por hecho: una conexión, un

@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
+    "test:iconos": "node scripts/validar-iconos-cursos.cjs",
+    "test:fortran:introduccion": "node scripts/verificar-fortran.mjs --curso=fortran-fundamentos",
     "prepare": "husky"
   },
   "dependencies": {

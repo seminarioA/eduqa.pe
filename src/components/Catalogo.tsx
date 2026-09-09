@@ -73,12 +73,8 @@ export function FichaCurso({
   return (
     <div className="flex aspect-square w-full flex-col rounded-xl border border-borde bg-fondo p-3">
       <div className="flex items-start justify-between gap-3">
-        {/* Sin icono genérico: si el curso no es sobre un producto, va vacío. */}
-        {icono ? (
-          <Icono nombre={icono} className="size-6 shrink-0 text-texto-tenue" />
-        ) : (
-          <span aria-hidden="true" />
-        )}
+        {/* Todo curso conserva un icono visible. */}
+        <Icono nombre={icono} className="size-6 shrink-0 text-texto-tenue" />
         <span
           className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ring-1 ring-inset ${
             COLOR_NIVEL[nivel] ?? "bg-superficie text-texto-suave ring-borde"

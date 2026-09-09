@@ -56,11 +56,7 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
     return (
       <div className="flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5">
         <div className="flex items-start justify-between gap-3">
-          {curso.icono ? (
-            <Icono nombre={curso.icono} className="size-12 shrink-0 text-texto-tenue" />
-          ) : (
-            <span aria-hidden="true" />
-          )}
+          <Icono nombre={curso.icono} className="size-12 shrink-0 text-texto-tenue" />
           <span
             className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide ring-1 ring-inset ${
               COLOR_ESTADO[curso.estado] ?? COLOR_ESTADO.borrador

@@ -3,6 +3,7 @@ import "server-only";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
+import { resolverIconoCurso } from "@/lib/iconos-curso";
 import {
   REGIONES_VENN,
   derivarSecciones,
@@ -353,7 +354,7 @@ export function construirCurso(
     area: ficha.area as Curso["area"],
     nivel: String(ficha.nivel ?? "INTRODUCCIÓN"),
     horas: Number(ficha.horas ?? 0),
-    ...(ficha.icono ? { icono: ficha.icono as Curso["icono"] } : {}),
+    icono: resolverIconoCurso(String(ficha.slug ?? nombre), String(ficha.area ?? ""), ficha.icono),
     ...(ficha.paquetes ? { paquetes: ficha.paquetes as string[] } : {}),
     ...(preludio ? { preludio } : {}),
     lecciones,

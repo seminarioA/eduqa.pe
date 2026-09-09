@@ -131,14 +131,10 @@ export default async function Page() {
                     className="group flex flex-col rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
                   >
                     <div className="flex items-start justify-between gap-3">
-                      {c.icono ? (
-                        <Icono
+                      <Icono
                           nombre={c.icono}
                           className="size-9 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
                         />
-                      ) : (
-                        <span aria-hidden="true" />
-                      )}
                       <span className="flex shrink-0 flex-col items-end gap-1">
                         <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900">
                           {c.nivel}

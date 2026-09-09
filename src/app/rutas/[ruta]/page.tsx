@@ -149,14 +149,10 @@ export default async function Page({ params }: PageProps<"/rutas/[ruta]">) {
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
-                {paso.curso.icono ? (
-                  <Icono
+                <Icono
                     nombre={paso.curso.icono}
                     className="size-8 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
                   />
-                ) : (
-                  <span className="size-8 shrink-0" aria-hidden="true" />
-                )}
 
                 <span className="min-w-0 flex-1">
                   <span

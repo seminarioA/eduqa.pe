@@ -4,10 +4,14 @@
 // Todo lo que dibuje un logo de marca vive detrás de este archivo.
 
 import type { ComponentType } from "react";
+import { BookOpen, CloudUpload, Database, Sigma, Pill, Dna } from "lucide-react";
+import type { IconoNombre } from "@/lib/iconos-curso";
+export type { IconoNombre } from "@/lib/iconos-curso";
 import { FaLinkedin } from "react-icons/fa6";
 import {
   SiDocker,
   SiFastapi,
+  SiFortran,
   SiGithub,
   SiGithubactions,
   SiGooglegemini,
@@ -33,30 +37,19 @@ import {
   SiX,
   SiYoutube,
 } from "react-icons/si";
-// Regla: solo logos reales de productos. Prohibido el glifo genérico —
-// si un curso no es sobre un producto concreto, va SIN icono.
-export type IconoNombre =
-  | "docker"
-  | "fastapi"
-  | "githubactions"
-  | "gemini"
-  | "huggingface"
-  | "pandas"
-  | "postgresql"
-  | "python"
-  | "pytorch"
-  | "scikitlearn"
-  | "opencv"
-  | "linux"
-  | "n8n"
-  | "notebooklm"
-  | "redis"
-  | "sqlite"
-  | "supabase";
+// Todos los cursos muestran un icono. Las tecnologías usan sus logotipos;
+// las materias generales usan símbolos de la biblioteca Lucide.
 
 const MAPA: Record<IconoNombre, ComponentType<{ className?: string }>> = {
+  libro: BookOpen,
+  nube: CloudUpload,
+  datos: Database,
+  matematicas: Sigma,
+  farmacologia: Pill,
+  bioingenieria: Dna,
   docker: SiDocker,
   fastapi: SiFastapi,
+  fortran: SiFortran,
   githubactions: SiGithubactions,
   gemini: SiGooglegemini,
   huggingface: SiHuggingface,
@@ -78,10 +71,10 @@ export function Icono({
   nombre,
   className,
 }: {
-  nombre: IconoNombre;
+  nombre?: IconoNombre;
   className?: string;
 }) {
-  const C = MAPA[nombre];
+  const C = MAPA[nombre ?? "libro"] ?? MAPA.libro;
   return <C className={className} aria-hidden="true" />;
 }
 

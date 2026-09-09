@@ -141,8 +141,8 @@ export type Curso = {
   area: Area;
   nivel: string;
   horas: number;
-  /** Solo logos reales de producto. Si el curso no trata sobre uno, se omite. */
-  icono?: IconoNombre;
+  /** Obligatorio: logotipo del producto o símbolo de la materia. */
+  icono: IconoNombre;
   /**
    * Paquetes de PyPI que hacen falta para ejecutar el código del curso. Se
    * instalan con micropip la primera vez que alguien ejecuta algo, no al
@@ -292,4 +292,3 @@ export function agruparEnSecciones(bloques: Bloque[]): Seccion[] {
 
   return raiz;
 }
-
