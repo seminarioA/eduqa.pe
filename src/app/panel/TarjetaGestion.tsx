@@ -146,6 +146,9 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
   return (
     <form
       action={accion}
+      // React reinicia el formulario cuando la acción termina, incluso si
+      // devuelve un error. El borrador se conserva hasta guardar o cancelar.
+      onReset={(event) => event.preventDefault()}
       className="flex min-w-0 flex-col rounded-xl border-2 border-rojo-acento bg-fondo p-5"
     >
       <input type="hidden" name="curso" value={curso.slug} />
