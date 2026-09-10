@@ -5,8 +5,8 @@ import { clienteServidor } from "@/lib/supabase/servidor";
 
 export type EstadoGuardado = { ok: boolean; error?: string };
 
-export const ESTADOS = ["borrador", "privado", "publico"] as const;
-export type EstadoCurso = (typeof ESTADOS)[number];
+const ESTADOS = ["borrador", "privado", "publico"] as const;
+type EstadoCurso = (typeof ESTADOS)[number];
 
 /**
  * Guarda los campos editables de un curso.

@@ -4,9 +4,9 @@ import { useActionState, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import {
   cambiarEstadoReporte,
-  ESTADOS_REPORTE,
   type EstadoReporte,
 } from "./acciones";
+import { ESTADOS_REPORTE } from "./estados";
 import { Selector } from "@/components/Selector";
 
 const ETIQUETAS: Record<string, string> = {

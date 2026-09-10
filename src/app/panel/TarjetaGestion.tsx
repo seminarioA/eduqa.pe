@@ -47,8 +47,23 @@ const ETIQUETA_ESTADO: Record<string, string> = {
 export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
   // Los campos arrancan bloqueados: editar es una decisión, no un accidente.
   const [editando, setEditando] = useState(false);
+  const [borrador, setBorrador] = useState({
+    titulo: curso.titulo,
+    resumen: curso.resumen,
+    estado: curso.estado,
+    precio: String(curso.precio),
+    accesoLibre: curso.accesoLibre,
+  });
   const [estado, accion, guardando] = useActionState<EstadoGuardado | null, FormData>(
-    guardarCurso,
+    async (anterior, datos) => {
+      try {
+        const resultado = await guardarCurso(anterior, datos);
+        if (resultado.ok) setEditando(false);
+        return resultado;
+      } catch {
+        return { ok: false, error: "No pudimos confirmar el guardado. Inténtalo de nuevo; tus cambios siguen en el formulario." };
+      }
+    },
     null,
   );
 
@@ -95,7 +110,16 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
         <div className="mt-3 flex gap-2">
           <button
             type="button"
-            onClick={() => setEditando(true)}
+            onClick={() => {
+              setBorrador({
+                titulo: curso.titulo,
+                resumen: curso.resumen,
+                estado: curso.estado,
+                precio: String(curso.precio),
+                accesoLibre: curso.accesoLibre,
+              });
+              setEditando(true);
+            }}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-borde-fuerte px-3 py-2 text-xs font-medium text-texto-suave transition-colors hover:border-rojo-acento hover:text-rojo-acento"
           >
             <Pencil size={13} aria-hidden="true" />
@@ -110,7 +134,7 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
         </div>
 
         {estado?.ok && (
-          <p className="mt-2 flex items-center gap-1 text-[11px] text-exito">
+          <p role="status" className="mt-2 flex items-center gap-1 text-[11px] text-exito">
             <Check size={12} aria-hidden="true" />
             Guardado
           </p>
@@ -122,7 +146,7 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
   return (
     <form
       action={accion}
-      className="flex aspect-square flex-col overflow-y-auto rounded-xl border-2 border-rojo-acento bg-fondo p-5"
+      className="flex min-w-0 flex-col rounded-xl border-2 border-rojo-acento bg-fondo p-5"
     >
       <input type="hidden" name="curso" value={curso.slug} />
 
@@ -133,6 +157,7 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
         <button
           type="button"
           onClick={() => setEditando(false)}
+          disabled={guardando}
           aria-label="Cancelar"
           className="rounded p-1 text-texto-tenue transition-colors hover:text-rojo-acento"
         >
@@ -142,13 +167,20 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
 
       <div className="space-y-3">
         <Campo etiqueta="Título">
-          <input name="titulo" defaultValue={curso.titulo} required className={claseInput} />
+          <input
+            name="titulo"
+            value={borrador.titulo}
+            onChange={(e) => setBorrador({ ...borrador, titulo: e.target.value })}
+            required
+            className={claseInput}
+          />
         </Campo>
 
         <Campo etiqueta="Resumen">
           <textarea
             name="resumen"
-            defaultValue={curso.resumen}
+            value={borrador.resumen}
+            onChange={(e) => setBorrador({ ...borrador, resumen: e.target.value })}
             required
             rows={3}
             className={`${claseInputBase} w-full resize-none`}
@@ -157,7 +189,12 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
 
         <div className="grid grid-cols-2 gap-3">
           <Campo etiqueta="Estado">
-            <select name="estado" defaultValue={curso.estado} className={claseInput}>
+            <select
+              name="estado"
+              value={borrador.estado}
+              onChange={(e) => setBorrador({ ...borrador, estado: e.target.value })}
+              className={claseInput}
+            >
               <option value="borrador">Borrador</option>
               <option value="privado">Privado</option>
               <option value="publico">Público</option>
@@ -170,7 +207,8 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
               type="number"
               min={0}
               step="0.10"
-              defaultValue={curso.precio}
+              value={borrador.precio}
+              onChange={(e) => setBorrador({ ...borrador, precio: e.target.value })}
               className={claseInput}
             />
           </Campo>
@@ -182,7 +220,8 @@ export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
           <input
             type="checkbox"
             name="acceso_libre"
-            defaultChecked={curso.accesoLibre}
+            checked={borrador.accesoLibre}
+            onChange={(e) => setBorrador({ ...borrador, accesoLibre: e.target.checked })}
             className="mt-0.5 size-3.5 shrink-0 accent-rojo"
           />
           <span>

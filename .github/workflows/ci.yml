@@ -41,6 +41,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test:catalogo
+      - run: npm run test:panel
       - name: Instalar compiladores para los cursos Fortran
         run: sudo apt-get update && sudo apt-get install -y gfortran build-essential
       - run: npm run test:fortran

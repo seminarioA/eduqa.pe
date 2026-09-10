@@ -2,16 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { clienteServidor } from "@/lib/supabase/servidor";
+import { ESTADOS_REPORTE, type EstadoDeReporte } from "./estados";
 
 export type EstadoReporte = { ok: boolean; error?: string };
-
-export const ESTADOS_REPORTE = [
-  "abierto",
-  "en_curso",
-  "resuelto",
-  "descartado",
-] as const;
-export type EstadoDeReporte = (typeof ESTADOS_REPORTE)[number];
 
 /**
  * Triaje de un reporte. Quién puede hacerlo lo decide RLS: la política de
