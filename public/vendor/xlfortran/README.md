@@ -12,6 +12,12 @@ intento. Los programas se compilan y ejecutan localmente en WebAssembly. La pág
 recibe únicamente texto del protocolo Jupyter; no presenta HTML producido por el
 programa. La carga inicial del motor es de aproximadamente 65 MB sin compresión.
 
+Al abrir un curso o el sandbox de Fortran se descarga e inicializa un Worker de
+reserva. La primera ejecución consume esa reserva; al terminar se destruye y se
+prepara otra mientras siga abierto un curso o sandbox. Al salir se libera la
+reserva. La inicialización compartida evita duplicar la descarga si se pulsa
+Ejecutar antes de que termine la carga.
+
 Referencias técnicas:
 - https://gws.phd/posts/fortran_wasm/ (Fortran y WebAssembly)
 - https://github.com/lfortran/lfortran/blob/main/doc/src/jupyterlite.md

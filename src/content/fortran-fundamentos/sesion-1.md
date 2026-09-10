@@ -11,7 +11,7 @@ Al terminar la sesión podrás reconocer las partes de una unidad de programa, g
 
 # Preparar el entorno
 
-Necesitas un editor de texto, una terminal y GNU Fortran. Sigue la instalación correspondiente a tu sistema en la documentación enlazada y ejecuta `gfortran --version` para comprobar que la terminal encuentra el compilador. Puedes ejecutar y editar Fortran en EDUQA. El compilador se carga la primera vez que pulsas «Ejecutar» o «Comprobar»; las siguientes ejecuciones reutilizan la descarga. Los bloques marcados «ejecución local» requieren GNU Fortran.
+Necesitas un editor de texto, una terminal y GNU Fortran. Sigue la instalación correspondiente a tu sistema en la documentación enlazada y ejecuta `gfortran --version` para comprobar que la terminal encuentra el compilador. Puedes ejecutar y editar Fortran en EDUQA. El compilador se descarga y prepara al abrir el curso. Puedes seguir leyendo durante la carga y practicar con tus propios programas en el sandbox de la ruta, disponible desde el índice del curso. Los bloques marcados «ejecución local» requieren GNU Fortran.
 
 > Doc: [Fortran-lang: instalar GNU Fortran](https://fortran-lang.org/learn/os_setup/install_gfortran/)
 

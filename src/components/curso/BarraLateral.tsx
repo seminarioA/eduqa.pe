@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { ChevronRight, Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
+import { ChevronRight, FlaskConical, Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import type { Curso, Leccion } from "@/lib/cursos";
 import { Llama } from "@/components/Llama";
 
@@ -155,12 +155,14 @@ function Contenido({
   inicio,
   seccionActiva,
   onNavegar,
+  sandbox,
 }: {
   curso: Curso;
   actual: Leccion;
   inicio: string;
   seccionActiva: string | null;
   onNavegar?: () => void;
+  sandbox?: string;
 }) {
   return (
     <nav className="flex h-full flex-col">
@@ -177,6 +179,7 @@ function Contenido({
       <div className="border-b border-borde px-4 py-3">
         <p className="text-xs uppercase tracking-wide text-texto-tenue">Curso</p>
         <p className="mt-1 text-sm font-semibold leading-snug">{curso.titulo}</p>
+        {sandbox && <Link href={sandbox} onClick={onNavegar} className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-rojo-acento hover:underline"><FlaskConical size={15} aria-hidden="true" />Sandbox de Fortran</Link>}
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-4">
@@ -200,10 +203,12 @@ export function BarraLateral({
   curso,
   actual,
   inicio = "/cursos",
+  sandbox,
 }: {
   curso: Curso;
   actual: Leccion;
   inicio?: string;
+  sandbox?: string;
 }) {
   const [movilAbierta, setMovilAbierta] = useState(false);
   const [plegada, setPlegada] = useState(false);
@@ -255,6 +260,7 @@ export function BarraLateral({
               curso={curso}
               actual={actual}
               inicio={inicio}
+              sandbox={sandbox}
               seccionActiva={seccionActiva}
               onNavegar={() => setMovilAbierta(false)}
             />
@@ -282,6 +288,7 @@ export function BarraLateral({
             <Link href={inicio} aria-label="Volver">
               <Llama className="h-8 w-auto text-rojo-acento" />
             </Link>
+            {sandbox && <Link href={sandbox} aria-label="Sandbox de Fortran" className="rounded-lg p-2 text-rojo-acento hover:bg-superficie"><FlaskConical size={18} aria-hidden="true" /></Link>}
           </div>
         ) : (
           <div className="relative h-full">
@@ -298,6 +305,7 @@ export function BarraLateral({
               curso={curso}
               actual={actual}
               inicio={inicio}
+              sandbox={sandbox}
               seccionActiva={seccionActiva}
             />
           </div>

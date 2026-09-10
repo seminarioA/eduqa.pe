@@ -7,6 +7,9 @@ let salida = '';
 let fallo = false;
 let terminado = false;
 let iniciado = false;
+let preparacion;
+let entrada = new Uint8Array();
+let posicion = 0;
 function agregar(texto) {
   salida += limpiar(texto);
   if (salida.length > LIMITE_SALIDA) {
@@ -28,15 +31,9 @@ self.postMessage = mensaje => {
   if (tipo === 'error') { fallo = true; agregar((mensaje.content.traceback || [mensaje.content.evalue]).join('\n')); }
   if (tipo === 'execute_reply') finalizar(fallo || mensaje.content.status !== 'ok');
 };
-self.onmessage = async ({ data }) => {
-  if (iniciado) return;
-  iniciado = true;
-  try {
-    if (typeof data.codigo !== 'string' || data.codigo.length > 50000) throw new Error('El programa debe tener como máximo 50 000 caracteres.');
-    enviar({ tipo: 'fase', fase: 'cargando' });
+function preparar() {
+  return preparacion ??= (async () => {
     importScripts(BASE + 'xlfortran.js');
-    const entrada = new TextEncoder().encode(String(data.entrada ?? ''));
-    let posicion = 0;
     const mod = await self.createXeusModule({
       locateFile: archivo => BASE + archivo,
       print: texto => agregar(texto + '\n'),
@@ -47,13 +44,30 @@ self.onmessage = async ({ data }) => {
     self.get_stdin = () => ({ error: 'Introduce los datos en el campo de entrada antes de ejecutar.' });
     mod.FS.mkdir('/practica');
     mod.FS.chdir('/practica');
+    const kernel = new mod.xkernel(['xlfortran']);
+    const servidor = kernel.get_server();
+    kernel.start();
+    return { mod, servidor, kernel };
+  })();
+}
+self.onmessage = async ({ data }) => {
+  if (iniciado) return;
+  try {
+    if (data.tipo === 'preparar') {
+      await preparar();
+      enviar({ tipo: 'listo' });
+      return;
+    }
+    iniciado = true;
+    if (typeof data.codigo !== 'string' || data.codigo.length > 50000) throw new Error('El programa debe tener como máximo 50 000 caracteres.');
+    const { mod, servidor } = await preparar();
+    entrada = new TextEncoder().encode(String(data.entrada ?? ''));
+    posicion = 0;
+    salida = '';
     for (const [nombre, texto] of Object.entries(data.archivos ?? {})) {
       if (!/^[a-zA-Z0-9_.-]+$/.test(nombre) || typeof texto !== 'string' || texto.length > 50000) throw new Error('Archivo de práctica inválido.');
       mod.FS.writeFile(nombre, texto);
     }
-    const kernel = new mod.xkernel(['xlfortran']);
-    const servidor = kernel.get_server();
-    kernel.start();
     enviar({ tipo: 'fase', fase: 'ejecutando' });
     servidor.notify_listener({
       header: { msg_id: 'ejecucion', username: 'estudiante', session: 'practica', date: new Date().toISOString(), msg_type: 'execute_request', version: '5.3' },

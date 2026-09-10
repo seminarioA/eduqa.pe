@@ -88,6 +88,6 @@ export const config = {
   // Se excluyen estáticos e imágenes: no necesitan sesión y encarecerían
   // cada petición con una llamada de red a Supabase.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|vendor/|fortran/|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

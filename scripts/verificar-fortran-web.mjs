@@ -7,10 +7,12 @@ import { cargar } from './validar-iconos-cursos.mjs';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const { cargarCursosLocales } = cargar(path.resolve('src/lib/curso-markdown.ts'));
 const biblioteca = ts.transpileModule(fs.readFileSync('src/lib/fortran-web.ts','utf8'), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+let fallarDescarga = false;
 const servidor = http.createServer((req,res)=>{
   const ruta = new URL(req.url,'http://localhost').pathname;
   if(ruta==='/'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><body>Verificación Fortran</body></html>');return;}
   if(ruta==='/motor.js'){res.setHeader('Content-Type','application/javascript');res.end(biblioteca);return;}
+  if(fallarDescarga && ruta.endsWith('/xlfortran.js')){res.statusCode=503;res.end('Descarga no disponible');return;}
   const archivo=path.resolve('public','.'+ruta);
   if(!archivo.startsWith(path.resolve('public')+path.sep)||!fs.existsSync(archivo)||!fs.statSync(archivo).isFile()){res.statusCode=404;res.end();return;}
   res.setHeader('Content-Type',archivo.endsWith('.wasm')?'application/wasm':archivo.endsWith('.js')?'application/javascript':'application/octet-stream');
@@ -32,7 +34,45 @@ try{
  async function ejecutar(codigo,opciones={}){
   return page.evaluate(async({codigo,opciones})=>{const {ejecutarFortran}=await import('/motor.js');return ejecutarFortran(codigo,opciones);},{codigo,opciones});
  }
- if(!process.argv.includes('--solo-ejercicios')){
+ let workers=0;
+ page.on('worker',()=>workers++);
+ const preparado=await page.evaluate(async()=>{
+  const motor=await import('/motor.js');
+  const resultados=await Promise.all([motor.prepararFortran(),motor.prepararFortran(),motor.prepararFortran()]);
+  return {resultados,estado:motor.estadoFortran()};
+ });
+ assert.deepEqual(preparado,{resultados:[true,true,true],estado:'listo'});
+ assert.equal(workers,1,'La precarga debe compartir un único Worker');
+ assert.deepEqual(await ejecutar('program primero\n print *, 42\nend program primero'),{salida:'42',error:false});
+ assert.equal(workers,1,'La primera ejecución debe consumir el compilador ya preparado');
+ const duranteCarga=await page.evaluate(async()=>{
+  const motor=await import('/motor.js');
+  const precarga=motor.prepararFortran();
+  const resultado=await motor.ejecutarFortran('program segundo\n print *, 7\nend program segundo');
+  return {preparado:await precarga,resultado};
+ });
+ assert.deepEqual(duranteCarga,{preparado:true,resultado:{salida:'7',error:false}});
+ assert.equal(workers,2,'Ejecutar durante la precarga no debe iniciar otra descarga');
+ const limpieza=await page.evaluate(async()=>{
+  const motor=await import('/motor.js');
+  const salir=motor.mantenerFortranPreparado();
+  await motor.prepararFortran();
+  salir();
+  await new Promise(resolve=>setTimeout(resolve,20));
+  return motor.estadoFortran();
+ });
+ assert.equal(limpieza,'sin-empezar');
+ // Una pestaña sin caché permite simular un fallo real y reintentar.
+ const falloContexto=await browser.newContext();
+ const falloPagina=await falloContexto.newPage();
+ await falloPagina.goto(`http://127.0.0.1:${servidor.address().port}/`);
+ fallarDescarga=true;
+ assert.equal(await falloPagina.evaluate(async()=>{const m=await import('/motor.js');await m.prepararFortran();return m.estadoFortran();}),'error');
+ fallarDescarga=false;
+ assert.equal(await falloPagina.evaluate(async()=>{const m=await import('/motor.js');return m.prepararFortran();}),true);
+ await falloContexto.close();
+ console.log('Precarga única, reutilización, ejecución durante la carga, liberación y reintento verificados.');
+ if(!process.argv.includes('--solo-ejercicios') && !process.argv.includes('--solo-preparacion')){
   let cantidad=0;
   for(const c of cursos)for(const l of c.lecciones)for(const b of l.bloques){
    if(b.tipo!=='codigo'||b.lenguaje!=='fortran'||b.sinConsola)continue;
@@ -43,7 +83,7 @@ try{
   }
   console.log(`${cantidad} ejemplos ejecutados en WebAssembly y comparados con GNU Fortran.`);
  }
- if(!process.argv.includes('--solo-ejemplos')) {
+ if(!process.argv.includes('--solo-ejemplos') && !process.argv.includes('--solo-preparacion')) {
  for(const c of cursos)for(const l of c.lecciones)for(const e of Object.values(l.ejercicios??{})){
   if(e.lenguaje!=='fortran')continue;
   const ficha=respuestas.find(r=>r.curso===c.slug&&r.archivo===`sesion-${l.numero}.md`);

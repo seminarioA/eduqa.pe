@@ -9,7 +9,7 @@ Este curso aplica los módulos, la memoria y los procedimientos estudiados en Fo
 
 Necesitas GNU Fortran, un compilador C y Make. En Ubuntu puedes instalarlos con `sudo apt install gfortran build-essential`; en macOS, instala las herramientas de línea de comandos de Xcode y GNU Fortran. Comprueba la instalación con `gfortran --version`, `cc --version` y `make --version`. Cada bloque Fortran incluye sus dependencias: guárdalo en un archivo independiente y ejecuta `gfortran -std=f2018 -Wall -Wextra -fcheck=all archivo.f90 -o programa`, seguido de `./programa`.
 
-`-std=f2018` selecciona Fortran 2018; `-Wall` y `-Wextra` activan advertencias; `-fcheck=all` añade comprobaciones durante la ejecución; `-o` nombra el ejecutable. También puedes editar y ejecutar los ejemplos y resolver el ejercicio de cada sesión directamente en el navegador. La primera ejecución descarga el compilador WebAssembly; cada intento usa memoria y archivos virtuales independientes.
+`-std=f2018` selecciona Fortran 2018; `-Wall` y `-Wextra` activan advertencias; `-fcheck=all` añade comprobaciones durante la ejecución; `-o` nombra el ejecutable. También puedes editar y ejecutar los ejemplos y resolver el ejercicio de cada sesión directamente en el navegador. Al abrir el curso se descarga y prepara el compilador WebAssembly; cada intento usa memoria y archivos virtuales independientes. El sandbox de la ruta permite practicar con programas propios y archivos de entrada.
 
 # Definir el contrato de una biblioteca
 

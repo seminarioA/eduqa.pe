@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Check, Clock, Lock, Play, Route as RouteIcon } from "lucide-react";
+import { ArrowRight, Check, Clock, FlaskConical, Lock, Play, Route as RouteIcon } from "lucide-react";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { perfilActual, misMatriculas } from "@/lib/matriculas";
 import { miProgreso, contarPorCurso } from "@/lib/progreso";
@@ -132,6 +132,14 @@ export default async function Page({ params }: PageProps<"/rutas/[ruta]">) {
           <Play size={15} aria-hidden="true" />
           {hechos > 0 ? "Continuar" : "Empezar"}: {siguiente.curso.titulo}
         </Link>
+      )}
+
+      {pasos.some(p => p.curso.icono === "fortran") && (
+        <section className="mt-6 rounded-xl border border-borde bg-superficie p-5">
+          <h2 className="flex items-center gap-2 font-semibold"><FlaskConical size={18} aria-hidden="true" className="text-rojo-acento" />Sandbox de Fortran</h2>
+          <p className="mt-2 text-sm leading-relaxed text-texto-suave">Un espacio para practicar a lo largo de la ruta: escribe, modifica y ejecuta tus propios programas.</p>
+          <Link href={`/rutas/${ruta.slug}/sandbox`} className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-rojo-acento hover:underline">Abrir sandbox<ArrowRight size={15} aria-hidden="true" /></Link>
+        </section>
       )}
 
       <ol className="mt-8 divide-y divide-borde rounded-xl border border-borde">

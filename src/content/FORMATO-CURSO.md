@@ -283,7 +283,10 @@ un archivo virtual. Estas vallas se asocian al programa anterior. El alumno pued
 editar sus datos desde «Datos de entrada»; cada ejecución reconstruye el entorno
 sin conservar los archivos escritos por un intento anterior.
 
-El motor se descarga al primer uso. «Detener» cancela el proceso; la ejecución
+El motor se descarga y prepara al abrir una lección de Fortran o el sandbox de
+su ruta de aprendizaje. El índice del curso y la página de la ruta enlazan al
+sandbox, que conserva un borrador local y permite descargar el fuente `.f90`.
+«Detener» cancela el proceso; la ejecución
 tiene un límite de tiempo y de salida. Las fuentes del alumno permanecen en su
 navegador. Consulta `public/vendor/xlfortran/README.md` para las versiones,
 licencias, comprobaciones y limitaciones conocidas del motor.

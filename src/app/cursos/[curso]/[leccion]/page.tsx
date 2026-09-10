@@ -25,6 +25,8 @@ import { SelectorTema } from "@/components/Tema";
 import { Teoria } from "@/components/curso/Teoria";
 import { Venn } from "@/components/curso/Venn";
 import { CargandoCurso } from "@/components/curso/CargandoCurso";
+import { PreparacionFortran } from "@/components/curso/PreparacionFortran";
+import { rutaDeCadaCurso } from "@/lib/rutas";
 import { Ejercicios } from "@/components/curso/Ejercicios";
 import { EjercicioPunto } from "@/components/curso/EjercicioPunto";
 import { ejerciciosPython1 } from "@/content/python-ejercicios";
@@ -173,6 +175,8 @@ export default async function Page({
   const valoracionPropia = siguiente ? null : await miValoracion(cursoSlug);
 
   const ejecutable = CON_CONSOLA.has(`${cursoSlug}/${leccionSlug}`);
+  const esFortran = curso.icono === "fortran" || leccion.bloques.some(b => b.tipo === "codigo" && b.lenguaje === "fortran");
+  const rutaFortran = esFortran ? (await rutaDeCadaCurso()).get(cursoSlug) : undefined;
 
   // Sin sesión no hay progreso que guardar: el botón no se pinta.
   const vistas = usuario ? await vistasDe(cursoSlug) : new Set<string>();
@@ -184,7 +188,7 @@ export default async function Page({
       {/* El intérprete se trae al abrir la sesión, no al pulsar Ejecutar. */}
       {ejecutable && <CargandoCurso paquetes={curso.paquetes} />}
 
-      <BarraLateral curso={curso} actual={leccion} inicio={usuario ? "/cursos" : "/"} />
+      <BarraLateral curso={curso} actual={leccion} inicio={usuario ? "/cursos" : "/"} sandbox={rutaFortran ? `/rutas/${rutaFortran.ruta}/sandbox` : undefined} />
 
       <main className="min-w-0 flex-1">
         <article className="mx-auto w-full max-w-3xl px-6 py-12 lg:px-10">
@@ -208,6 +212,7 @@ export default async function Page({
             <h1 className="mt-2 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               {leccion.titulo}
             </h1>
+            {esFortran && <PreparacionFortran />}
           </header>
 
           <div className="mt-8">
