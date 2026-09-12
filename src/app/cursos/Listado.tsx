@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
-import { Search, X } from "lucide-react";
+import { BookOpen, Flame, Route, Search, X } from "lucide-react";
 import { TarjetaCursoMatricula, type DatosCurso } from "./TarjetaCursoMatricula";
 import { Selector } from "@/components/Selector";
 import { TarjetaRuta, type DatosRuta } from "@/components/TarjetaRuta";
@@ -195,12 +195,13 @@ export function Listado({
               tableta no se mezcla con las tarjetas del grupo siguiente. */}
           {sinFiltrar && populares.length > 0 && (
             <section aria-labelledby="catalogo-populares">
-              <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h2 id="catalogo-populares" className="text-xl font-semibold tracking-tight">
-                  Más elegidos
-                </h2>
-                <p className="text-sm text-texto-suave">Por compras e inscripciones</p>
-              </div>
+              <h2
+                id="catalogo-populares"
+                className="mb-4 flex items-center gap-2 text-xl font-semibold tracking-tight"
+              >
+                <Flame size={20} className="shrink-0 text-rojo-acento" aria-hidden="true" />
+                Más elegidos
+              </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {populares.map((c) => <TarjetaPopular key={c.slug} curso={c} />)}
               </div>
@@ -211,12 +212,13 @@ export function Listado({
               aria-labelledby="catalogo-rutas"
               className={populares.length > 0 ? "border-t border-borde pt-8" : undefined}
             >
-              <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h2 id="catalogo-rutas" className="text-xl font-semibold tracking-tight">
-                  Rutas populares
-                </h2>
-                <p className="text-sm text-texto-suave">Según la actividad de sus cursos</p>
-              </div>
+              <h2
+                id="catalogo-rutas"
+                className="mb-4 flex items-center gap-2 text-xl font-semibold tracking-tight"
+              >
+                <Route size={20} className="shrink-0 text-rojo-acento" aria-hidden="true" />
+                Rutas populares
+              </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {rutas.map((r) => (
                   <TarjetaRuta
@@ -235,8 +237,12 @@ export function Listado({
               ? "border-t border-borde pt-8"
               : undefined}
           >
-            <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h2 id="catalogo-todos" className="text-xl font-semibold tracking-tight">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <h2
+                id="catalogo-todos"
+                className="flex items-center gap-2 text-xl font-semibold tracking-tight"
+              >
+                <BookOpen size={20} className="shrink-0 text-rojo-acento" aria-hidden="true" />
                 {sinFiltrar ? "Todos los cursos" : "Resultados"}
               </h2>
               <p className="text-sm text-texto-suave">

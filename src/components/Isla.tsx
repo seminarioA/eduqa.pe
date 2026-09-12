@@ -28,10 +28,7 @@ type Enlace = {
 };
 
 /**
- * Barra lateral flotante, presente en toda la aplicación.
- *
- * Es una isla y no una columna pegada al borde para que no compita con el
- * contenido: se separa del margen y deja respirar la página que tiene al lado.
+ * Barra lateral rectangular, pegada al borde de la aplicación.
  *
  * Va expandida, con la etiqueta al lado de cada icono. Un icono solo obliga a
  * adivinar o a esperar un rótulo emergente, y en una barra de cinco destinos
@@ -103,7 +100,7 @@ export function Isla({
   return (
     <nav
       aria-label="Navegación principal"
-      className="fixed inset-y-4 left-4 z-30 hidden w-56 flex-col rounded-2xl border border-borde bg-fondo p-3 shadow-lg lg:flex"
+      className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-borde bg-fondo px-3 py-4 lg:flex"
     >
       <Link
         href={inicio}
