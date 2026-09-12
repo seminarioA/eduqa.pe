@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { cargar } from "./validar-iconos-cursos.mjs";
 
 const carpeta = process.argv.find((arg) => arg.startsWith("--curso="))?.split("=")[1] ?? "fortran-fundamentos";
 assert.match(carpeta, /^fortran-[a-z-]+$/);
@@ -15,10 +16,11 @@ const patron = /```fortran(?: !sin-consola)?\n([\s\S]*?)\n```(?:\n\n```salida\n(
 const resultados = [];
 let negativos = 0;
 
-function ejecutar(codigo, cwd, entrada = "") {
+function ejecutar(codigo, cwd, entrada = "", debeCompilar = true) {
   writeFileSync(join(cwd, "programa.f90"), codigo);
   const compilacion = spawnSync(compilador, ["-std=f2018", "-Wall", "-Wextra", "-fcheck=all", "-fbacktrace", "programa.f90", "-o", "programa"], { cwd, encoding: "utf8", timeout: 20000 });
-  assert.equal(compilacion.status, 0, compilacion.stderr);
+  if (debeCompilar) assert.equal(compilacion.status, 0, compilacion.stderr);
+  else if (compilacion.status !== 0) return compilacion;
   const ejecucion = spawnSync(join(cwd, "programa"), [], { cwd, input: entrada, encoding: "utf8", timeout: 10000 });
   assert.ok(!ejecucion.error, String(ejecucion.error));
   return ejecucion;
@@ -75,7 +77,30 @@ try {
     if (actualizar) writeFileSync(ruta, texto);
   }
   assert.ok(resultados.length > 0, "No hay ejemplos Fortran");
-  console.log(`${carpeta}: ${resultados.length} programas compilados y ejecutados; ${negativos} soluciones incorrectas rechazadas.`);
+  const { cargarCurso } = cargar(resolve("src/lib/curso-markdown.ts"));
+  const curso = cargarCurso(carpeta);
+  const respuestas = JSON.parse(readFileSync("scripts/fortran-respuestas.json", "utf8"));
+  let ejercicios = 0;
+  for (const leccion of curso.lecciones) for (const [seccion, ejercicio] of Object.entries(leccion.ejercicios ?? {})) {
+    const respuesta = respuestas.find(r => r.curso === carpeta && r.archivo === `sesion-${leccion.numero}.md` && (!r.seccion || r.seccion === seccion));
+    assert.ok(respuesta, `Falta respuesta: ${leccion.slug}#${seccion}`);
+    for (const correcta of [true, false]) {
+      const cwd = join(temporal, `ejercicio-${ejercicios}-${correcta}`);
+      mkdirSync(cwd);
+      const codigo = ejercicio.plantilla.replace("___", () => correcta ? respuesta.respuesta : respuesta.incorrecta);
+      const ejecucion = ejecutar(codigo, cwd, "", correcta);
+      let acierto = false;
+      if (ejecucion.status === 0) {
+        try {
+          compararSalida(ejecucion.stdout, ejercicio.esperado, seccion);
+          acierto = true;
+        } catch { /* Una salida distinta debe rechazar la respuesta incorrecta. */ }
+      }
+      assert.equal(acierto, correcta, `${leccion.slug}#${seccion}: respuesta ${correcta ? 'correcta' : 'incorrecta'}; ${ejecucion.stdout} ${ejecucion.stderr}`);
+    }
+    ejercicios++;
+  }
+  console.log(`${carpeta}: ${resultados.length} programas y ${ejercicios} ejercicios ejecutados; respuestas correctas aceptadas e incorrectas rechazadas, además de ${negativos} pruebas de error.`);
 } finally {
   rmSync(temporal, { recursive: true, force: true });
 }

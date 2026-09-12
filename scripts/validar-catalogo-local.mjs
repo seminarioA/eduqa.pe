@@ -22,7 +22,7 @@ try {
   fs.rmSync(temporal, { recursive: true, force: true });
 }
 const ruta = [
-  ['fortran-fundamentos', 'Introducción a Fortran', 41],
+  ['fortran-fundamentos', 'Introducción a Fortran', null],
   ['fortran-calculo-cientifico', 'Fortran intermedio', 49],
   ['fortran-avanzado', 'Fortran avanzado', 8],
   ['fortran-ingenieria-software', 'Fortran aplicado a la ingeniería de software', 5],
@@ -36,8 +36,29 @@ for (const [i, [slug, titulo, programas]] of ruta.entries()) {
   assert.equal(curso.icono, 'fortran');
   assert.deepEqual(curso.lecciones.map(l => l.numero), [1,2,3,4]);
   const bloques = curso.lecciones.flatMap(l => l.bloques);
-  assert.equal(bloques.filter(b => b.tipo === 'codigo' && b.lenguaje === 'fortran').length, programas);
-  assert.equal(curso.lecciones.flatMap(l => Object.values(l.ejercicios ?? {})).filter(e => e.lenguaje === 'fortran').length, 4);
+  if (programas !== null) {
+    assert.equal(bloques.filter(b => b.tipo === 'codigo' && b.lenguaje === 'fortran').length, programas);
+    assert.equal(curso.lecciones.flatMap(l => Object.values(l.ejercicios ?? {})).filter(e => e.lenguaje === 'fortran').length, 4);
+  } else {
+    // Cada punto de introducción debe poder practicarse por separado.
+    for (const leccion of curso.lecciones) {
+      const puntos = leccion.secciones.filter(s => !['Antes de empezar', 'Cierre'].includes(s.titulo));
+      assert.ok(puntos.length > 0);
+      assert.deepEqual(Object.keys(leccion.ejercicios), puntos.map(s => s.id));
+      for (const ejercicio of Object.values(leccion.ejercicios)) {
+        assert.equal(ejercicio.lenguaje, 'fortran');
+        assert.equal(ejercicio.plantilla.match(/___/g)?.length, 1);
+        assert.ok(ejercicio.plantilla.split('\n').length <= 12, 'Ejercicio introductorio demasiado largo');
+      }
+      for (const bloque of leccion.bloques.filter(b => b.tipo === 'codigo')) {
+        assert.equal(bloque.lenguaje, 'fortran');
+        assert.ok(!bloque.sinConsola, 'Los ejemplos introductorios deben ejecutarse en el navegador');
+        assert.ok(bloque.docs?.length, 'Ejemplo sin documentación');
+      }
+    }
+    const inicio = curso.lecciones[0].bloques.find(b => b.tipo === 'codigo');
+    assert.match(inicio.contenido, /^program saludo\nend program saludo$/);
+  }
   const ficha = parse(fs.readFileSync(path.join('src/content',slug,'curso.md'),'utf8').split('---')[1]);
   assert.equal(ficha.ruta.posicion, i + 1);
   assert.deepEqual(ficha.ruta.requisitos, i ? [ruta[i-1][0]] : []);

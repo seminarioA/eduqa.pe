@@ -48,30 +48,6 @@
     "incorrecta": "estado == 0"
   },
   {
-    "curso": "fortran-fundamentos",
-    "archivo": "sesion-1.md",
-    "respuesta": "minutos * 60",
-    "incorrecta": "minutos * 100"
-  },
-  {
-    "curso": "fortran-fundamentos",
-    "archivo": "sesion-2.md",
-    "respuesta": "real(validas) / real(total)",
-    "incorrecta": "validas / total"
-  },
-  {
-    "curso": "fortran-fundamentos",
-    "archivo": "sesion-3.md",
-    "respuesta": "mediciones(indice) > 20",
-    "incorrecta": "mediciones(indice) >= 20"
-  },
-  {
-    "curso": "fortran-fundamentos",
-    "archivo": "sesion-4.md",
-    "respuesta": "sum(valores)",
-    "incorrecta": "size(valores)"
-  },
-  {
     "curso": "fortran-ingenieria-software",
     "archivo": "sesion-1.md",
     "respuesta": "size(valores) < 1",
@@ -94,5 +70,348 @@
     "archivo": "sesion-4.md",
     "respuesta": "real(resultado_local, c_double)",
     "incorrecta": "real(resultado_local + 1.0_real64, c_double)"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "la-unidad-de-programa-principal",
+    "respuesta": "end",
+    "incorrecta": "inicio"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "mostrar-un-texto-con-print",
+    "respuesta": "print",
+    "incorrecta": "escribir"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "escribir-comentarios",
+    "respuesta": "!",
+    "incorrecta": "?"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "exigir-declaraciones-con-implicit-none",
+    "respuesta": "none",
+    "incorrecta": "nada"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "declarar-una-variable-entera",
+    "respuesta": "integer",
+    "incorrecta": "entero"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "asignar-y-consultar-un-valor",
+    "respuesta": "=",
+    "incorrecta": "=="
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "cambiar-el-valor-de-una-variable",
+    "respuesta": "6",
+    "incorrecta": "4"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "numeros-reales",
+    "respuesta": "real",
+    "incorrecta": "integer"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "variables-de-texto",
+    "respuesta": "4",
+    "incorrecta": "3"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "valores-logicos",
+    "respuesta": ".false.",
+    "incorrecta": ".true."
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-1.md",
+    "seccion": "constantes-con-nombre",
+    "respuesta": "parameter",
+    "incorrecta": "constante"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "sumar",
+    "respuesta": "+",
+    "incorrecta": "-"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "restar",
+    "respuesta": "-",
+    "incorrecta": "+"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "multiplicar",
+    "respuesta": "*",
+    "incorrecta": "+"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "dividir-enteros",
+    "respuesta": "/",
+    "incorrecta": "*"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "dividir-numeros-reales",
+    "respuesta": "2.0",
+    "incorrecta": "7.0"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "elevar-a-una-potencia",
+    "respuesta": "**",
+    "incorrecta": "*"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "agrupar-operaciones",
+    "respuesta": "(2 + 3)",
+    "incorrecta": "2 + 3"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "unir-textos",
+    "respuesta": "//",
+    "incorrecta": "+"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "convertir-a-real",
+    "respuesta": "real",
+    "incorrecta": "inexistente"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "convertir-a-entero",
+    "respuesta": "int",
+    "incorrecta": "real"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-2.md",
+    "seccion": "obtener-el-resto",
+    "respuesta": "mod",
+    "incorrecta": "max"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "igualdad",
+    "respuesta": "==",
+    "incorrecta": "/="
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "desigualdad",
+    "respuesta": "/=",
+    "incorrecta": "=="
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "mayor-que",
+    "respuesta": ">",
+    "incorrecta": "<"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "menor-que",
+    "respuesta": "<",
+    "incorrecta": ">"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "mayor-o-igual-que",
+    "respuesta": ">=",
+    "incorrecta": ">"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "menor-o-igual-que",
+    "respuesta": "<=",
+    "incorrecta": "<"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "conjuncion-logica",
+    "respuesta": ".and.",
+    "incorrecta": ".or."
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "disyuncion-logica",
+    "respuesta": ".or.",
+    "incorrecta": ".and."
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "negacion-logica",
+    "respuesta": ".not.",
+    "incorrecta": ".not. .not."
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "ejecutar-bajo-una-condicion",
+    "respuesta": "if",
+    "incorrecta": "si"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "elegir-una-alternativa-con-else",
+    "respuesta": "else",
+    "incorrecta": "then"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "anadir-otra-condicion",
+    "respuesta": "==",
+    "incorrecta": "/="
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "repetir-con-do",
+    "respuesta": "3",
+    "incorrecta": "2"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "cambiar-el-incremento-del-bucle",
+    "respuesta": "2",
+    "incorrecta": "1"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "repetir-mientras-se-cumpla-una-condicion",
+    "respuesta": "3",
+    "incorrecta": "2"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "terminar-un-bucle-con-exit",
+    "respuesta": "exit",
+    "incorrecta": "cycle"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-3.md",
+    "seccion": "omitir-una-iteracion-con-cycle",
+    "respuesta": "cycle",
+    "incorrecta": "exit"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "crear-un-arreglo",
+    "respuesta": "3",
+    "incorrecta": "2"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "consultar-un-elemento",
+    "respuesta": "2",
+    "incorrecta": "1"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "modificar-un-elemento",
+    "respuesta": "2",
+    "incorrecta": "1"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "seleccionar-una-seccion",
+    "respuesta": ":",
+    "incorrecta": ","
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "consultar-el-tamano",
+    "respuesta": "size",
+    "incorrecta": "sum"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "sumar-los-elementos",
+    "respuesta": "sum",
+    "incorrecta": "size"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "recorrer-un-arreglo",
+    "respuesta": "indice",
+    "incorrecta": "1"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "definir-una-funcion",
+    "respuesta": "2",
+    "incorrecta": "3"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "definir-una-subrutina",
+    "respuesta": "call",
+    "incorrecta": "print"
+  },
+  {
+    "curso": "fortran-fundamentos",
+    "archivo": "sesion-4.md",
+    "seccion": "compartir-una-constante-mediante-un-modulo",
+    "respuesta": "use",
+    "incorrecta": "importar"
   }
 ]

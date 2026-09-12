@@ -1,451 +1,641 @@
 ---
 numero: 3
-titulo: "Decisiones y bucles"
+titulo: "Comparaciones, decisiones y bucles"
 ---
 
-# Objetivos y referencias
+# Antes de empezar
 
-La sesión combina explicación, programas completos y una práctica resuelta. Cada ejemplo se compila en su propio archivo; no depende de haber ejecutado otra sesión. Las referencias enlazan documentación pública del lenguaje y del compilador.
+Las comparaciones devuelven valores de tipo `logical`. Esos resultados permiten ejecutar una instrucción bajo una condición o repetirla mientras una condición se cumpla. Primero se estudian los seis operadores de comparación, uno por apartado.
 
-Al terminar la sesión podrás construir condiciones completas, ordenar ramas que se excluyen, seleccionar casos discretos y recorrer procesos mediante bucles cuyo criterio de terminación sea visible y verificable.
+# Igualdad
 
-# Valores y expresiones lógicas
-
-El tipo `logical` almacena `.true.` o `.false.`. Una expresión relacional compara dos valores y produce uno de esos resultados. Los seis operadores relacionales simbólicos son igualdad (`==`), desigualdad (`/=`), menor que (`<`), menor o igual que (`<=`), mayor que (`>`) y mayor o igual que (`>=`).
-
-Fortran también admite las grafías históricas `.eq.`, `.ne.`, `.lt.`, `.le.`, `.gt.` y `.ge.`. En código nuevo, las formas simbólicas suelen mostrar mejor la relación matemática. Los dos operandos deben ser comparables; una cadena no se compara numéricamente con un entero.
+El operador de igualdad (`==`) comprueba si dos valores son iguales. Devuelve un valor lógico. Se distingue de `=`, que asigna un valor.
 
 ```fortran
-program relaciones_presion
+program comparacion
   implicit none
-  real :: presion_pa
-  real :: referencia_pa
-  logical :: igual
-  logical :: distinta
-  logical :: menor
-  logical :: no_mayor
-  logical :: mayor
-  logical :: no_menor
-
-  presion_pa = 101420.0
-  referencia_pa = 101325.0
-  igual = presion_pa == referencia_pa
-  distinta = presion_pa /= referencia_pa
-  menor = presion_pa < referencia_pa
-  no_mayor = presion_pa <= referencia_pa
-  mayor = presion_pa > referencia_pa
-  no_menor = presion_pa >= referencia_pa
-
-  print *, igual, distinta, menor
-  print *, no_mayor, mayor, no_menor
-end program relaciones_presion
-```
-
-```salida
- F T F
- F T T
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-Cada asignación muestra uno de los seis operadores. En datos reales calculados, `==` y `/=` comparan representaciones exactas; para equivalencia aproximada se formula una tolerancia como en la sesión anterior.
-
-# Operadores lógicos combinatorios
-
-La negación (`.not.`) invierte un valor lógico. La conjunción (`.and.`) es verdadera cuando ambos operandos son verdaderos. La disyunción (`.or.`) es verdadera cuando al menos uno es verdadero. La equivalencia (`.eqv.`) es verdadera cuando ambos operandos tienen el mismo valor lógico y la no equivalencia (`.neqv.`), cuando difieren.
-
-Fortran no garantiza evaluación con cortocircuito. Si una segunda condición divide por una variable o accede a un elemento cuya validez depende de la primera condición, utiliza bloques `if` anidados.
-
-La precedencia lógica coloca primero las relaciones, luego `.not.`, después `.and.`, a continuación `.or.` y finalmente `.eqv.` o `.neqv.`. Los paréntesis deben conservarse cuando hagan visible la condición científica o de seguridad.
-
-```fortran
-program ventana_operativa
-  implicit none
-  real :: temperatura_c
-  real :: presion_kpa
-  logical :: mantenimiento
-  logical :: dentro_de_rango
-  logical :: operacion_permitida
-
-  temperatura_c = 42.0
-  presion_kpa = 180.0
-  mantenimiento = .false.
-  dentro_de_rango = (temperatura_c >= 15.0) .and. &
-                    (temperatura_c <= 55.0) .and. &
-                    (presion_kpa >= 120.0) .and. &
-                    (presion_kpa <= 220.0)
-  operacion_permitida = dentro_de_rango .and. (.not. mantenimiento)
-
-  print *, operacion_permitida
-end program ventana_operativa
+  print *, 4 == 4
+end program comparacion
 ```
 
 ```salida
  T
 ```
 
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-Los límites inferior y superior se escriben por separado: Fortran no interpreta una cadena matemática como `15.0 <= temperatura_c <= 55.0`. Cada relación produce un lógico y `.and.` combina los resultados.
-
-# IF de una sola rama
-
-El bloque `if` ejecuta su cuerpo solo cuando la expresión entre paréntesis es verdadera. La palabra clave `then` introduce el bloque y `end if` lo cierra. La sangría no modifica el significado, pero permite reconocer los límites de la rama.
-
-```fortran
-program advertencia_esfuerzo
-  implicit none
-  real :: esfuerzo_mpa
-  real, parameter :: limite_mpa = 250.0
-
-  esfuerzo_mpa = 267.0
-
-  if (esfuerzo_mpa > limite_mpa) then
-    print *, 'El esfuerzo supera el limite definido.'
-  end if
-end program advertencia_esfuerzo
-```
-
-```salida
- El esfuerzo supera el limite definido.
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-Cuando la condición es falsa, la ejecución continúa después de `end if`. El bloque no necesita una rama alternativa si no existe una operación válida para ese caso.
-
-# IF, ELSE IF y ELSE
-
-Una cadena `if` evalúa condiciones de arriba hacia abajo. Se ejecuta el bloque de la primera condición verdadera y se omiten los restantes. `else` recibe todos los casos no capturados antes. Por tanto, el orden forma parte del algoritmo cuando los intervalos se solapan.
-
-```fortran
-program clasificacion_residuo
-  implicit none
-  real :: residuo
-  real :: magnitud
-
-  residuo = -0.034
-  magnitud = abs(residuo)
-
-  if (magnitud <= 0.001) then
-    print *, 'Convergencia estricta.'
-  else if (magnitud <= 0.010) then
-    print *, 'Convergencia moderada.'
-  else if (magnitud <= 0.050) then
-    print *, 'Aproximacion inicial.'
-  else
-    print *, 'El residuo requiere revision.'
-  end if
-end program clasificacion_residuo
-```
-
-```salida
- Aproximacion inicial.
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-Las condiciones avanzan del intervalo más restrictivo al más amplio. Si la segunda prueba se evaluara primero, también capturaría los valores que pertenecen a la categoría estricta.
-
-# SELECT CASE para categorías discretas
-
-`select case (expresion)` compara una expresión entera, de caracteres o lógica con selectores mutuamente excluyentes. `case (valor)` selecciona un valor; `case (inferior:superior)`, un intervalo cerrado; `case (:superior)`, un intervalo sin límite inferior; y `case (inferior:)`, uno sin límite superior. Una lista separada por comas reúne varios selectores.
-
-`case default` procesa valores no contemplados. Aunque es opcional en la sintaxis, incluirlo hace visible la política para entradas inválidas o estados nuevos.
-
-```fortran
-program regimen_bomba
-  implicit none
-  integer :: codigo_modo
-
-  codigo_modo = 2
-
-  select case (codigo_modo)
-  case (0)
-    print *, 'Bomba detenida.'
-  case (1)
-    print *, 'Caudal reducido.'
-  case (2, 3)
-    print *, 'Regimen de operacion.'
-  case (4:6)
-    print *, 'Regimen de prueba.'
-  case default
-    print *, 'Codigo de modo no valido.'
-  end select
-end program regimen_bomba
-```
-
-```salida
- Regimen de operacion.
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-Ningún valor puede pertenecer a dos selectores del mismo constructo. Cuando la decisión depende de varias variables o de relaciones diferentes, una cadena `if` expresa mejor la lógica que `select case`.
-
-# El bucle DO contado
-
-El bucle contado adopta la forma `do indice = inicio, fin, paso`. Inicio, fin y paso se evalúan al entrar al bucle. El paso es opcional y su valor predeterminado es uno. Un paso positivo requiere un inicio no mayor que el final para ejecutar alguna iteración; un paso negativo requiere el orden contrario.
-
-El índice debe ser entero en código moderno y no se modifica dentro del cuerpo. Después de `end do`, no se debe depender de su valor. El cuerpo puede ejecutarse cero veces si los parámetros no describen un recorrido válido.
-
-```fortran
-program suma_trabajo
-  implicit none
-  integer :: intervalo
-  integer, parameter :: cantidad_intervalos = 6
-  real :: fuerza_n(cantidad_intervalos)
-  real :: desplazamiento_m
-  real :: trabajo_j
-
-  fuerza_n = [12.0, 13.5, 15.0, 14.0, 11.5, 10.0]
-  desplazamiento_m = 0.25
-  trabajo_j = 0.0
-
-  do intervalo = 1, cantidad_intervalos
-    trabajo_j = trabajo_j + fuerza_n(intervalo) * desplazamiento_m
-  end do
-
-  print *, trabajo_j
-end program suma_trabajo
-```
-
-```salida
-   19.0000000
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-El acumulador `trabajo_j` se inicializa antes del bucle. Cada iteración añade la contribución de un intervalo; omitir la inicialización haría que el primer cálculo utilizara un valor indefinido.
-
-# Pasos descendentes y no unitarios
-
-El tercer parámetro del `do` es el incremento. Un valor de dos recorre posiciones alternas y un valor negativo recorre en sentido descendente. El incremento no puede ser cero.
-
-```fortran !sin-consola
-program barrido_descendente
-  implicit none
-  integer :: nivel
-
-  do nivel = 10, 2, -2
-    print *, nivel
-  end do
-end program barrido_descendente
-```
-
-```salida
-          10
-           8
-           6
-           4
-           2
-```
-
-> Nota: Esta construcción no reproduce todavía la salida correcta con el compilador web fijado. Ejecuta este ejemplo con GNU Fortran en tu equipo; el ejercicio de la sesión sí se puede resolver en el navegador.
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-El límite final se incluye cuando el índice lo alcanza exactamente. Este bucle visita una secuencia descendente porque el incremento es `-2`; con un incremento positivo no ejecutaría ninguna iteración.
-
-# DO WHILE y condición previa
-
-`do while (condicion)` comprueba la condición antes de cada iteración. Si comienza falsa, el cuerpo se ejecuta cero veces. Alguna operación del cuerpo debe modificar los datos de los que depende la condición; de otro modo, el bucle puede no terminar.
-
-```fortran
-program enfriamiento_iterativo
-  implicit none
-  integer :: iteracion
-  integer, parameter :: max_iteraciones = 100
-  real :: temperatura_c
-  real, parameter :: objetivo_c = 30.0
-
-  iteracion = 0
-  temperatura_c = 85.0
-
-  do while ((temperatura_c > objetivo_c) .and. &
-            (iteracion < max_iteraciones))
-    temperatura_c = temperatura_c - 0.08 * (temperatura_c - 20.0)
-    iteracion = iteracion + 1
-  end do
-
-  print *, iteracion, temperatura_c
-end program enfriamiento_iterativo
-```
-
-```salida
-          23   29.5506611
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-El límite de iteraciones evita una espera ilimitada si el modelo deja de acercarse al objetivo. Al salir, el programa debe distinguir si alcanzó el criterio térmico o agotó el límite cuando esa diferencia afecte decisiones posteriores.
-
-# Terminación anticipada con EXIT
-
-Un `do` sin parámetros repite su cuerpo hasta que una sentencia transfiere el control. `exit` termina el bucle más interno y continúa después de `end do`. Esta forma resulta clara cuando la condición de terminación se calcula en medio del cuerpo. El ejemplo siguiente conserva un bucle contado para imponer además un máximo; `exit` funciona tanto en bucles contados como indefinidos.
-
-```fortran
-program aproximacion_raiz
-  implicit none
-  integer :: iteracion
-  integer, parameter :: max_iteraciones = 40
-  real :: estimacion
-  real :: nueva_estimacion
-  real, parameter :: tolerancia = 1.0e-6
-
-  estimacion = 1.0
-
-  do iteracion = 1, max_iteraciones
-    nueva_estimacion = 0.5 * (estimacion + 2.0 / estimacion)
-    if (abs(nueva_estimacion - estimacion) <= tolerancia) exit
-    estimacion = nueva_estimacion
-  end do
-
-  print *, nueva_estimacion
-end program aproximacion_raiz
-```
-
-```salida
-   1.41421354
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-La sentencia `if` lógica de una línea ejecuta aquí únicamente `exit`. No sustituye un bloque cuando una condición controla varias sentencias. El máximo de iteraciones hace que la terminación sea demostrable incluso si la tolerancia no se alcanza.
-
-# CYCLE y la iteración actual
-
-`cycle` abandona el resto de la iteración actual y vuelve al control del bucle para iniciar la siguiente. No termina el bucle completo. Conviene usarlo para descartar un dato antes de ejecutar cálculos que presuponen su validez.
-
-```fortran
-program promedio_lecturas_validas
-  implicit none
-  integer :: posicion
-  integer :: cantidad_validas
-  real :: lecturas_c(6)
-  real :: suma_c
-
-  lecturas_c = [19.8, -999.0, 20.1, 20.0, -999.0, 19.9]
-  cantidad_validas = 0
-  suma_c = 0.0
-
-  do posicion = 1, size(lecturas_c)
-    if (lecturas_c(posicion) == -999.0) cycle
-    suma_c = suma_c + lecturas_c(posicion)
-    cantidad_validas = cantidad_validas + 1
-  end do
-
-  if (cantidad_validas > 0) then
-    print *, suma_c / real(cantidad_validas)
-  else
-    print *, 'No hay lecturas validas.'
-  end if
-end program promedio_lecturas_validas
-```
-
-```salida
-   19.9500008
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-La constante centinela se compara de forma exacta porque proviene de un código de ausencia asignado de forma directa, no de un cálculo real. En un sistema real, la política de datos ausentes debe estar definida por el formato de adquisición.
-
-# Bucles anidados y nombres
-
-Un nombre seguido de dos puntos (`:`) puede identificar un constructo. `exit nombre` termina el bucle nombrado y `cycle nombre` inicia la siguiente iteración de ese bucle. Los nombres eliminan ambigüedad cuando existen bucles anidados.
-
-```fortran
-program localizar_umbral
-  implicit none
-  integer :: fila
-  integer :: columna
-  integer :: fila_encontrada
-  integer :: columna_encontrada
-  real :: campo(3, 4)
-  real, parameter :: umbral = 8.0
-
-  campo = reshape([1.0, 2.0, 3.0, 4.0, 9.0, 6.0, &
-                   7.0, 8.0, 5.0, 2.0, 1.0, 0.0], shape(campo))
-  fila_encontrada = 0
-  columna_encontrada = 0
-
-  buscar: do columna = 1, size(campo, 2)
-    do fila = 1, size(campo, 1)
-      if (campo(fila, columna) > umbral) then
-        fila_encontrada = fila
-        columna_encontrada = columna
-        exit buscar
-      end if
-    end do
-  end do buscar
-
-  print *, fila_encontrada, columna_encontrada
-end program localizar_umbral
-```
-
-```salida
-           2           2
-```
-
-> Doc: [Operadores y control](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-`exit buscar` abandona ambos niveles porque el nombre pertenece al bucle exterior. El orden de los índices recorre primero las filas de cada columna, coherente con el almacenamiento por columnas de los arreglos Fortran.
-
-# Práctica: contar observaciones sobre un umbral
-
-Recorre cuatro mediciones y cuenta solo las que superan estrictamente 20. El caso de frontera, una medición igual a 20, permite distinguir `>` de `>=`. Mantén la comprobación después del bucle para verificar ambas variantes.
-
-```fortran
-program practica_umbral
-  implicit none
-  integer :: mediciones(4), indice, superiores
-  mediciones = [18, 20, 22, 25]
-  superiores = 0
-  do indice = 1, size(mediciones)
-    ! verificar-error: mediciones(indice) > 20 => mediciones(indice) >= 20
-    if (mediciones(indice) > 20) superiores = superiores + 1
-  end do
-  if (superiores /= 2) error stop 'El limite se conto incorrectamente'
-  write(*,'(I0)') superiores
-end program practica_umbral
-```
-
-```salida
-2
-```
-
-> Doc: [Fortran-lang: control de flujo](https://fortran-lang.org/learn/quickstart/operators_control_flow/)
-
-La solución inicializa el contador una vez y lo incrementa solo dentro de la condición. Si se inicializara dentro del bucle, se perdería el conteo anterior. La sesión siguiente desarrolla los arreglos empleados para reunir las mediciones.
-
-# Ejercicio en el navegador
-
-Completa el programa y pulsa «Comprobar». El código se compila y ejecuta en tu navegador; cada intento comienza desde cero.
+> Doc: [Igualdad](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
 
 ```ejercicio fortran
 # Enunciado
-Completa la operación que falta para que el programa cumpla las comprobaciones de esta sesión.
+Completa el operador de igualdad para que la comparación sea verdadera.
 # Plantilla
-program practica_umbral
+program comparacion
   implicit none
-  integer :: mediciones(4), indice, superiores
-  mediciones = [18, 20, 22, 25]
-  superiores = 0
-  do indice = 1, size(mediciones)
-    if (___) superiores = superiores + 1
-  end do
-  if (superiores /= 2) error stop 'El limite se conto incorrectamente'
-  write(*,'(I0)') superiores
-end program practica_umbral
+  print *, 4 ___ 4
+end program comparacion
 # Esperado
-2
+T
 # Pista
-Revisa la práctica resuelta de esta sesión y las condiciones que comprueba antes de imprimir la salida.
+Usa el operador ==.
+```
+
+# Desigualdad
+
+El operador de desigualdad (`/=`) comprueba si los valores son diferentes. No representa una división seguida de una asignación: los dos signos forman un solo operador.
+
+```fortran
+program comparacion
+  implicit none
+  print *, 4 /= 6
+end program comparacion
+```
+
+```salida
+ T
+```
+
+> Doc: [Desigualdad](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa el operador de desigualdad para que la comparación sea verdadera.
+# Plantilla
+program comparacion
+  implicit none
+  print *, 4 ___ 6
+end program comparacion
+# Esperado
+T
+# Pista
+Usa el operador /=.
+```
+
+# Mayor que
+
+El operador mayor que (`>`) comprueba si el valor izquierdo supera al derecho. Cuando los dos son iguales, el resultado es falso.
+
+```fortran
+program comparacion
+  implicit none
+  print *, 6 > 4
+end program comparacion
+```
+
+```salida
+ T
+```
+
+> Doc: [Mayor que](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa el operador de mayor que para que la comparación sea verdadera.
+# Plantilla
+program comparacion
+  implicit none
+  print *, 6 ___ 4
+end program comparacion
+# Esperado
+T
+# Pista
+Usa el operador >.
+```
+
+# Menor que
+
+El operador menor que (`<`) comprueba si el valor izquierdo es inferior al derecho. La igualdad no satisface esta comparación.
+
+```fortran
+program comparacion
+  implicit none
+  print *, 4 < 6
+end program comparacion
+```
+
+```salida
+ T
+```
+
+> Doc: [Menor que](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa el operador de menor que para que la comparación sea verdadera.
+# Plantilla
+program comparacion
+  implicit none
+  print *, 4 ___ 6
+end program comparacion
+# Esperado
+T
+# Pista
+Usa el operador <.
+```
+
+# Mayor o igual que
+
+El operador mayor o igual que (`>=`) incluye la igualdad. Por eso dos valores iguales satisfacen esta comparación.
+
+```fortran
+program comparacion
+  implicit none
+  print *, 4 >= 4
+end program comparacion
+```
+
+```salida
+ T
+```
+
+> Doc: [Mayor o igual que](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa el operador de mayor o igual que para que la comparación sea verdadera.
+# Plantilla
+program comparacion
+  implicit none
+  print *, 4 ___ 4
+end program comparacion
+# Esperado
+T
+# Pista
+Usa el operador >=.
+```
+
+# Menor o igual que
+
+El operador menor o igual que (`<=`) incluye la igualdad. Se escribe primero el signo menor y después el signo igual.
+
+```fortran
+program comparacion
+  implicit none
+  print *, 4 <= 4
+end program comparacion
+```
+
+```salida
+ T
+```
+
+> Doc: [Menor o igual que](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa el operador de menor o igual que para que la comparación sea verdadera.
+# Plantilla
+program comparacion
+  implicit none
+  print *, 4 ___ 4
+end program comparacion
+# Esperado
+T
+# Pista
+Usa el operador <=.
+```
+
+# Conjunción lógica
+
+El operador de conjunción (`.and.`) produce verdadero solo si los dos operandos son verdaderos. Los puntos forman parte del operador. Aquí una comparación es verdadera y la otra falsa, por lo que su conjunción es falsa.
+
+```fortran
+program condiciones
+  implicit none
+  print *, (4 > 2) .and. (4 < 3)
+end program condiciones
+```
+
+```salida
+ F
+```
+
+> Doc: [Conjunción lógica](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa el operador que exige que ambas comparaciones sean verdaderas.
+# Plantilla
+program condiciones
+  implicit none
+  print *, (4 > 2) ___ (4 < 3)
+end program condiciones
+# Esperado
+F
+# Pista
+La conjunción se escribe .and.
+```
+
+# Disyunción lógica
+
+El operador de disyunción (`.or.`) produce verdadero si al menos uno de los operandos es verdadero. También es verdadero cuando ambos lo son.
+
+```fortran
+program condiciones
+  implicit none
+  print *, (4 > 2) .or. (4 < 3)
+end program condiciones
+```
+
+```salida
+ T
+```
+
+> Doc: [Disyunción lógica](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa el operador que acepta que al menos una comparación sea verdadera.
+# Plantilla
+program condiciones
+  implicit none
+  print *, (4 > 2) ___ (4 < 3)
+end program condiciones
+# Esperado
+T
+# Pista
+La disyunción se escribe .or.
+```
+
+# Negación lógica
+
+El operador de negación (`.not.`) invierte el valor lógico de un único operando: de verdadero a falso o de falso a verdadero. Se escribe antes de ese operando.
+
+```fortran
+program condiciones
+  implicit none
+  print *, .not. .false.
+end program condiciones
+```
+
+```salida
+ T
+```
+
+> Doc: [Negación lógica](https://fortran-lang.org/learn/quickstart/operators_control_flow/#logical-operators)
+
+```ejercicio fortran
+# Enunciado
+Completa la negación para obtener verdadero.
+# Plantilla
+program condiciones
+  implicit none
+  print *, ___ .false.
+end program condiciones
+# Esperado
+T
+# Pista
+La negación se escribe .not.
+```
+
+# Ejecutar bajo una condición
+
+La construcción `if (...) then` ejecuta un bloque si su condición es verdadera. `if` significa «si» y `then`, «entonces». Los paréntesis delimitan la condición; `end if` cierra el bloque.
+
+La variable `cantidad` contiene cuatro, por lo que la condición se cumple y se imprime el mensaje. Si se cambia su valor a cero, no se imprime nada. La sangría permite reconocer las instrucciones del bloque.
+
+```fortran
+program inventario
+  implicit none
+  integer :: cantidad
+  cantidad = 4
+  if (cantidad > 0) then
+    print *, 'Disponible'
+  end if
+end program inventario
+```
+
+```salida
+ Disponible
+```
+
+> Doc: [Ejecutar bajo una condición](https://fortran-lang.org/learn/quickstart/operators_control_flow/#conditional-construct-if)
+
+```ejercicio fortran
+# Enunciado
+Completa la palabra que abre la condición.
+# Plantilla
+program inventario
+  implicit none
+  ___ (4 > 0) then
+    print *, 'Disponible'
+  end if
+end program inventario
+# Esperado
+Disponible
+# Pista
+La condición se abre con if.
+```
+
+# Elegir una alternativa con else
+
+`else` —«si no»— añade la alternativa que se ejecuta cuando la condición de `if` es falsa. En esta construcción se ejecuta exactamente una de las dos ramas.
+
+La condición siguiente es falsa, así que se imprime el mensaje de la rama `else`.
+
+```fortran
+program inventario
+  implicit none
+  if (0 > 0) then
+    print *, 'Disponible'
+  else
+    print *, 'Agotado'
+  end if
+end program inventario
+```
+
+```salida
+ Agotado
+```
+
+> Doc: [Elegir una alternativa con else](https://fortran-lang.org/learn/quickstart/operators_control_flow/#conditional-construct-if)
+
+```ejercicio fortran
+# Enunciado
+Completa la palabra que inicia la alternativa de una condición falsa.
+# Plantilla
+program inventario
+  implicit none
+  if (0 > 0) then
+    print *, 'Disponible'
+  ___
+    print *, 'Agotado'
+  end if
+end program inventario
+# Esperado
+Agotado
+# Pista
+La alternativa se escribe con else.
+```
+
+# Añadir otra condición
+
+`else if (...) then` comprueba otra condición cuando la anterior fue falsa. Las condiciones se evalúan en orden. Al encontrar una verdadera se ejecuta su bloque y se omiten las demás ramas; `else` cubre el caso en que ninguna se cumple.
+
+Aquí el número no es menor que cero, pero sí es igual a cero.
+
+```fortran
+program clasificacion
+  implicit none
+  if (0 < 0) then
+    print *, 'Negativo'
+  else if (0 == 0) then
+    print *, 'Cero'
+  else
+    print *, 'Positivo'
+  end if
+end program clasificacion
+```
+
+```salida
+ Cero
+```
+
+> Doc: [Añadir otra condición](https://fortran-lang.org/learn/quickstart/operators_control_flow/#conditional-construct-if)
+
+```ejercicio fortran
+# Enunciado
+Completa la segunda condición para reconocer el cero.
+# Plantilla
+program clasificacion
+  implicit none
+  if (0 < 0) then
+    print *, 'Negativo'
+  else if (0 ___ 0) then
+    print *, 'Cero'
+  else
+    print *, 'Positivo'
+  end if
+end program clasificacion
+# Esperado
+Cero
+# Pista
+Usa la comparación de igualdad (==).
+```
+
+# Repetir con do
+
+Un **bucle** repite instrucciones. `do indice = 1, 3` asigna al contador `indice` los valores desde uno hasta tres, incluidos los extremos, con incremento de uno por omisión. La coma separa el valor inicial del final y `end do` cierra el bucle.
+
+Cada repetición, llamada **iteración**, añade el contador a `total`. Esta variable comienza en cero y acumula las sumas. La declaración `integer :: indice, total` declara dos enteros; la coma separa sus nombres. Al terminar el bucle se imprime la suma acumulada.
+
+```fortran
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 1, 3
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+```
+
+```salida
+           6
+```
+
+> Doc: [Repetir con do](https://fortran-lang.org/learn/quickstart/operators_control_flow/#loop-constructs-do)
+
+```ejercicio fortran
+# Enunciado
+Completa el límite para sumar los enteros desde uno hasta tres.
+# Plantilla
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 1, ___
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+# Esperado
+6
+# Pista
+El valor final está incluido.
+```
+
+# Cambiar el incremento del bucle
+
+Un tercer valor en `do` fija el incremento del contador. `do indice = 2, 6, 2` comienza en dos y suma dos en cada iteración, sin superar seis. El incremento no puede ser cero. El acumulador `total` suma los valores dos, cuatro y seis.
+
+```fortran
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 2, 6, 2
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+```
+
+```salida
+          12
+```
+
+> Doc: [Cambiar el incremento del bucle](https://fortran-lang.org/learn/quickstart/operators_control_flow/#loop-constructs-do)
+
+```ejercicio fortran
+# Enunciado
+Completa el incremento para sumar dos, cuatro y seis.
+# Plantilla
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 2, 6, ___
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+# Esperado
+12
+# Pista
+El tercer valor indica cuánto aumenta el contador.
+```
+
+# Repetir mientras se cumpla una condición
+
+`do while (...)` —«repetir mientras»— comprueba una condición antes de cada iteración. Si es falsa desde el principio, el cuerpo no se ejecuta.
+
+Este bucle imprime `turno` y luego lo aumenta. En `turno = turno + 1`, primero se calcula el valor derecho con el contenido actual y después se asigna el resultado. Esa actualización permite que la condición deje de cumplirse.
+
+```fortran
+program conteo
+  implicit none
+  integer :: turno
+  turno = 1
+  do while (turno <= 3)
+    print *, turno
+    turno = turno + 1
+  end do
+end program conteo
+```
+
+```salida
+           1
+           2
+           3
+```
+
+> Doc: [Repetir mientras se cumpla una condición](https://fortran-lang.org/learn/quickstart/operators_control_flow/#conditional-loop-do-while)
+
+```ejercicio fortran
+# Enunciado
+Completa el límite para imprimir los turnos uno, dos y tres.
+# Plantilla
+program conteo
+  implicit none
+  integer :: turno
+  turno = 1
+  do while (turno <= ___)
+    print *, turno
+    turno = turno + 1
+  end do
+end program conteo
+# Esperado
+1
+2
+3
+# Pista
+El bucle continúa mientras turno sea menor o igual que el límite.
+```
+
+# Terminar un bucle con exit
+
+La sentencia `exit` termina el bucle en el que aparece. Aquí se ejecuta cuando el contador llega a tres, antes de sumar ese valor a `total`. La ejecución continúa después de `end do` y muestra la suma de uno y dos.
+
+```fortran
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 1, 4
+    if (indice == 3) then
+      exit
+    end if
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+```
+
+```salida
+           3
+```
+
+> Doc: [Terminar un bucle con exit](https://fortran-lang.org/learn/quickstart/operators_control_flow/#loop-control-statements-exit-and-cycle)
+
+```ejercicio fortran
+# Enunciado
+Completa la sentencia que termina el bucle antes de sumar tres.
+# Plantilla
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 1, 4
+    if (indice == 3) then
+      ___
+    end if
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+# Esperado
+3
+# Pista
+Para abandonar el bucle se usa exit.
+```
+
+# Omitir una iteración con cycle
+
+La sentencia `cycle` omite las instrucciones restantes de la iteración actual. El bucle continúa con la siguiente iteración. Aquí se omite la suma del dos, pero se suma el tres. El resultado reúne solo uno y tres.
+
+```fortran
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 1, 3
+    if (indice == 2) then
+      cycle
+    end if
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+```
+
+```salida
+           4
+```
+
+> Doc: [Omitir una iteración con cycle](https://fortran-lang.org/learn/quickstart/operators_control_flow/#loop-control-statements-exit-and-cycle)
+
+```ejercicio fortran
+# Enunciado
+Completa la sentencia que omite el dos y permite continuar con el tres.
+# Plantilla
+program conteo
+  implicit none
+  integer :: indice, total
+  total = 0
+  do indice = 1, 3
+    if (indice == 2) then
+      ___
+    end if
+    total = total + indice
+  end do
+  print *, total
+end program conteo
+# Esperado
+4
+# Pista
+Para continuar con la siguiente iteración se usa cycle.
 ```
 
 # Cierre
 
-Esta sesión cubrió los seis operadores relacionales, cinco operadores lógicos, bloques `if`, cadenas `else if`, selección por casos y bucles contados, condicionales, indefinidos, anidados y controlados por `cycle` o `exit`.
-
-La sesión siguiente organiza colecciones de datos mediante arreglos y separa responsabilidades mediante subrutinas, funciones y módulos. Las estructuras de control aprendidas aquí se utilizarán dentro de esos procedimientos sin depender de estado oculto.
+Ya puedes comparar valores con los seis operadores relacionales, combinar condiciones con conjunción, disyunción y negación, elegir ramas y controlar bucles. En la siguiente sesión agruparás valores en arreglos y organizarás operaciones en funciones, subrutinas y módulos.

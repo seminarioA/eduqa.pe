@@ -43,7 +43,7 @@ const curso = cargarCurso('fortran-fundamentos');
 assert.equal(curso.titulo,'Introducción a Fortran');
 assert.equal(curso.icono,'fortran');
 assert.equal(curso.lecciones.length,4);
-assert.equal(curso.lecciones.flatMap(l=>l.bloques).filter(b=>b.tipo==='codigo').length,41);
+assert.ok(curso.lecciones.every(l => l.bloques.some(b => b.tipo === 'codigo')));
 const ficha = fs.readFileSync('src/content/fortran-fundamentos/curso.md','utf8').replace('icono: fortran\n','');
 const antiguo=construirCurso('fortran-fundamentos',new Map([['curso.md',ficha]]),[{numero:1,titulo:'Sesión protegida',slug:'sesion-1'}]);
 assert.equal(antiguo.icono,'fortran');

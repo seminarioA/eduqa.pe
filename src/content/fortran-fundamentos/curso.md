@@ -1,7 +1,7 @@
 ---
 slug: fortran-fundamentos
 titulo: "Introducción a Fortran"
-resumen: "Fundamentos de Fortran moderno para formular cálculos científicos: tipos y precisión, control de flujo, arreglos, procedimientos y módulos."
+resumen: "Fortran desde cero, un concepto por apartado. Programas breves, ejercicios en el navegador y referencias a la documentación de Fortran-lang y GNU Fortran."
 area: "Lenguajes"
 nivel: INTRODUCCIÓN
 horas: 16
