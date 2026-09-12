@@ -183,10 +183,6 @@ export function Listado({
 
       {entreBarraYRejilla}
 
-      <p className="mt-6 text-sm text-texto-suave">
-        {visibles.length} {visibles.length === 1 ? "curso" : "cursos"}
-      </p>
-
       {visibles.length === 0 ? (
         <p className="mt-8 rounded-xl border border-borde bg-superficie px-5 py-8 text-center text-sm text-texto-suave">
           {busqueda
@@ -194,18 +190,33 @@ export function Listado({
             : "Todavía no hay cursos en esta área."}
         </p>
       ) : (
-        <div className="mt-6 space-y-4">
+        <div className="mt-8 space-y-8">
           {/* Cada grupo ocupa su propia rejilla. Así una fila incompleta en
               tableta no se mezcla con las tarjetas del grupo siguiente. */}
           {sinFiltrar && populares.length > 0 && (
-            <section aria-label="Cursos más comprados o inscritos">
+            <section aria-labelledby="catalogo-populares">
+              <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h2 id="catalogo-populares" className="text-xl font-semibold tracking-tight">
+                  Más elegidos
+                </h2>
+                <p className="text-sm text-texto-suave">Por compras e inscripciones</p>
+              </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {populares.map((c) => <TarjetaPopular key={c.slug} curso={c} />)}
               </div>
             </section>
           )}
           {sinFiltrar && rutas.length > 0 && (
-            <section aria-label="Rutas más populares">
+            <section
+              aria-labelledby="catalogo-rutas"
+              className={populares.length > 0 ? "border-t border-borde pt-8" : undefined}
+            >
+              <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h2 id="catalogo-rutas" className="text-xl font-semibold tracking-tight">
+                  Rutas populares
+                </h2>
+                <p className="text-sm text-texto-suave">Según la actividad de sus cursos</p>
+              </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {rutas.map((r) => (
                   <TarjetaRuta
@@ -218,7 +229,20 @@ export function Listado({
               </div>
             </section>
           )}
-          <section aria-label="Todos los cursos">
+          <section
+            aria-labelledby="catalogo-todos"
+            className={sinFiltrar && (populares.length > 0 || rutas.length > 0)
+              ? "border-t border-borde pt-8"
+              : undefined}
+          >
+            <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h2 id="catalogo-todos" className="text-xl font-semibold tracking-tight">
+                {sinFiltrar ? "Todos los cursos" : "Resultados"}
+              </h2>
+              <p className="text-sm text-texto-suave">
+                {visibles.length} {visibles.length === 1 ? "curso" : "cursos"}
+              </p>
+            </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {visibles.map((c) => (
                 <TarjetaCursoMatricula
