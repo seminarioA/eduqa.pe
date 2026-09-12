@@ -5,7 +5,7 @@ import { Infinity as Infinito, UserRound } from "lucide-react";
 import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { valoraciones } from "@/lib/valoraciones";
 import { rutas } from "@/lib/rutas";
-import { popularidad, ordenarPorPopularidad } from "@/lib/popularidad";
+import { popularidad, ordenarPorPopularidad, ordenarRutasPorPopularidad } from "@/lib/popularidad";
 import { misMatriculas, perfilActual, resumenPlan } from "@/lib/matriculas";
 import { precios } from "@/lib/precios";
 import { contarPorCurso, miProgreso } from "@/lib/progreso";
@@ -49,11 +49,32 @@ export default async function Page() {
   const itinerarios = await rutas();
   const catalogo = await obtenerCursos();
   const cuentas = await popularidad();
+  const disponibles = catalogo.filter((c) => tarifas.has(c.slug));
+  const cursosPorSlug = new Map(disponibles.map((c) => [c.slug, c]));
+  const rutasVisibles = itinerarios.map((r) => ({
+    slug: r.slug,
+    nombre: r.nombre,
+    descripcion: r.descripcion,
+    cursos: r.cursos.flatMap((c) => {
+      const curso = cursosPorSlug.get(c.slug);
+      if (!curso) return [];
+      return [
+        {
+          slug: c.slug,
+          titulo: c.titulo,
+          requisitos: c.requisitos,
+          acceso_libre: c.acceso_libre,
+          horas: curso.horas,
+          icono: curso.icono,
+        },
+      ];
+    }),
+  }));
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 lg:pl-64 xl:pl-32 2xl:pl-6 py-14">
       <Listado
-        populares={ordenarPorPopularidad(catalogo, cuentas).map((c) => ({
+        populares={ordenarPorPopularidad(disponibles, cuentas).map((c) => ({
           slug: c.slug,
           titulo: tarifas.get(c.slug)?.titulo ?? c.titulo,
           resumen: tarifas.get(c.slug)?.resumen ?? c.resumen,
@@ -124,52 +145,31 @@ export default async function Page() {
           </>
         }
 
-        rutas={itinerarios.map((r) => ({
-          slug: r.slug,
-          nombre: r.nombre,
-          descripcion: r.descripcion,
-          cursos: r.cursos.flatMap((c) => {
-            const curso = catalogo.find((x) => x.slug === c.slug);
-            // Un curso de la ruta que no esté en el catálogo no se pinta: es
-            // una fila huérfana, no un hueco que haya que rellenar.
-            if (!curso) return [];
-            return [{
-              slug: c.slug,
-              titulo: c.titulo,
-              requisitos: c.requisitos,
-              acceso_libre: c.acceso_libre,
-              horas: curso.horas,
-              icono: curso.icono,
-            }];
-          }),
-        }))}
+        rutas={ordenarRutasPorPopularidad(rutasVisibles, cuentas)}
         alTope={plan.alTope}
         esAdmin={perfil?.es_admin ?? false}
-        cursos={catalogo
-          .filter((c) => tarifas.has(c.slug))
-          .map((c) => {
-            const m = porCurso.get(c.slug);
-            const t = tarifas.get(c.slug);
-            return {
-              slug: c.slug,
-              titulo: t?.titulo ?? c.titulo,
-              resumen: t?.resumen ?? c.resumen,
-              area: c.area,
-              nivel: c.nivel,
-              horas: c.horas,
-              sesiones: c.lecciones.length,
-              primeraLeccion: c.lecciones[0].slug,
-              valoracion: notas.get(c.slug),
-              icono: c.icono,
-              matriculado: m?.estado === "activa" || m?.estado === "completada",
-              completado: m?.estado === "completada",
-              precio: t?.precio ?? 0,
-              inscritoEn: m?.creada_en ? new Date(m.creada_en).getTime() : null,
-              vistas: vistasPorCurso.get(c.slug) ?? 0,
-            };
-          })}
+        cursos={disponibles.map((c) => {
+          const m = porCurso.get(c.slug);
+          const t = tarifas.get(c.slug);
+          return {
+            slug: c.slug,
+            titulo: t?.titulo ?? c.titulo,
+            resumen: t?.resumen ?? c.resumen,
+            area: c.area,
+            nivel: c.nivel,
+            horas: c.horas,
+            sesiones: c.lecciones.length,
+            primeraLeccion: c.lecciones[0].slug,
+            valoracion: notas.get(c.slug),
+            icono: c.icono,
+            matriculado: m?.estado === "activa" || m?.estado === "completada",
+            completado: m?.estado === "completada",
+            precio: t?.precio ?? 0,
+            inscritoEn: m?.creada_en ? new Date(m.creada_en).getTime() : null,
+            vistas: vistasPorCurso.get(c.slug) ?? 0,
+          };
+        })}
       />
-
     </div>
   );
 }

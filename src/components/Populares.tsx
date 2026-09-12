@@ -15,8 +15,8 @@ export type CursoPopular = {
  * Tarjeta de un curso popular, para el inicio de la rejilla del catálogo.
  *
  * Sigue la forma de las demás tarjetas de curso; lo que la distingue es la
- * insignia con la llama y el número real de alumnos: «12 inscritos» se puede
- * comprobar, «el más popular» no dice cuánto ni respecto a qué.
+ * insignia con la llama y el número real de personas que compraron o se
+ * matricularon. Una persona se cuenta una sola vez por curso.
  */
 export function TarjetaPopular({ curso }: { curso: CursoPopular }) {
   return (
@@ -45,7 +45,7 @@ export function TarjetaPopular({ curso }: { curso: CursoPopular }) {
       <div className="mt-3 flex items-center justify-between border-t border-borde pt-2.5 text-xs text-texto-tenue">
         <span className="flex items-center gap-1.5">
           <Users size={13} aria-hidden="true" />
-          {curso.matriculas} {curso.matriculas === 1 ? "inscrito" : "inscritos"}
+          {curso.matriculas} {curso.matriculas === 1 ? "compra o inscripción" : "compras o inscripciones"}
         </span>
         <ArrowRight
           size={14}

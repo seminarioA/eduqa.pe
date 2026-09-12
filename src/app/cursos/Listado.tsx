@@ -48,7 +48,7 @@ export function Listado({
 }: {
   cursos: CursoListado[];
   rutas?: DatosRuta[];
-  /** Los más matriculados: abren la rejilla, antes que las rutas. */
+  /** Tres cursos más comprados o inscritos: abren el catálogo. */
   populares?: Parameters<typeof TarjetaPopular>[0]["curso"][];
   alTope: boolean;
   esAdmin?: boolean;
@@ -194,29 +194,42 @@ export function Listado({
             : "Todavía no hay cursos en esta área."}
         </p>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Los populares abren la rejilla y las rutas les siguen, pero solo
-              cuando no se está buscando nada concreto: quien escribe en el
-              buscador quiere un curso, no un escaparate. */}
-          {sinFiltrar &&
-            populares.map((c) => <TarjetaPopular key={c.slug} curso={c} />)}
-          {sinFiltrar &&
-            rutas.map((r) => (
-              <TarjetaRuta
-                key={r.slug}
-                ruta={r}
-                completados={completados}
-                matriculados={matriculados}
-              />
-            ))}
-          {visibles.map((c) => (
-            <TarjetaCursoMatricula
-              key={c.slug}
-              curso={c}
-              alTope={alTope}
-              esAdmin={esAdmin}
-            />
-          ))}
+        <div className="mt-6 space-y-4">
+          {/* Cada grupo ocupa su propia rejilla. Así una fila incompleta en
+              tableta no se mezcla con las tarjetas del grupo siguiente. */}
+          {sinFiltrar && populares.length > 0 && (
+            <section aria-label="Cursos más comprados o inscritos">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {populares.map((c) => <TarjetaPopular key={c.slug} curso={c} />)}
+              </div>
+            </section>
+          )}
+          {sinFiltrar && rutas.length > 0 && (
+            <section aria-label="Rutas más populares">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {rutas.map((r) => (
+                  <TarjetaRuta
+                    key={r.slug}
+                    ruta={r}
+                    completados={completados}
+                    matriculados={matriculados}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+          <section aria-label="Todos los cursos">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {visibles.map((c) => (
+                <TarjetaCursoMatricula
+                  key={c.slug}
+                  curso={c}
+                  alTope={alTope}
+                  esAdmin={esAdmin}
+                />
+              ))}
+            </div>
+          </section>
         </div>
       )}
     </>

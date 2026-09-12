@@ -4,7 +4,7 @@ import { cache } from "react";
 import { clienteServidor } from "@/lib/supabase/servidor";
 
 /**
- * Matrículas por curso.
+ * Personas que se matricularon o compraron cada curso.
  *
  * Sale de una vista que solo expone el recuento: quién se matriculó en qué no
  * se puede consultar desde aquí.
@@ -16,25 +16,37 @@ export const popularidad = cache(async (): Promise<Map<string, number>> => {
 });
 
 /**
- * Los cursos con más matrículas, siempre que exista un orden real.
- *
- * Con todos los cursos empatados no hay nada que ordenar, y presentar cuatro
- * empatados como «los más populares» sería inventar un ranking. En ese caso
- * devuelve una lista vacía y la sección no se dibuja.
+ * Ante un empate se conserva el orden del catálogo. El número mostrado en
+ * cada tarjeta es el recuento real, incluso cuando dos cursos comparten puesto.
  */
 export function ordenarPorPopularidad<T extends { slug: string }>(
   cursos: T[],
   cuentas: Map<string, number>,
   cuantos = 3,
 ): T[] {
-  const conMatriculas = cursos
-    .map((c) => ({ curso: c, n: cuentas.get(c.slug) ?? 0 }))
-    .filter((x) => x.n > 0)
-    .sort((a, b) => b.n - a.n);
+  if (cuentas.size === 0) return [];
+  return cursos
+    .map((curso, posicion) => ({ curso, posicion, n: cuentas.get(curso.slug) ?? 0 }))
+    .sort((a, b) => b.n - a.n || a.posicion - b.posicion)
+    .slice(0, cuantos)
+    .map((x) => x.curso);
+}
 
-  if (conMatriculas.length < 2) return [];
-  // Si el primero no supera al último, están todos empatados.
-  if (conMatriculas[0].n === conMatriculas[conMatriculas.length - 1].n) return [];
-
-  return conMatriculas.slice(0, cuantos).map((x) => x.curso);
+/** Una ruta recibe la suma de compras o inscripciones de sus cursos visibles. */
+export function ordenarRutasPorPopularidad<T extends { cursos: { slug: string }[] }>(
+  rutas: T[],
+  cuentas: Map<string, number>,
+  cuantos = 3,
+): T[] {
+  if (cuentas.size === 0) return [];
+  return rutas
+    .filter((ruta) => ruta.cursos.length > 0)
+    .map((ruta, posicion) => ({
+      ruta,
+      posicion,
+      n: ruta.cursos.reduce((total, curso) => total + (cuentas.get(curso.slug) ?? 0), 0),
+    }))
+    .sort((a, b) => b.n - a.n || a.posicion - b.posicion)
+    .slice(0, cuantos)
+    .map((x) => x.ruta);
 }
