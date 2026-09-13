@@ -12,20 +12,48 @@ import {
   LogIn,
   LogOut,
   Megaphone,
+  PanelLeftClose,
+  PanelLeftOpen,
   Receipt,
   Settings,
   Stamp,
   UserRoundPlus,
 } from "lucide-react";
-import type { ComponentType } from "react";
+import { useSyncExternalStore, type ComponentType } from "react";
 import { MarcaInline } from "@/components/LlamaMarca";
 import { SelectorTemaCompacto } from "@/components/Tema";
+import { CLAVE_BARRA_LATERAL } from "@/lib/barra-lateral";
 
 type Enlace = {
   href: string;
   etiqueta: string;
   Icono: ComponentType<{ size?: number; className?: string }>;
 };
+
+const EVENTO_BARRA = "eduqa:barra-lateral";
+
+function suscribirBarra(avisar: () => void) {
+  window.addEventListener(EVENTO_BARRA, avisar);
+  const sincronizarOtraPestana = (evento: StorageEvent) => {
+    if (evento.key !== CLAVE_BARRA_LATERAL) return;
+    document.documentElement.dataset.sidebar =
+      evento.newValue === "collapsed" ? "collapsed" : "expanded";
+    avisar();
+  };
+  window.addEventListener("storage", sincronizarOtraPestana);
+  return () => {
+    window.removeEventListener(EVENTO_BARRA, avisar);
+    window.removeEventListener("storage", sincronizarOtraPestana);
+  };
+}
+
+function barraColapsada() {
+  return document.documentElement.dataset.sidebar === "collapsed";
+}
+
+function barraExpandidaEnServidor() {
+  return false;
+}
 
 /**
  * Barra lateral rectangular, pegada al borde de la aplicación.
@@ -50,6 +78,22 @@ export function Isla({
   onSalir: () => void;
 }) {
   const ruta = usePathname();
+  const colapsada = useSyncExternalStore(
+    suscribirBarra,
+    barraColapsada,
+    barraExpandidaEnServidor,
+  );
+
+  const alternarBarra = () => {
+    const siguiente = colapsada ? "expanded" : "collapsed";
+    document.documentElement.dataset.sidebar = siguiente;
+    try {
+      window.localStorage.setItem(CLAVE_BARRA_LATERAL, siguiente);
+    } catch {
+      // La barra sigue funcionando si el navegador bloquea el almacenamiento.
+    }
+    window.dispatchEvent(new Event(EVENTO_BARRA));
+  };
 
   /*
    * Para quien ya entró, el inicio es la lista de cursos. La portada es una
@@ -99,18 +143,34 @@ export function Isla({
 
   return (
     <nav
+      id="barra-lateral"
       aria-label="Navegación principal"
       className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-borde bg-fondo px-3 py-4 lg:flex"
     >
-      <Link
-        href={inicio}
-        className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-superficie"
-      >
-        <MarcaInline svg={marcaSidebar} className="h-8 w-auto text-rojo-acento" />
-        <span className="text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
-          EDUQA.PE
-        </span>
-      </Link>
+      <div className="sidebar-cabecera flex items-center gap-1">
+        <Link
+          href={inicio}
+          aria-label={autenticado ? "Ir a cursos" : "Ir al inicio"}
+          title={autenticado ? "Cursos" : "Inicio"}
+          className="sidebar-marca flex min-w-0 flex-1 items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-superficie"
+        >
+          <MarcaInline svg={marcaSidebar} className="h-8 w-auto shrink-0 text-rojo-acento" />
+          <span className="sidebar-etiqueta whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
+            EDUQA.PE
+          </span>
+        </Link>
+        <button
+          type="button"
+          onClick={alternarBarra}
+          aria-label={colapsada ? "Expandir barra lateral" : "Colapsar barra lateral"}
+          aria-pressed={colapsada}
+          title={colapsada ? "Expandir barra lateral" : "Colapsar barra lateral"}
+          className="sidebar-control flex size-8 shrink-0 items-center justify-center rounded-lg text-texto-suave transition-colors hover:bg-superficie hover:text-texto focus-visible:outline-2 focus-visible:outline-rojo-acento"
+        >
+          <PanelLeftClose size={18} className="sidebar-icono-expandido" aria-hidden="true" />
+          <PanelLeftOpen size={18} className="sidebar-icono-colapsado" aria-hidden="true" />
+        </button>
+      </div>
 
       <span className="my-2 h-px w-full bg-borde" aria-hidden="true" />
 
@@ -125,15 +185,17 @@ export function Isla({
             <li key={href}>
               <Link
                 href={href}
+                aria-label={etiqueta}
                 aria-current={activo ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                title={etiqueta}
+                className={`sidebar-enlace flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
                   activo
                     ? "bg-rojo-tenue font-medium text-rojo-acento"
                     : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
                 }`}
               >
                 <Icono size={17} className="shrink-0" />
-                {etiqueta}
+                <span className="sidebar-etiqueta whitespace-nowrap">{etiqueta}</span>
               </Link>
             </li>
           );
@@ -142,17 +204,19 @@ export function Isla({
 
       <span className="mt-2 h-px w-full bg-borde" aria-hidden="true" />
 
-      <div className="mt-2 flex items-center justify-between gap-2 px-1">
+      <div className="sidebar-pie mt-2 flex items-center justify-between gap-2 px-1">
         <SelectorTemaCompacto />
 
         {autenticado && (
           <form action={onSalir}>
             <button
               type="submit"
+              aria-label="Salir"
+              title="Salir"
               className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
             >
               <LogOut size={16} aria-hidden="true" />
-              Salir
+              <span className="sidebar-etiqueta">Salir</span>
             </button>
           </form>
         )}

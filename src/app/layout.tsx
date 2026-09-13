@@ -11,6 +11,7 @@ import { perfilActual } from "@/lib/matriculas";
 import { esInterno } from "@/lib/roles";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { marcaActual } from "@/lib/marca";
+import { GUION_BARRA_LATERAL } from "@/lib/barra-lateral";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -54,6 +55,7 @@ export default async function RootLayout({
         {/* Antes de nada: si la preferencia guardada es monocromo, la clase
             tiene que estar puesta ya en el primer pintado. */}
         <script dangerouslySetInnerHTML={{ __html: GUION_ARRANQUE }} />
+        <script dangerouslySetInnerHTML={{ __html: GUION_BARRA_LATERAL }} />
         <ProveedorTema>
           <Isla
             autenticado={Boolean(usuario)}

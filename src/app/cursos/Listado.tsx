@@ -199,7 +199,7 @@ export function Listado({
                 id="catalogo-populares"
                 className="mb-4 flex items-center gap-2 text-xl font-semibold tracking-tight"
               >
-                <Flame size={20} className="shrink-0 text-rojo-acento" aria-hidden="true" />
+                <Flame size={20} strokeWidth={1.5} className="shrink-0" aria-hidden="true" />
                 Más elegidos
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -216,7 +216,7 @@ export function Listado({
                 id="catalogo-rutas"
                 className="mb-4 flex items-center gap-2 text-xl font-semibold tracking-tight"
               >
-                <Route size={20} className="shrink-0 text-rojo-acento" aria-hidden="true" />
+                <Route size={20} strokeWidth={1.5} className="shrink-0" aria-hidden="true" />
                 Rutas populares
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -242,7 +242,7 @@ export function Listado({
                 id="catalogo-todos"
                 className="flex items-center gap-2 text-xl font-semibold tracking-tight"
               >
-                <BookOpen size={20} className="shrink-0 text-rojo-acento" aria-hidden="true" />
+                <BookOpen size={20} strokeWidth={1.5} className="shrink-0" aria-hidden="true" />
                 {sinFiltrar ? "Todos los cursos" : "Resultados"}
               </h2>
               <p className="text-sm text-texto-suave">

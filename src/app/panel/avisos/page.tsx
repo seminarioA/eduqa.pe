@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Eye, Megaphone, Pin } from "lucide-react";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { perfilActual } from "@/lib/matriculas";
 import { avisosVisibles } from "@/lib/avisos";
-import { Llama } from "@/components/Llama";
 import { Migas } from "@/components/Migas";
 import { Tablero } from "@/components/Tablero";
 import { Formulario } from "./Formulario";
@@ -38,25 +36,11 @@ export default async function Page() {
     (a) => a.publicado && (a.vigente_hasta === null || a.vigente_hasta >= hoy),
   );
 
-  const nombre =
-    perfil.nombre?.trim().split(" ")[0] ?? usuario.email?.split("@")[0] ?? "";
-
   return (
     <main className="mx-auto w-full max-w-3xl px-6 lg:pl-64 xl:pl-32 2xl:pl-6 py-12">
-      <div className="flex items-center justify-between gap-4">
-        <Link href="/panel" className="flex items-center gap-3">
-          <Llama className="h-10 w-auto text-rojo-acento" />
-          <span className="text-base font-bold uppercase tracking-[0.2em] text-rojo-acento">
-            EDUQA.PE
-          </span>
-        </Link>
-      </div>
+      <Migas items={[{ texto: "Panel", href: "/panel" }, { texto: "Avisos" }]} />
 
-      <div className="mt-8">
-        <Migas items={[{ texto: "Panel", href: "/panel" }, { texto: "Avisos" }]} />
-      </div>
-
-      <h1 className="flex items-center gap-2 text-3xl font-semibold tracking-tight">
+      <h1 className="mt-4 flex items-center gap-2 text-3xl font-semibold tracking-tight">
         <Megaphone size={26} className="text-rojo-acento" aria-hidden="true" />
         Avisos
       </h1>
@@ -66,29 +50,14 @@ export default async function Page() {
         cabecera. Va en una sola dirección: nadie responde.
       </p>
 
-      {/* Vista previa: la misma cabecera de /cursos, con el mismo componente,
-          para ver el tablero tal cual sin salir de aquí. */}
+      {/* Vista previa del botón que aparece en la cabecera de /cursos. */}
       <section className="mt-8 rounded-xl border border-borde bg-superficie p-5">
         <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-texto-tenue">
           <Eye size={13} aria-hidden="true" />
           Así se ve en Cursos
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 rounded-lg bg-fondo px-4 py-4">
-          <span className="flex items-center gap-3">
-            <Llama className="h-12 w-auto shrink-0 text-rojo-acento" />
-            <span className="flex flex-col leading-tight">
-              <span className="text-sm text-texto-suave">
-                Bienvenido, <span className="font-medium text-texto">{nombre}</span>
-              </span>
-              <span className="text-base font-bold uppercase tracking-[0.2em] text-rojo-acento">
-                EDUQA.PE
-              </span>
-            </span>
-          </span>
-
-          <span aria-hidden="true" className="hidden h-8 w-px bg-borde sm:block" />
-
+        <div className="mt-4 flex items-center rounded-lg bg-fondo px-4 py-4">
           <Tablero avisos={comoSeVe} />
         </div>
 

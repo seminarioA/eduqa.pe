@@ -13,7 +13,6 @@ import { avisosVisibles } from "@/lib/avisos";
 import { Tablero } from "@/components/Tablero";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { cerrarSesion } from "@/app/acceder/acciones";
-import { Llama } from "@/components/Llama";
 import { MenuPerfil } from "@/components/MenuPerfil";
 import { Migas } from "@/components/Migas";
 import { Listado } from "./Listado";
@@ -82,17 +81,7 @@ export default async function Page() {
           matriculas: cuentas.get(c.slug) ?? 0,
           icono: c.icono,
         }))}
-        cabecera={
-          <>
-            <Link href="/cursos" className="flex shrink-0 items-center gap-2.5">
-              <Llama className="h-9 w-auto shrink-0 text-rojo-acento" />
-              <span className="text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
-                EDUQA.PE
-              </span>
-            </Link>
-            <Tablero avisos={avisos} />
-          </>
-        }
+        cabecera={<Tablero avisos={avisos} />}
         acciones={
           <MenuPerfil
             nombre={perfil?.nombre}

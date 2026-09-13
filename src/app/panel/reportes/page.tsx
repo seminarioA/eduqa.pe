@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Bug, Paperclip } from "lucide-react";
 import { clienteServidor, usuarioActual } from "@/lib/supabase/servidor";
 import { perfilActual } from "@/lib/matriculas";
-import { Llama } from "@/components/Llama";
 import { Migas } from "@/components/Migas";
 import { CambiarEstado } from "./CambiarEstado";
 
@@ -61,20 +59,9 @@ export default async function Page() {
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 lg:pl-64 xl:pl-32 2xl:pl-6 py-12">
-      <div className="flex items-center justify-between gap-4">
-        <Link href="/panel" className="flex items-center gap-3">
-          <Llama className="h-10 w-auto text-rojo-acento" />
-          <span className="text-base font-bold uppercase tracking-[0.2em] text-rojo-acento">
-            EDUQA.PE
-          </span>
-        </Link>
-      </div>
+      <Migas items={[{ texto: "Panel", href: "/panel" }, { texto: "Reportes" }]} />
 
-      <div className="mt-8">
-        <Migas items={[{ texto: "Panel", href: "/panel" }, { texto: "Reportes" }]} />
-      </div>
-
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <h1 className="flex items-center gap-2 text-3xl font-semibold tracking-tight">
           <Bug size={26} className="text-rojo-acento" aria-hidden="true" />
           Reportes

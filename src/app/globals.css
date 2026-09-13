@@ -116,6 +116,73 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* La preferencia de la barra se aplica antes de hidratar y la página libera
+   el espacio reservado cuando queda reducida a iconos. */
+#barra-lateral {
+  transition: width 180ms ease;
+}
+
+.sidebar-icono-colapsado {
+  display: none;
+}
+
+html[data-sidebar="collapsed"] #barra-lateral {
+  width: 4.5rem;
+}
+
+html[data-sidebar="collapsed"] .sidebar-cabecera,
+html[data-sidebar="collapsed"] .sidebar-pie {
+  flex-direction: column;
+  align-items: center;
+}
+
+html[data-sidebar="collapsed"] .sidebar-marca {
+  flex: none;
+  width: 100%;
+  justify-content: center;
+  padding-inline: 0;
+}
+
+html[data-sidebar="collapsed"] .sidebar-etiqueta,
+html[data-sidebar="collapsed"] .sidebar-icono-expandido {
+  display: none;
+}
+
+html[data-sidebar="collapsed"] .sidebar-icono-colapsado {
+  display: block;
+}
+
+html[data-sidebar="collapsed"] .sidebar-enlace {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+html[data-sidebar="collapsed"] .sidebar-pie {
+  padding-inline: 0;
+}
+
+html[data-sidebar="collapsed"] .sidebar-pie form,
+html[data-sidebar="collapsed"] .sidebar-pie form button {
+  width: 100%;
+}
+
+html[data-sidebar="collapsed"] .sidebar-pie form button {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+@media (min-width: 1024px) {
+  html[data-sidebar="collapsed"] .lg\:pl-64 {
+    padding-left: 5.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  html[data-sidebar="collapsed"] .xl\:pl-32 {
+    padding-left: 1.5rem;
+  }
+}
+
 /*
  * Shiki genera ambos temas a la vez; aquí se elige cuál se pinta. El fondo se
  * aplica solo al bloque: dárselo también a cada span pintaba un rectángulo
