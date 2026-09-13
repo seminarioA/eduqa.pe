@@ -130,7 +130,6 @@ html[data-sidebar="collapsed"] #barra-lateral {
   width: 4.5rem;
 }
 
-html[data-sidebar="collapsed"] .sidebar-cabecera,
 html[data-sidebar="collapsed"] .sidebar-pie {
   flex-direction: column;
   align-items: center;

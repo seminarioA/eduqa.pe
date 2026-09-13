@@ -152,36 +152,21 @@ export function Isla({
     <nav
       id="barra-lateral"
       aria-label="Navegación principal"
-      className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-borde bg-fondo px-3 py-4 lg:flex"
+      className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-borde bg-fondo lg:flex"
     >
-      <div className="sidebar-cabecera flex items-center gap-1">
-        <Link
-          href={inicio}
-          aria-label={autenticado ? "Ir a cursos" : "Ir al inicio"}
-          title={autenticado ? "Cursos" : "Inicio"}
-          className="sidebar-marca flex min-w-0 flex-1 items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-superficie"
-        >
-          <MarcaInline svg={marcaSidebar} className="h-8 w-auto shrink-0 text-rojo-acento" />
-          <span className="sidebar-etiqueta whitespace-nowrap text-lg font-bold tracking-tight">
-            EDUQA<span className="text-rojo-acento">.PE</span>
-          </span>
-        </Link>
-        <button
-          type="button"
-          onClick={alternarBarra}
-          aria-label={colapsada ? "Expandir barra lateral" : "Colapsar barra lateral"}
-          title={colapsada ? "Expandir (o)" : "Colapsar (o)"}
-          className="sidebar-toggle rounded-lg p-1.5 text-texto-tenue transition-colors hover:bg-superficie hover:text-texto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
-        >
-          {colapsada ? (
-            <PanelLeftOpen size={16} aria-hidden="true" />
-          ) : (
-            <PanelLeftClose size={16} aria-hidden="true" />
-          )}
-        </button>
-      </div>
+      <Link
+        href={inicio}
+        aria-label={autenticado ? "Ir a cursos" : "Ir al inicio"}
+        title={autenticado ? "Cursos" : "Inicio"}
+        className="sidebar-marca flex items-center gap-2 border-b border-borde px-4 py-4 transition-colors hover:bg-superficie"
+      >
+        <MarcaInline svg={marcaSidebar} className="h-9 w-auto text-rojo-acento" />
+        <span className="sidebar-etiqueta text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
+          EDUQA.PE
+        </span>
+      </Link>
 
-      <div className="mt-6 flex flex-1 flex-col gap-1">
+      <div className="mx-3 mt-3 flex flex-1 flex-col gap-1 overflow-y-auto">
         {enlaces.map(({ href, etiqueta, Icono }) => {
           const activo = ruta === href || (href !== "/cursos" && href !== "/" && ruta.startsWith(href));
           return (
@@ -203,18 +188,27 @@ export function Isla({
         })}
       </div>
 
-      <div className="sidebar-pie mt-auto flex flex-col gap-2 border-t border-borde pt-3">
-        <div className="sidebar-tema flex items-center justify-between px-2">
-          <span className="sidebar-etiqueta text-xs text-texto-tenue">Tema</span>
-          <SelectorTemaCompacto />
-        </div>
+      <div className="sidebar-pie mx-3 mb-4 mt-2 flex items-center justify-between gap-1 border-t border-borde px-1 pt-3">
+        <SelectorTemaCompacto />
+
+        <button
+          type="button"
+          onClick={alternarBarra}
+          aria-label={colapsada ? "Expandir barra lateral" : "Colapsar barra lateral"}
+          aria-pressed={colapsada}
+          title={colapsada ? "Expandir barra lateral" : "Colapsar barra lateral"}
+          className="sidebar-control flex size-8 shrink-0 items-center justify-center rounded-lg text-texto-suave transition-colors hover:bg-superficie hover:text-texto focus-visible:outline-2 focus-visible:outline-rojo-acento"
+        >
+          <PanelLeftClose size={18} className="sidebar-icono-expandido" aria-hidden="true" />
+          <PanelLeftOpen size={18} className="sidebar-icono-colapsado" aria-hidden="true" />
+        </button>
         {autenticado && (
           <button
             type="button"
             onClick={onSalir}
             title="Cerrar sesión"
             aria-label="Cerrar sesión"
-            className="sidebar-enlace flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
+            className="sidebar-enlace flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
           >
             <LogOut size={16} className="shrink-0" />
             <span className="sidebar-etiqueta truncate">Cerrar sesión</span>
