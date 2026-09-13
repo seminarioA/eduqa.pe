@@ -1,56 +1,80 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import {
-  DollarSign,
-  Eye,
-  EyeOff,
-  GraduationCap,
+  AlertCircle,
+  BookOpen,
+  Check,
+  Clock,
+  Globe,
   Loader2,
+  Pencil,
   Sparkles,
+  X,
 } from "lucide-react";
+import { guardarCurso, type EstadoGuardado } from "./acciones";
 import { Icono, type IconoNombre } from "@/components/Iconos";
-import { Boton } from "@/components/ui";
-import { publicarCurso, despublicarCurso, type EstadoAccion } from "./cursos/acciones";
+import { Boton, Campo, claseInput, claseInputBase } from "@/components/ui";
 import type { FormatoCurso } from "@/lib/curso-tipos";
 
-export type DatosGestion = {
+export type CursoGestion = {
   slug: string;
   titulo: string;
   resumen: string;
-  area: string;
-  nivel: string;
-  horas: number;
+  estado: string;
+  precio: number;
+  accesoLibre: boolean;
   sesiones: number;
+  horas: number;
+  primeraLeccion: string;
   formato?: FormatoCurso;
   icono?: IconoNombre;
-  publicado: boolean;
-  precio: number;
 };
 
-export function TarjetaGestion({ curso }: { curso: DatosGestion }) {
-  const [estadoPublicar, accionPublicar, publicando] = useActionState<
-    EstadoAccion | null,
-    FormData
-  >(publicarCurso, null);
+const COLOR_ESTADO: Record<string, string> = {
+  borrador: "bg-superficie text-texto-tenue ring-borde-fuerte",
+  privado:
+    "bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:ring-amber-900",
+  publico:
+    "bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900",
+};
 
-  const [estadoDespublicar, accionDespublicar, despublicando] = useActionState<
-    EstadoAccion | null,
-    FormData
-  >(despublicarCurso, null);
+const ETIQUETA_ESTADO: Record<string, string> = {
+  borrador: "Borrador",
+  privado: "Privado",
+  publico: "Público",
+};
 
-  const pendiente = publicando || despublicando;
+export function TarjetaGestion({ curso }: { curso: CursoGestion }) {
+  const [editando, setEditando] = useState(false);
+  const [borrador, setBorrador] = useState({
+    titulo: curso.titulo,
+    resumen: curso.resumen,
+    estado: curso.estado,
+    precio: String(curso.precio),
+    accesoLibre: curso.accesoLibre,
+  });
+  const [estado, accion, guardando] = useActionState<EstadoGuardado | null, FormData>(
+    async (anterior, datos) => {
+      try {
+        const resultado = await guardarCurso(anterior, datos);
+        if (resultado.ok) setEditando(false);
+        return resultado;
+      } catch {
+        return { ok: false, error: "No pudimos confirmar el guardado. Inténtalo de nuevo; tus cambios siguen en el formulario." };
+      }
+    },
+    null,
+  );
+
   const esMicro = curso.formato === "microcurso" || curso.formato === "pildora";
 
-  return (
-    <div className="flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-6 shadow-sm">
-      <div>
+  if (!editando) {
+    return (
+      <div className="flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5">
         <div className="flex items-start justify-between gap-3">
-          <Icono
-            nombre={curso.icono}
-            className="size-12 shrink-0 text-texto-tenue"
-          />
+          <Icono nombre={curso.icono} className="size-12 shrink-0 text-texto-tenue" />
           <div className="flex flex-col items-end gap-1.5">
             <div className="flex items-center gap-1.5">
               {esMicro && (
@@ -60,107 +84,179 @@ export function TarjetaGestion({ curso }: { curso: DatosGestion }) {
                 </span>
               )}
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                  curso.publicado
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                    : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide ring-1 ring-inset ${
+                  COLOR_ESTADO[curso.estado] ?? COLOR_ESTADO.borrador
                 }`}
               >
-                {curso.publicado ? "Publicado" : "Borrador Markdown"}
+                {ETIQUETA_ESTADO[curso.estado] ?? curso.estado}
               </span>
             </div>
-            <span className="text-xs text-texto-tenue">{curso.area}</span>
           </div>
         </div>
 
-        <h3 className="mt-4 text-lg font-semibold leading-snug text-texto">
-          {curso.titulo}
-        </h3>
-        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-texto-suave">
+        {curso.accesoLibre && (
+          <p className="mt-2 flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-rojo-acento">
+            <Globe size={11} aria-hidden="true" />
+            Acceso libre
+          </p>
+        )}
+
+        <h3 className="mt-4 text-base font-semibold leading-snug">{curso.titulo}</h3>
+        <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-texto-suave">
           {curso.resumen}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-texto-tenue">
-          <span>{curso.sesiones} sesiones</span>
-          <span>·</span>
-          <span>{curso.horas} horas</span>
-          <span>·</span>
-          <span className="font-semibold text-texto">
-            {curso.publicado ? `S/ ${curso.precio.toFixed(2)}` : "Sin precio"}
+        <div className="mt-3 flex items-center justify-between border-t border-borde pt-2.5 text-xs text-texto-tenue">
+          <span className="flex items-center gap-3">
+            <span className="flex items-center gap-1">
+              <BookOpen size={13} aria-hidden="true" />
+              {curso.sesiones}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock size={13} aria-hidden="true" />
+              {curso.horas} h
+            </span>
           </span>
+          <span className="font-medium text-texto">S/{curso.precio.toFixed(2)}</span>
         </div>
-      </div>
 
-      <div className="mt-6 border-t border-borde pt-4">
-        {curso.publicado ? (
-          <div className="flex items-center justify-between gap-2">
-            <Link
-              href={`/cursos/${curso.slug}`}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-texto-suave hover:text-rojo-acento"
-            >
-              <Eye size={14} />
-              Ver en catálogo
-            </Link>
+        <div className="mt-3 flex gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setBorrador({
+                titulo: curso.titulo,
+                resumen: curso.resumen,
+                estado: curso.estado,
+                precio: String(curso.precio),
+                accesoLibre: curso.accesoLibre,
+              });
+              setEditando(true);
+            }}
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-borde-fuerte px-3 py-2 text-xs font-medium text-texto-suave transition-colors hover:border-rojo-acento hover:text-rojo-acento"
+          >
+            <Pencil size={13} aria-hidden="true" />
+            Editar
+          </button>
+          <Link
+            href={`/cursos/${curso.slug}/${curso.primeraLeccion}`}
+            className="flex items-center justify-center rounded-lg border border-borde-fuerte px-3 py-2 text-xs font-medium text-texto-suave transition-colors hover:border-rojo-acento hover:text-rojo-acento"
+          >
+            Ver
+          </Link>
+        </div>
 
-            <form action={accionDespublicar}>
-              <input type="hidden" name="slug" value={curso.slug} />
-              <Boton
-                type="submit"
-                variante="secundario"
-                disabled={pendiente}
-                className="py-1.5 text-xs"
-              >
-                {despublicando ? (
-                  <Loader2 size={13} className="animate-spin" />
-                ) : (
-                  <EyeOff size={13} />
-                )}
-                Despublicar
-              </Boton>
-            </form>
-          </div>
-        ) : (
-          <form action={accionPublicar} className="flex flex-col gap-3">
-            <input type="hidden" name="slug" value={curso.slug} />
-            <div className="flex items-center gap-2">
-              <label htmlFor={`precio-${curso.slug}`} className="text-xs text-texto-tenue">
-                Precio (PEN S/):
-              </label>
-              <div className="relative flex-1">
-                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-texto-tenue">
-                  S/
-                </span>
-                <input
-                  id={`precio-${curso.slug}`}
-                  type="number"
-                  name="precio"
-                  step="0.01"
-                  min="0"
-                  defaultValue="49.00"
-                  required
-                  className="w-full rounded-lg border border-borde bg-fondo py-1.5 pl-8 pr-3 text-xs text-texto focus:border-rojo-acento focus:outline-none"
-                />
-              </div>
-            </div>
-
-            <Boton
-              type="submit"
-              disabled={pendiente}
-              className="w-full py-1.5 text-xs"
-            >
-              {publicando && <Loader2 size={13} className="animate-spin" />}
-              Publicar en Catálogo
-            </Boton>
-          </form>
-        )}
-
-        {estadoPublicar && !estadoPublicar.ok && (
-          <p className="mt-2 text-[11px] text-rojo-acento">{estadoPublicar.error}</p>
-        )}
-        {estadoDespublicar && !estadoDespublicar.ok && (
-          <p className="mt-2 text-[11px] text-rojo-acento">{estadoDespublicar.error}</p>
+        {estado?.ok && (
+          <p role="status" className="mt-2 flex items-center gap-1 text-[11px] text-exito">
+            <Check size={12} aria-hidden="true" />
+            Guardado
+          </p>
         )}
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <form
+      action={accion}
+      onReset={(event) => event.preventDefault()}
+      className="flex min-w-0 flex-col rounded-xl border-2 border-rojo-acento bg-fondo p-5"
+    >
+      <input type="hidden" name="curso" value={curso.slug} />
+
+      <div className="mb-3 flex items-center justify-between">
+        <span className="text-xs font-semibold uppercase tracking-wide text-rojo-acento">
+          Editando
+        </span>
+        <button
+          type="button"
+          onClick={() => setEditando(false)}
+          disabled={guardando}
+          aria-label="Cancelar"
+          className="rounded p-1 text-texto-tenue transition-colors hover:text-rojo-acento"
+        >
+          <X size={16} aria-hidden="true" />
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        <Campo etiqueta="Título">
+          <input
+            name="titulo"
+            value={borrador.titulo}
+            onChange={(e) => setBorrador({ ...borrador, titulo: e.target.value })}
+            required
+            className={claseInput}
+          />
+        </Campo>
+
+        <Campo etiqueta="Resumen">
+          <textarea
+            name="resumen"
+            value={borrador.resumen}
+            onChange={(e) => setBorrador({ ...borrador, resumen: e.target.value })}
+            required
+            rows={3}
+            className={`${claseInputBase} w-full resize-none`}
+          />
+        </Campo>
+
+        <div className="grid grid-cols-2 gap-3">
+          <Campo etiqueta="Estado">
+            <select
+              name="estado"
+              value={borrador.estado}
+              onChange={(e) => setBorrador({ ...borrador, estado: e.target.value })}
+              className={claseInput}
+            >
+              <option value="borrador">Borrador</option>
+              <option value="privado">Privado</option>
+              <option value="publico">Público</option>
+            </select>
+          </Campo>
+
+          <Campo etiqueta="Precio">
+            <input
+              name="precio"
+              type="number"
+              min={0}
+              step="0.10"
+              value={borrador.precio}
+              onChange={(e) => setBorrador({ ...borrador, precio: e.target.value })}
+              className={claseInput}
+            />
+          </Campo>
+        </div>
+
+        <label className="flex items-start gap-2 text-xs leading-snug text-texto-suave">
+          <input
+            type="checkbox"
+            name="acceso_libre"
+            checked={borrador.accesoLibre}
+            onChange={(e) => setBorrador({ ...borrador, accesoLibre: e.target.checked })}
+            className="mt-0.5 size-3.5 shrink-0 accent-rojo"
+          />
+          <span>
+            Acceso libre: cualquiera lee el material sin cuenta ni matrícula.
+            Requiere que el curso esté público.
+          </span>
+        </label>
+      </div>
+
+      {estado && !estado.ok && (
+        <p
+          role="alert"
+          className="mt-3 flex items-start gap-1.5 text-[11px] leading-snug text-rojo-acento"
+        >
+          <AlertCircle size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
+          {estado.error}
+        </p>
+      )}
+
+      <Boton type="submit" disabled={guardando} className="mt-4 w-full py-2 text-xs">
+        {guardando && <Loader2 size={14} className="animate-spin" aria-hidden="true" />}
+        {guardando ? "Guardando…" : "Guardar cambios"}
+      </Boton>
+    </form>
   );
 }

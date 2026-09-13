@@ -1,71 +1,189 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { BookOpen, GraduationCap, Sparkles } from "lucide-react";
-import { usuarioEsAdmin } from "@/lib/supabase/servidor";
+import { BookOpen, Database, HardDrive, User, Sparkles } from "lucide-react";
+import { usuarioActual, clienteServidor } from "@/lib/supabase/servidor";
+import { perfilActual } from "@/lib/matriculas";
 import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { precios } from "@/lib/precios";
-import { TarjetaGestion } from "@/app/panel/TarjetaGestion";
 import { Migas } from "@/components/Migas";
+import { FormularioCurso } from "./Formulario";
+import { CrearCurso } from "./Crear";
+import { TarjetaGestion } from "../TarjetaGestion";
 
 export const metadata: Metadata = {
-  title: "Gestión de Cursos & Precios — Panel EDUQA.PE",
+  title: "Gestión de Cursos & Microcursos — EDUQA.PE",
   robots: { index: false, follow: false },
 };
 
-export default async function PanelCursosPage() {
-  const esAdmin = await usuarioEsAdmin();
-  if (!esAdmin) redirect("/cursos");
+export default async function Page() {
+  const usuario = await usuarioActual();
+  if (!usuario) redirect("/acceder?volverA=/panel/cursos");
 
-  const [catalogo, tarifas] = await Promise.all([obtenerCursos(), precios()]);
+  const perfil = await perfilActual();
+  if (!perfil?.es_admin) redirect("/cursos");
 
-  const cursosConEstado = catalogo.map((c) => {
-    const tarifa = tarifas.get(c.slug);
-    return {
-      slug: c.slug,
-      titulo: tarifa?.titulo ?? c.titulo,
-      resumen: tarifa?.resumen ?? c.resumen,
-      area: c.area,
-      nivel: c.nivel,
-      horas: c.horas,
-      formato: c.formato,
-      sesiones: c.lecciones.length,
-      icono: c.icono,
-      publicado: tarifas.has(c.slug),
-      precio: tarifa?.precio ?? 0,
-    };
-  });
+  const [tarifas, catalogoCursos, supabase] = await Promise.all([
+    precios(),
+    obtenerCursos(),
+    clienteServidor(),
+  ]);
+
+  const { data: enLaBase } = await supabase
+    .from("curso_sesiones")
+    .select("curso_slug, archivo");
+
+  const sesionesPorCurso = new Map<string, number>();
+  for (const s of enLaBase ?? []) {
+    sesionesPorCurso.set(s.curso_slug, (sesionesPorCurso.get(s.curso_slug) ?? 0) + 1);
+  }
+
+  // Creadores: el nombre sale de `perfiles`, que es donde vive el del alumno.
+  const { data: autorias } = await supabase
+    .from("curso_creadores")
+    .select("curso_slug, usuario_id, rol, orden")
+    .order("orden");
+
+  const { data: perfiles } = await supabase.from("perfiles").select("id, nombre");
+  const nombrePorId = new Map((perfiles ?? []).map((p) => [p.id, p.nombre]));
+
+  const creadoresPorCurso = new Map<string, string[]>();
+  for (const a of autorias ?? []) {
+    const lista = creadoresPorCurso.get(a.curso_slug) ?? [];
+    lista.push(nombrePorId.get(a.usuario_id) || "sin nombre");
+    creadoresPorCurso.set(a.curso_slug, lista);
+  }
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
+    <div className="mx-auto w-full max-w-5xl px-6 py-10 lg:pl-64 xl:pl-32 2xl:pl-6">
       <Migas
         items={[
           { texto: "Panel", href: "/panel" },
-          { texto: "Gestión de Cursos" },
+          { texto: "Cursos & Microcursos", href: "/panel/cursos" },
         ]}
       />
 
-      <header className="mt-6 border-b border-borde pb-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-rojo-tenue px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-rojo-acento">
+            <Sparkles size={12} />
+            Gestión Educativa
+          </div>
+          <h1 className="mt-2 text-2xl font-bold text-texto sm:text-3xl">
+            Cursos & Microcursos
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-texto-suave">
+            Publica nuevos contenidos en Markdown o actualiza tarifas, visibilidad (borrador, privado, público) y sesiones de cursos existentes directamente en Supabase sin necesidad de redesplegar.
+          </p>
+        </div>
+      </div>
+
+      <section className="mt-8 rounded-2xl border border-borde bg-superficie p-6 shadow-sm">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-texto-tenue">
+          Publicar o Modificar Contenido Markdown
+        </h2>
+        <div className="mt-4">
+          <CrearCurso />
+        </div>
+
+        <div className="mt-6">
+          <FormularioCurso />
+        </div>
+      </section>
+
+      {/* Tarjetas de Administración de Precios y Estados */}
+      <section className="mt-12">
+        <div className="flex items-center justify-between">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-rojo-acento">
-              <GraduationCap size={14} />
-              Catálogo & Precios
-            </div>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight text-texto">
-              Gestión de Cursos y Microcursos
-            </h1>
-            <p className="mt-1 text-sm text-texto-suave">
-              Publica, despublica o ajusta el precio de los cursos escritos en Markdown en `src/content/`.
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-texto">
+              Tarifas y Visibilidad de Cursos ({catalogoCursos.length})
+            </h2>
+            <p className="mt-1 text-xs text-texto-suave">
+              Borrador: oculto en catálogo · Privado: solo con enlace directo · Público: visible en catálogo.
             </p>
           </div>
         </div>
-      </header>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {cursosConEstado.map((curso) => (
-          <TarjetaGestion key={curso.slug} curso={curso} />
-        ))}
-      </div>
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {catalogoCursos.map((c) => {
+            const t = tarifas.get(c.slug);
+            return (
+              <TarjetaGestion
+                key={c.slug}
+                curso={{
+                  slug: c.slug,
+                  titulo: t?.titulo ?? c.titulo,
+                  resumen: t?.resumen ?? c.resumen,
+                  estado: t?.estado ?? "publico",
+                  precio: t?.precio ?? 0,
+                  accesoLibre: t?.acceso_libre ?? false,
+                  sesiones: c.lecciones.length,
+                  horas: c.horas,
+                  primeraLeccion: c.lecciones[0].slug,
+                  formato: c.formato,
+                  icono: c.icono,
+                }}
+              />
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Lista detallada de estado del repositorio vs base */}
+      <section className="mt-14 border-t border-borde pt-10">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-texto-tenue">
+          Auditoría de Origen y Creadores
+        </h2>
+        <ul className="mt-3 divide-y divide-borde rounded-2xl border border-borde bg-superficie">
+          {catalogoCursos.map((c) => {
+            const enBase = sesionesPorCurso.has(c.slug);
+            return (
+              <li key={c.slug} className="flex items-center gap-3 px-4 py-3.5 text-xs">
+                <BookOpen size={15} className="shrink-0 text-texto-tenue" aria-hidden="true" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-texto">{c.titulo}</p>
+                  <p className="font-mono text-[11px] text-texto-tenue">{c.slug}</p>
+                </div>
+                {c.formato === "microcurso" && (
+                  <span className="shrink-0 rounded-md bg-rojo-tenue px-2 py-0.5 text-[10px] font-semibold text-rojo-acento">
+                    Microcurso
+                  </span>
+                )}
+                <span className="shrink-0 text-xs text-texto-suave">
+                  {c.lecciones.length} sesiones
+                </span>
+                <span
+                  className="flex shrink-0 items-center gap-1 text-[11px] text-texto-tenue"
+                  title={
+                    creadoresPorCurso.get(c.slug)?.join(", ") ??
+                    "Sin creador registrado"
+                  }
+                >
+                  <User size={12} aria-hidden="true" />
+                  {creadoresPorCurso.get(c.slug)?.length
+                    ? creadoresPorCurso.get(c.slug)!.length === 1
+                      ? creadoresPorCurso.get(c.slug)![0]
+                      : `${creadoresPorCurso.get(c.slug)!.length} creadores`
+                    : "sin creador"}
+                </span>
+                <span
+                  title={enBase ? "Se sirve desde la base" : "Vive en el repositorio"}
+                  className="flex shrink-0 items-center gap-1 text-[11px] text-texto-tenue"
+                >
+                  {enBase ? (
+                    <>
+                      <Database size={12} aria-hidden="true" /> base
+                    </>
+                  ) : (
+                    <>
+                      <HardDrive size={12} aria-hidden="true" /> repo
+                    </>
+                  )}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
     </div>
   );
 }

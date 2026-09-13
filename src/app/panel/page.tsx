@@ -4,248 +4,301 @@ import type { Metadata } from "next";
 import {
   BookOpen,
   Bug,
-  GraduationCap,
   Megaphone,
-  Newspaper,
   Route,
-  Sparkles,
+  Newspaper,
   Stamp,
-  Users,
+  ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
-import { usuarioActual, usuarioEsAdmin } from "@/lib/supabase/servidor";
-import { obtenerCursos } from "@/lib/catalogo-cursos";
-import { precios } from "@/lib/precios";
-import { totalEstudiantes } from "@/lib/matriculas";
-import { Icono } from "@/components/Iconos";
+import { usuarioActual } from "@/lib/supabase/servidor";
 import { Migas } from "@/components/Migas";
+import { obtenerCursos } from "@/lib/catalogo-cursos";
+import { misMatriculas, perfilActual } from "@/lib/matriculas";
 
 export const metadata: Metadata = {
-  title: "Panel de Gestión — EDUQA.PE",
+  title: "Panel — EDUQA.PE",
   robots: { index: false, follow: false },
 };
 
-export default async function PanelPrincipalPage() {
+export default async function Page() {
   const usuario = await usuarioActual();
   if (!usuario) redirect("/acceder?volverA=/panel");
 
-  const esAdmin = await usuarioEsAdmin();
-  const [catalogo, tarifas, alumnosTotal] = await Promise.all([
-    obtenerCursos(),
-    precios(),
-    totalEstudiantes(),
+  const [perfil, matriculas] = await Promise.all([
+    perfilActual(),
+    misMatriculas(),
   ]);
 
-  const cursosPublicados = catalogo.filter((c) => tarifas.has(c.slug));
+  const alta = usuario.created_at
+    ? new Date(usuario.created_at).toLocaleDateString("es-PE", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
+
+  const catalogo = await obtenerCursos();
+  const cursosPorSlug = new Map(catalogo.map((c) => [c.slug, c]));
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
-      <Migas items={[{ texto: "Panel de Control" }]} />
+    <main className="mx-auto w-full max-w-4xl px-6 py-10 lg:pl-64 xl:pl-32 2xl:pl-6">
+      <Migas items={[{ texto: "Panel" }]} />
 
-      <header className="mt-6 border-b border-borde pb-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-rojo-acento">
-              {esAdmin ? "Administración & Gestión" : "Mi Portal de Aprendizaje"}
-            </span>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight text-texto">
-              {esAdmin ? "Panel de Gestión General" : "Mis Cursos & Formación"}
-            </h1>
-            <p className="mt-1 text-sm text-texto-suave">
-              {esAdmin
-                ? "Administra los cursos, rutas de aprendizaje, blog en Medium, marca y avisos globales."
-                : "Accede a tus cursos activos, certificaciones y materiales."}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/cursos"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-borde bg-superficie px-4 py-2 text-xs font-semibold text-texto-suave transition-colors hover:border-rojo-acento hover:text-texto"
-            >
-              <GraduationCap size={15} />
-              Ver Catálogo
-            </Link>
-          </div>
+      <header className="mt-4 flex flex-col justify-between gap-4 border-b border-borde pb-6 sm:flex-row sm:items-end">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-texto">
+            Panel de Usuario
+          </h1>
+          <p className="mt-1 text-sm text-texto-suave">
+            Información de tu cuenta, cursos activos y accesos directos.
+          </p>
         </div>
       </header>
 
-      {/* Métricas clave */}
-      <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3" aria-label="Métricas">
-        <div className="rounded-2xl border border-borde bg-superficie p-5">
-          <div className="flex items-center gap-2 text-xs font-medium text-texto-tenue">
-            <BookOpen size={14} className="text-rojo-acento" />
-            Cursos Disponibles
-          </div>
-          <p className="mt-2 text-2xl font-bold text-texto">{cursosPublicados.length}</p>
-          <span className="mt-1 inline-block text-[11px] text-texto-tenue">
-            {catalogo.length} registrados en Markdown
-          </span>
-        </div>
+      {/* Ficha de usuario */}
+      <section className="mt-8 rounded-2xl border border-borde bg-superficie p-6">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-texto-tenue">
+          Datos de la cuenta
+        </h2>
 
-        <div className="rounded-2xl border border-borde bg-superficie p-5">
-          <div className="flex items-center gap-2 text-xs font-medium text-texto-tenue">
-            <Users size={14} className="text-rojo-acento" />
-            Estudiantes Registrados
+        <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt className="text-xs uppercase tracking-wide text-texto-tenue">Nombre</dt>
+            <dd className="mt-0.5 text-sm font-medium text-texto">
+              {perfil?.nombre ?? (
+                <span className="italic text-texto-tenue">Sin especificar</span>
+              )}
+            </dd>
           </div>
-          <p className="mt-2 text-2xl font-bold text-texto">{alumnosTotal}</p>
-          <span className="mt-1 inline-block text-[11px] text-texto-tenue">
-            En toda la plataforma
-          </span>
-        </div>
 
-        <div className="rounded-2xl border border-borde bg-superficie p-5">
-          <div className="flex items-center gap-2 text-xs font-medium text-texto-tenue">
-            <Sparkles size={14} className="text-rojo-acento" />
-            Nuevos Formatos
+          <div>
+            <dt className="text-xs uppercase tracking-wide text-texto-tenue">Correo</dt>
+            <dd className="mt-0.5 truncate font-medium">{usuario.email}</dd>
           </div>
-          <p className="mt-2 text-sm font-semibold text-texto">Cursos & Microcursos</p>
-          <span className="mt-1 inline-block text-[11px] text-texto-tenue">
-            Píldoras de alta intensidad técnica
-          </span>
+
+          <div>
+            <dt className="text-xs uppercase tracking-wide text-texto-tenue">Rol</dt>
+            <dd className="mt-0.5 text-sm font-medium text-texto">
+              {perfil?.es_admin ? "Administrador" : "Alumno"}
+            </dd>
+          </div>
+
+          {alta && (
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-texto-tenue">Miembro desde</dt>
+              <dd className="mt-0.5 text-sm text-texto-suave">{alta}</dd>
+            </div>
+          )}
+        </dl>
+
+        <div className="mt-6 flex gap-3 border-t border-borde pt-4">
+          <Link
+            href="/ajustes"
+            className="rounded-lg border border-borde bg-fondo px-3 py-1.5 text-xs font-medium text-texto transition-colors hover:border-rojo-acento hover:text-rojo-acento"
+          >
+            Editar perfil
+          </Link>
         </div>
       </section>
 
-      {/* Módulos de Gestión para Administradores */}
-      {esAdmin && (
-        <section className="mt-12" aria-label="Módulos de administración">
-          <div className="mb-6">
-            <h2 className="text-xl font-bold tracking-tight text-texto">
-              Módulos de Gestión
-            </h2>
-            <p className="mt-1 text-sm text-texto-suave">
-              Selecciona el área que deseas administrar. Cada módulo cuenta con su propio panel y herramientas dedicadas.
-            </p>
-          </div>
+      {/* Mis cursos: lo que ve cualquier usuario */}
+      <section className="mt-10">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-texto-tenue">
+            Mis Cursos Activos ({matriculas.length})
+          </h2>
+          <Link
+            href="/cursos"
+            className="text-xs font-medium text-rojo-acento hover:underline"
+          >
+            Ver catálogo completo →
+          </Link>
+        </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {/* 1. Gestión de Cursos */}
+        {matriculas.length === 0 ? (
+          <div className="mt-3 rounded-2xl border border-dashed border-borde p-8 text-center">
+            <p className="text-sm text-texto-suave">
+              Aún no te has matriculado en ningún curso.
+            </p>
+            <Link
+              href="/cursos"
+              className="mt-3 inline-block rounded-xl bg-rojo px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
+            >
+              Explorar cursos disponibles
+            </Link>
+          </div>
+        ) : (
+          <div className="mt-3 divide-y divide-borde rounded-2xl border border-borde bg-superficie">
+            {matriculas.map((m) => {
+              const info = cursosPorSlug.get(m.curso_slug);
+              return (
+                <div
+                  key={m.curso_slug}
+                  className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-texto-tenue">
+                        {info?.area ?? "Curso"}
+                      </span>
+                      {info?.formato === "microcurso" && (
+                        <span className="rounded bg-rojo-tenue px-1.5 py-0.5 text-[9px] font-bold text-rojo-acento">
+                          Microcurso
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-1 truncate text-sm font-semibold text-texto">
+                      {info?.titulo ?? m.curso_slug}
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/cursos/${m.curso_slug}`}
+                      className="inline-flex items-center gap-1 rounded-lg border border-borde bg-fondo px-3 py-1.5 text-xs font-medium text-texto transition-colors hover:border-rojo-acento"
+                    >
+                      Continuar
+                      <ArrowUpRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Panel de administración modular */}
+      {perfil?.es_admin && (
+        <section className="mt-12 border-t border-borde pt-10" aria-label="Administración">
+          <div className="flex items-center gap-2">
+            <Sparkles size={16} className="text-rojo-acento" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-texto">
+              Panel de Administración y Gestión
+            </h2>
+          </div>
+          <p className="mt-1 text-xs text-texto-suave">
+            Herramientas exclusivas para administradores de EDUQA.PE.
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* 1. Gestión Cursos */}
             <Link
               href="/panel/cursos"
-              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-6 transition-all duration-200 hover:-translate-y-1 hover:border-rojo-acento hover:shadow-lg"
+              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
             >
               <div>
-                <div className="flex size-11 items-center justify-center rounded-xl bg-rojo-tenue text-rojo-acento transition-colors group-hover:bg-rojo group-hover:text-white">
-                  <GraduationCap size={22} />
+                <div className="flex size-9 items-center justify-center rounded-lg bg-rojo-tenue text-rojo-acento">
+                  <BookOpen size={18} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-texto group-hover:text-rojo-acento">
+                <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
                   Gestión de Cursos
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                  Publicar o despublicar cursos Markdown, fijar precios en Soles (PEN) y gestionar la visibilidad.
+                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
+                  Publica Markdown, ajusta precios y visibilidad.
                 </p>
               </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-rojo-acento">
-                <span>Administrar cursos →</span>
-              </div>
+              <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
             </Link>
 
             {/* 2. Rutas de Aprendizaje */}
             <Link
               href="/panel/rutas"
-              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-6 transition-all duration-200 hover:-translate-y-1 hover:border-rojo-acento hover:shadow-lg"
+              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
             >
               <div>
-                <div className="flex size-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500 transition-colors group-hover:bg-blue-600 group-hover:text-white">
-                  <Route size={22} />
+                <div className="flex size-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500">
+                  <Route size={18} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-texto group-hover:text-rojo-acento">
-                  Rutas de Aprendizaje
+                <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
+                  Rutas Formativas
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                  Crear y editar rutas formativas paso a paso, asignar secuencias de cursos y configurar prerrequisitos.
+                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
+                  Especializaciones, itinerarios y prerrequisitos.
                 </p>
               </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-rojo-acento">
-                <span>Administrar rutas →</span>
-              </div>
+              <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
             </Link>
 
-            {/* 3. Blog Sincronizado con Medium */}
+            {/* 3. Blog Medium */}
             <Link
               href="/panel/blog"
-              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-6 transition-all duration-200 hover:-translate-y-1 hover:border-rojo-acento hover:shadow-lg"
+              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
             >
               <div>
-                <div className="flex size-11 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 transition-colors group-hover:bg-amber-600 group-hover:text-white">
-                  <Newspaper size={22} />
+                <div className="flex size-9 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500">
+                  <Newspaper size={18} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-texto group-hover:text-rojo-acento">
-                  Blog en Medium
+                <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
+                  Blog Medium
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                  Monitorear sincronización del feed RSS de Medium a nombre de la empresa y forzar recarga de caché.
+                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
+                  Sincronización RSS y recarga de caché.
                 </p>
               </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-rojo-acento">
-                <span>Gestionar blog →</span>
-              </div>
+              <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
             </Link>
 
-            {/* 4. Avisos Globales */}
+            {/* 4. Avisos */}
             <Link
               href="/panel/avisos"
-              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-6 transition-all duration-200 hover:-translate-y-1 hover:border-rojo-acento hover:shadow-lg"
+              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
             >
               <div>
-                <div className="flex size-11 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500 transition-colors group-hover:bg-purple-600 group-hover:text-white">
-                  <Megaphone size={22} />
+                <div className="flex size-9 items-center justify-center rounded-lg bg-purple-500/10 text-purple-500">
+                  <Megaphone size={18} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-texto group-hover:text-rojo-acento">
-                  Avisos & Comunicados
+                <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
+                  Avisos Globales
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                  Publicar banners informativos y alertas globales visibles para los alumnos en el catálogo.
+                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
+                  Banners y comunicados en catálogo.
                 </p>
               </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-rojo-acento">
-                <span>Gestionar avisos →</span>
-              </div>
+              <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
             </Link>
 
-            {/* 5. Reportes de Errores */}
+            {/* 5. Reportes */}
             <Link
               href="/panel/reportes"
-              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-6 transition-all duration-200 hover:-translate-y-1 hover:border-rojo-acento hover:shadow-lg"
+              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
             >
               <div>
-                <div className="flex size-11 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 transition-colors group-hover:bg-rose-600 group-hover:text-white">
-                  <Bug size={22} />
+                <div className="flex size-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-500">
+                  <Bug size={18} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-texto group-hover:text-rojo-acento">
-                  Reportes & Feedback
+                <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
+                  Reportes & Errores
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                  Revisar incidencias reportadas por los estudiantes durante la ejecución interactiva de código.
+                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
+                  Incidencias reportadas por alumnos.
                 </p>
               </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-rojo-acento">
-                <span>Revisar reportes →</span>
-              </div>
+              <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
             </Link>
 
-            {/* 6. Identidad & Marca */}
+            {/* 6. Marca */}
             <Link
               href="/panel/marca"
-              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-6 transition-all duration-200 hover:-translate-y-1 hover:border-rojo-acento hover:shadow-lg"
+              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
             >
               <div>
-                <div className="flex size-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 transition-colors group-hover:bg-emerald-600 group-hover:text-white">
-                  <Stamp size={22} />
+                <div className="flex size-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
+                  <Stamp size={18} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-texto group-hover:text-rojo-acento">
+                <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
                   Identidad Visual
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                  Personalizar el logotipo SVG oficial, colores de marca y aspecto en la barra lateral.
+                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
+                  Logotipo SVG y personalización.
                 </p>
               </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-rojo-acento">
-                <span>Ajustar marca →</span>
-              </div>
+              <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
             </Link>
           </div>
         </section>
       )}
-    </div>
+    </main>
   );
 }
