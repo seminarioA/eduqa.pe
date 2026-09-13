@@ -16,6 +16,7 @@ import { usuarioActual } from "@/lib/supabase/servidor";
 import { cerrarSesion } from "@/app/acceder/acciones";
 import { MenuPerfil } from "@/components/MenuPerfil";
 import { Migas } from "@/components/Migas";
+import { TituloEditable } from "@/components/TituloEditable";
 import { Listado } from "./Listado";
 import { AvisoTope } from "./AvisoTope";
 
@@ -38,6 +39,7 @@ export default async function Page() {
   ]);
   const vistasPorCurso = contarPorCurso(progreso);
   const plan = resumenPlan(perfil, matriculas);
+  const esAdmin = perfil?.es_admin ?? false;
 
   const nombre =
     perfil?.nombre?.trim().split(" ")[0] ?? usuario.email?.split("@")[0] ?? "";
@@ -107,8 +109,13 @@ export default async function Page() {
             )}
 
             <div className="mt-2 flex flex-wrap items-center gap-3">
+              {/* Título principal de la página: editable en modo admin */}
               <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                {titulos["cursos-titulo-pagina"]}
+                <TituloEditable
+                  clave="cursos-titulo-pagina"
+                  valorInicial={titulos["cursos-titulo-pagina"]}
+                  esAdmin={esAdmin}
+                />
               </h1>
               {nombre && (
                 <span className="text-sm text-texto-suave">
@@ -128,13 +135,13 @@ export default async function Page() {
             </div>
 
             {plan.alTope && (
-              <AvisoTope limite={plan.limite} esAdmin={perfil?.es_admin ?? false} />
+              <AvisoTope limite={plan.limite} esAdmin={esAdmin} />
             )}
           </>
         }
         rutas={ordenarRutasPorPopularidad(rutasVisibles, cuentas)}
         alTope={plan.alTope}
-        esAdmin={perfil?.es_admin ?? false}
+        esAdmin={esAdmin}
         titulosSeccion={titulos}
         cursos={disponibles.map((c) => {
           const m = porCurso.get(c.slug);
