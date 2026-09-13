@@ -17,12 +17,10 @@ export async function generateMetadata({
 }: {
   params: Promise<{ ruta: string }>;
 }): Promise<Metadata> {
-  const { ruta: slug } = await params;
-  const itinerarios = await rutas();
-  const ruta = itinerarios.find((r) => r.slug === slug);
+  const { ruta } = await params;
+  const encontrada = (await rutas()).find((r) => r.slug === ruta);
   return {
-    title: ruta ? `${ruta.nombre} — EDUQA.PE` : "Ruta — EDUQA.PE",
-    robots: { index: false, follow: false },
+    title: encontrada ? `${encontrada.nombre} — EDUQA.PE` : "Ruta no encontrada — EDUQA.PE",
   };
 }
 
@@ -32,8 +30,12 @@ export default async function Page({
   params: Promise<{ ruta: string }>;
 }) {
   const { ruta: slug } = await params;
+
   const usuario = await usuarioActual();
   if (!usuario) redirect(`/acceder?volverA=/rutas/${slug}`);
+
+  const ruta = (await rutas()).find((r) => r.slug === slug);
+  if (!ruta) notFound();
 
   const [perfil, matriculas, progreso, catalogo] = await Promise.all([
     perfilActual(),
@@ -42,157 +44,179 @@ export default async function Page({
     obtenerCursos(),
   ]);
 
-  const itinerarios = await rutas();
-  const ruta = itinerarios.find((r) => r.slug === slug);
-  if (!ruta) notFound();
+  const vistas = contarPorCurso(progreso);
+  const matriculado = new Set(matriculas.map((m) => m.curso_slug));
+  const porSlug = new Map(catalogo.map((c) => [c.slug, c]));
 
-  const cursosPorSlug = new Map(catalogo.map((c) => [c.slug, c]));
-  const porCurso = new Map(matriculas.map((m) => [m.curso_slug, m]));
-  const vistasPorCurso = contarPorCurso(progreso);
-
-  const cursos = ruta.cursos.flatMap((c) => {
-    const curso = cursosPorSlug.get(c.slug);
+  const pasos = ruta.cursos.flatMap((c) => {
+    const curso = porSlug.get(c.slug);
     if (!curso) return [];
-    const m = porCurso.get(c.slug);
-    const sesiones = curso.lecciones.length;
-    const vistas = vistasPorCurso.get(c.slug) ?? 0;
-    const completada = m?.estado === "completada" || (sesiones > 0 && vistas >= sesiones);
-    const activa = m?.estado === "activa";
+    const hechas = vistas.get(c.slug) ?? 0;
     return [
       {
-        slug: c.slug,
-        titulo: c.titulo,
-        horas: curso.horas,
-        sesiones,
-        vistas,
-        completada,
-        activa,
-        requisitos: c.requisitos,
-        icono: curso.icono,
-        primeraLeccion: curso.lecciones[0]?.slug ?? "introduccion",
+        ...c,
+        curso,
+        hechas,
+        total: curso.lecciones.length,
+        completado: hechas >= curso.lecciones.length,
       },
     ];
   });
 
-  const completados = new Set(cursos.filter((c) => c.completada).map((c) => c.slug));
+  const completados = new Set(pasos.filter((p) => p.completado).map((p) => p.slug));
+  const hechos = completados.size;
+  const horas = pasos.reduce((n, p) => n + p.curso.horas, 0);
+  const siguiente = pasos.find((p) => !p.completado) ?? pasos[0];
+  const iconos = [...new Set(pasos.map((p) => p.curso.icono).filter(Boolean))];
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
+    <div className="mx-auto w-full max-w-3xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
       <CabeceraApp
-        acciones={
-          <form action={cerrarSesion}>
-            <button
-              type="submit"
-              className="text-xs text-texto-tenue hover:text-texto"
-            >
-              Salir
-            </button>
-          </form>
-        }
-      >
-        <Migas
-          items={[
-            { texto: "Cursos", href: "/cursos" },
-            { texto: ruta.nombre },
-          ]}
-        />
-        <div className="mt-2 flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-rojo-tenue text-rojo-acento">
-            <RouteIcon size={20} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-texto">
-              {ruta.nombre}
-            </h1>
-            <p className="text-xs text-texto-suave">
-              Ruta estructurada · {cursos.length} cursos ordenados por prerrequisitos
-            </p>
-          </div>
-        </div>
-        {ruta.descripcion && (
-          <p className="mt-3 text-sm leading-relaxed text-texto-suave">
-            {ruta.descripcion}
-          </p>
-        )}
-      </CabeceraApp>
+        nombre={perfil?.nombre?.trim().split(" ")[0] ?? ""}
+        correo={usuario.email}
+        foto={perfil?.foto}
+        onSalir={cerrarSesion}
+      />
 
-      <ol className="mt-10 space-y-4">
-        {cursos.map((c, idx) => {
-          const desbloqueado = c.requisitos.every((r) => completados.has(r));
-          const enlace = `/cursos/${c.slug}/${c.primeraLeccion}`;
+      <div className="mt-8">
+        <Migas items={[{ texto: "Cursos", href: "/cursos" }, { texto: ruta.nombre }]} />
+      </div>
 
-          return (
-            <li
-              key={c.slug}
-              className={`flex items-center justify-between gap-4 rounded-2xl border p-5 transition-all ${
-                c.completada
-                  ? "border-emerald-500/30 bg-superficie/60"
-                  : c.activa
-                    ? "border-rojo-acento/50 bg-superficie shadow-sm"
-                    : desbloqueado
-                      ? "border-borde bg-superficie"
-                      : "border-borde/40 bg-superficie/30 opacity-60"
+      <header className="flex flex-wrap items-start gap-5">
+        <span className="flex items-center">
+          {iconos.map((nombre, i) => (
+            <span
+              key={nombre}
+              className={`flex size-14 shrink-0 items-center justify-center rounded-full border border-borde bg-superficie ${
+                i > 0 ? "-ml-4" : ""
               }`}
             >
-              <div className="flex items-center gap-4 min-w-0 flex-1">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-fondo font-mono text-xs font-bold text-texto-tenue ring-1 ring-borde">
-                  {idx + 1}
+              <Icono nombre={nombre!} className="size-7 text-texto-suave" />
+            </span>
+          ))}
+        </span>
+
+        <div className="min-w-0 flex-1">
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-texto-tenue">
+            <RouteIcon size={12} aria-hidden="true" />
+            Ruta de aprendizaje
+          </span>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight">{ruta.nombre}</h1>
+          {ruta.descripcion && (
+            <p className="mt-2 text-sm leading-relaxed text-texto-suave">{ruta.descripcion}</p>
+          )}
+          <p className="mt-2 text-xs text-texto-tenue">
+            {pasos.length} cursos · {horas} h · {hechos} completado
+            {hechos === 1 ? "" : "s"}
+          </p>
+        </div>
+      </header>
+
+      {hechos > 0 && hechos < pasos.length && (
+        <div className="mt-6">
+          <div
+            role="progressbar"
+            aria-label={`Avance de ${ruta.nombre}`}
+            className="h-1.5 overflow-hidden rounded-full bg-borde"
+          >
+            <div
+              className="h-full rounded-full bg-rojo"
+              style={{ width: `${(hechos / pasos.length) * 100}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {siguiente && (
+        <Link
+          href={`/cursos/${siguiente.slug}/${siguiente.curso.lecciones[0].slug}`}
+          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-rojo px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-rojo-hover"
+        >
+          <Play size={15} aria-hidden="true" />
+          {hechos > 0 ? "Continuar" : "Empezar"}: {siguiente.curso.titulo}
+        </Link>
+      )}
+
+      {pasos.some((p) => p.curso.icono === "fortran") && (
+        <section className="mt-6 rounded-xl border border-borde bg-superficie p-5">
+          <h2 className="flex items-center gap-2 font-semibold">
+            <FlaskConical size={18} aria-hidden="true" className="text-rojo-acento" />
+            Sandbox de Fortran
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-texto-suave">
+            Un espacio para practicar a lo largo de la ruta: escribe, modifica y ejecuta tus propios programas.
+          </p>
+          <Link
+            href={`/rutas/${ruta.slug}/sandbox`}
+            className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-rojo-acento hover:underline"
+          >
+            Abrir sandbox
+            <ArrowRight size={15} aria-hidden="true" />
+          </Link>
+        </section>
+      )}
+
+      <ol className="mt-8 divide-y divide-borde rounded-xl border border-borde">
+        {pasos.map((paso, i) => {
+          const falta = paso.requisitos.some((r) => !completados.has(r));
+          const dePago = !paso.acceso_libre && !matriculado.has(paso.slug);
+
+          return (
+            <li key={paso.slug}>
+              <Link
+                href={`/cursos/${paso.slug}/${paso.curso.lecciones[0].slug}`}
+                className="group flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-superficie"
+              >
+                <span className="w-6 shrink-0 text-center font-mono text-xs text-texto-tenue">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
 
-                <Icono nombre={c.icono} className="size-8 shrink-0 text-texto-tenue" />
+                <Icono
+                  nombre={paso.curso.icono}
+                  className="size-8 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
+                />
 
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="truncate text-base font-semibold text-texto">
-                      {c.titulo}
-                    </h3>
-                    {c.completada && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-                        <Check size={11} /> Completado
+                <span className="min-w-0 flex-1">
+                  <span
+                    className={`block truncate text-sm font-medium ${
+                      paso.completado ? "text-texto-suave" : "group-hover:text-rojo-acento"
+                    }`}
+                  >
+                    {paso.curso.titulo}
+                  </span>
+                  <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-texto-tenue">
+                    <span>{paso.total} sesiones</span>
+                    <span className="flex items-center gap-1">
+                      <Clock size={10} aria-hidden="true" />
+                      {paso.curso.horas} h
+                    </span>
+                    {paso.hechas > 0 && !paso.completado && (
+                      <span className="text-texto-suave">
+                        {paso.hechas} de {paso.total} vistas
                       </span>
                     )}
-                  </div>
-
-                  <div className="mt-1 flex items-center gap-3 text-xs text-texto-tenue">
-                    <span>{c.horas} horas</span>
-                    <span>·</span>
-                    <span>{c.sesiones} sesiones</span>
-                    {c.vistas > 0 && !c.completada && (
-                      <>
-                        <span>·</span>
-                        <span className="text-rojo-acento">
-                          {c.vistas} de {c.sesiones} vistas
-                        </span>
-                      </>
+                    {dePago && <span>de pago</span>}
+                    {falta && !paso.completado && (
+                      <Lock
+                        size={10}
+                        aria-label="conviene hacer antes los cursos anteriores"
+                      />
                     )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="shrink-0">
-                {c.completada || c.activa ? (
-                  <Link
-                    href={enlace}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-rojo px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
-                  >
-                    <Play size={13} />
-                    {c.completada ? "Repasar" : "Continuar"}
-                  </Link>
-                ) : desbloqueado ? (
-                  <Link
-                    href={`/cursos`}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-borde bg-fondo px-3.5 py-2 text-xs font-semibold text-texto transition-colors hover:border-rojo-acento hover:text-rojo-acento"
-                  >
-                    Matricularme
-                    <ArrowRight size={13} />
-                  </Link>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-xs text-texto-tenue">
-                    <Lock size={13} />
-                    Bloqueado
                   </span>
-                )}
-              </div>
+                </span>
+
+                <span className="shrink-0">
+                  {paso.completado ? (
+                    <Check size={17} className="text-exito" aria-label="completado" />
+                  ) : (
+                    <Play
+                      size={15}
+                      className="text-texto-tenue transition-colors group-hover:text-rojo-acento"
+                      aria-hidden="true"
+                    />
+                  )}
+                </span>
+              </Link>
             </li>
           );
         })}
