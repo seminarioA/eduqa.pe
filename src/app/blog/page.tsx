@@ -1,0 +1,151 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+import { BookOpen, ExternalLink, Newspaper, Sparkles, Tag } from "lucide-react";
+import { obtenerArticulosMedium, obtenerCategoriasBlog } from "@/lib/blog-medium";
+import { BlogCard } from "@/components/BlogCard";
+import { Migas } from "@/components/Migas";
+
+export const metadata: Metadata = {
+  title: "Blog Técnico — EDUQA.PE",
+  description:
+    "Artículos técnicos sobre IA, Machine Learning, Ingeniería de Datos, Backend y Matemáticas aplicadas, sincronizados desde nuestro canal oficial de Medium.",
+};
+
+export const revalidate = 3600;
+
+export default async function BlogPage() {
+  const [articulos, categorias] = await Promise.all([
+    obtenerArticulosMedium(),
+    obtenerCategoriasBlog(),
+  ]);
+
+  const destacado = articulos[0];
+  const lista = articulos.slice(1);
+
+  return (
+    <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
+      <div className="flex items-center justify-between">
+        <Migas items={[{ texto: "Blog Técnico" }]} />
+        <a
+          href="https://medium.com/@seminarioA"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-xs font-medium text-texto-tenue transition-colors hover:text-rojo-acento"
+        >
+          <span>Canal Medium</span>
+          <ExternalLink size={13} aria-hidden="true" />
+        </a>
+      </div>
+
+      <header className="mt-6">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-borde bg-superficie px-3 py-1 text-xs font-medium text-rojo-acento">
+          <Sparkles size={13} />
+          Publicaciones Técnicas & Casos Reales
+        </div>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight text-texto sm:text-4xl">
+          Blog de Ingeniería & Inteligencia Artificial
+        </h1>
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-texto-suave">
+          Artículos profundos, análisis arquitectónicos y tutoriales escritos por el equipo de
+          EDUQA.PE para conectar teoría matemática con código en producción.
+        </p>
+      </header>
+
+      {/* Categorías */}
+      {categorias.length > 0 && (
+        <div className="mt-8 flex flex-wrap items-center gap-2 border-y border-borde py-4">
+          <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-texto-tenue">
+            <Tag size={13} />
+            Temas:
+          </span>
+          {categorias.map((cat) => (
+            <span
+              key={cat}
+              className="rounded-lg border border-borde bg-superficie px-3 py-1 text-xs font-medium text-texto-suave transition-colors hover:border-rojo-acento hover:text-texto"
+            >
+              {cat}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Artículo destacado */}
+      {destacado && (
+        <section className="mt-10" aria-label="Artículo destacado">
+          <div className="overflow-hidden rounded-3xl border border-borde bg-superficie shadow-sm transition-all hover:border-rojo-acento">
+            <div className="grid grid-cols-1 md:grid-cols-12">
+              {destacado.portada && (
+                <div className="relative aspect-video w-full overflow-hidden bg-fondo md:col-span-7 md:aspect-auto">
+                  <img
+                    src={destacado.portada}
+                    alt={destacado.titulo}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute left-4 top-4 rounded-full bg-rojo px-3 py-1 text-xs font-bold text-white shadow-md">
+                    Destacado
+                  </div>
+                </div>
+              )}
+              <div className={`flex flex-col justify-center p-8 ${destacado.portada ? "md:col-span-5" : "md:col-span-12"}`}>
+                <div className="flex flex-wrap gap-2">
+                  {destacado.categorias.slice(0, 3).map((c) => (
+                    <span
+                      key={c}
+                      className="rounded-full bg-rojo-tenue px-2.5 py-0.5 text-[11px] font-semibold text-rojo-acento"
+                    >
+                      {c}
+                    </span>
+                  ))}
+                </div>
+
+                <h2 className="mt-4 text-2xl font-bold leading-tight tracking-tight text-texto">
+                  <Link href={`/blog/${destacado.slug}`} className="hover:text-rojo-acento transition-colors">
+                    {destacado.titulo}
+                  </Link>
+                </h2>
+
+                <p className="mt-3 text-sm leading-relaxed text-texto-suave line-clamp-4">
+                  {destacado.resumen}
+                </p>
+
+                <div className="mt-6 flex items-center justify-between border-t border-borde pt-4 text-xs text-texto-tenue">
+                  <span>{destacado.fecha}</span>
+                  <span>{destacado.minutosLectura} min de lectura</span>
+                </div>
+
+                <Link
+                  href={`/blog/${destacado.slug}`}
+                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-rojo px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
+                >
+                  <BookOpen size={14} />
+                  Leer artículo completo
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Grid de artículos */}
+      <section className="mt-12" aria-label="Todos los artículos">
+        <h2 className="text-xl font-semibold tracking-tight text-texto">
+          Artículos recientes
+        </h2>
+        {lista.length > 0 ? (
+          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+            {lista.map((articulo) => (
+              <BlogCard key={articulo.guid} articulo={articulo} />
+            ))}
+          </div>
+        ) : !destacado ? (
+          <div className="mt-6 rounded-2xl border border-dashed border-borde p-12 text-center">
+            <Newspaper size={32} className="mx-auto text-texto-tenue" />
+            <p className="mt-3 text-sm text-texto-suave">
+              Pronto publicaremos nuevos artículos técnicos.
+            </p>
+          </div>
+        ) : null}
+      </section>
+    </div>
+  );
+}
