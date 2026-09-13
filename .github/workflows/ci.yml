@@ -17,6 +17,8 @@ jobs:
   dev:
     name: Validar dev
     runs-on: ubuntu-latest
+    outputs:
+      probar_fortran: ${{ steps.alcance.outputs.fortran }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -27,7 +29,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Validar mensajes de commit
+      - name: Validar commits y detectar pruebas necesarias
+        id: alcance
         env:
           EVENT_NAME: ${{ github.event_name }}
           BEFORE_SHA: ${{ github.event.before }}
@@ -43,6 +46,8 @@ jobs:
             BASE_SHA="$BEFORE_SHA"
           fi
           git log --format=%s "$BASE_SHA..HEAD" | npx --no -- commitlint
+          git diff --name-only "$BASE_SHA" HEAD | node scripts/alcance-ci.mjs >> "$GITHUB_OUTPUT"
+      - run: node --test scripts/alcance-ci.test.mjs
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test:marca
@@ -65,10 +70,14 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Instalar compiladores para los cursos Fortran
+        if: needs.dev.outputs.probar_fortran == 'true'
         run: sudo apt-get update && sudo apt-get install -y gfortran build-essential
-      - run: npm run test:fortran
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:fortran:web
+      - if: needs.dev.outputs.probar_fortran == 'true'
+        run: npm run test:fortran
+      - if: needs.dev.outputs.probar_fortran == 'true'
+        run: npx playwright install --with-deps chromium
+      - if: needs.dev.outputs.probar_fortran == 'true'
+        run: npm run test:fortran:web
 
   promover-qa:
     name: Promover el commit verificado a qa

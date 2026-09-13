@@ -43,6 +43,9 @@ todavía están en TypeScript. Al tocarlos, conviene pasarlos a Markdown.
   promueve exactamente ese commit a `qa` y después de `qa` a `main`. GitHub
   Actions no vuelve a compilar en `main`; el despliegue de Vercel es independiente.
   No hacer pushes manuales a `qa` ni a `main`.
+- La batería Fortran se ejecuta en QA solo si cambian cursos Fortran, su runtime,
+  ejercicios, parser, dependencias o herramientas relacionadas. El alcance se
+  verifica con `node --test scripts/alcance-ci.test.mjs`.
 - La prohibición técnica de pushes directos exige protección de ramas en GitHub.
   Mientras el plan del repositorio privado no permita activarla, el workflow
   expresa el proceso de publicación pero no impide que un administrador lo eluda.
