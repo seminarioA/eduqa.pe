@@ -1,216 +1,212 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArrowRight, Check, Clock, FlaskConical, Lock, Play, Route as RouteIcon } from "lucide-react";
-import { usuarioActual } from "@/lib/supabase/servidor";
-import { perfilActual, misMatriculas } from "@/lib/matriculas";
-import { miProgreso, contarPorCurso } from "@/lib/progreso";
-import { obtenerCursos } from "@/lib/catalogo-cursos";
+import {
+  BookOpen,
+  Check,
+  ChevronRight,
+  Clock,
+  GraduationCap,
+  Lock,
+  Route as RutaIcono,
+  Sparkles,
+} from "lucide-react";
 import { rutas } from "@/lib/rutas";
-import { cerrarSesion } from "@/app/acceder/acciones";
-import { CabeceraApp } from "@/components/CabeceraApp";
-import { Migas } from "@/components/Migas";
+import { obtenerCursos } from "@/lib/catalogo-cursos";
+import { precios } from "@/lib/precios";
+import { misMatriculas, usuarioActual } from "@/lib/matriculas";
 import { Icono } from "@/components/Iconos";
+import { Migas } from "@/components/Migas";
+
+export async function generateStaticParams() {
+  const todas = await rutas();
+  return todas.map((r) => ({ ruta: r.slug }));
+}
 
 export async function generateMetadata({
   params,
-}: PageProps<"/rutas/[ruta]">): Promise<Metadata> {
-  const { ruta } = await params;
-  const encontrada = (await rutas()).find((r) => r.slug === ruta);
+}: {
+  params: Promise<{ ruta: string }>;
+}): Promise<Metadata> {
+  const { ruta: rutaSlug } = await params;
+  const lista = await rutas();
+  const encontrada = lista.find((r) => r.slug === rutaSlug);
+  if (!encontrada) return { title: "Ruta no encontrada — EDUQA.PE" };
+
   return {
-    title: encontrada ? `${encontrada.nombre} — EDUQA.PE` : "Ruta no encontrada — EDUQA.PE",
+    title: `Ruta: ${encontrada.nombre} — EDUQA.PE`,
+    description:
+      encontrada.descripcion ||
+      `Especialización y secuencia de aprendizaje estructurada en EDUQA.PE.`,
   };
 }
 
-export default async function Page({ params }: PageProps<"/rutas/[ruta]">) {
-  const { ruta: slug } = await params;
-
-  const usuario = await usuarioActual();
-  if (!usuario) redirect(`/acceder?volverA=/rutas/${slug}`);
-
-  const ruta = (await rutas()).find((r) => r.slug === slug);
-  if (!ruta) notFound();
-
-  const [perfil, matriculas, progreso, catalogo] = await Promise.all([
-    perfilActual(),
-    misMatriculas(),
-    miProgreso(),
+export default async function RutaDetallePage({
+  params,
+}: {
+  params: Promise<{ ruta: string }>;
+}) {
+  const { ruta: rutaSlug } = await params;
+  const [todasLasRutas, catalogo, tarifas, matriculas, usuario] = await Promise.all([
+    rutas(),
     obtenerCursos(),
+    precios(),
+    misMatriculas(),
+    usuarioActual(),
   ]);
 
-  const vistas = contarPorCurso(progreso);
-  const matriculado = new Set(matriculas.map((m) => m.curso_slug));
-  const porSlug = new Map(catalogo.map((c) => [c.slug, c]));
+  const ruta = todasLasRutas.find((r) => r.slug === rutaSlug);
+  if (!ruta) notFound();
 
-  // Una fila de la ruta que no tenga curso en el catálogo no se pinta: es un
-  // resto, no un hueco que haya que rellenar con un enlace roto.
-  const pasos = ruta.cursos.flatMap((c) => {
-    const curso = porSlug.get(c.slug);
-    if (!curso) return [];
-    const hechas = vistas.get(c.slug) ?? 0;
-    return [{
-      ...c,
-      curso,
-      hechas,
-      total: curso.lecciones.length,
-      completado: hechas >= curso.lecciones.length,
-    }];
+  const cursosPorSlug = new Map(catalogo.map((c) => [c.slug, c]));
+  const matriculasPorSlug = new Map(matriculas.map((m) => [m.curso_slug, m]));
+
+  const cursosConDetalle = ruta.cursos.map((c, index) => {
+    const info = cursosPorSlug.get(c.slug);
+    const matricula = matriculasPorSlug.get(c.slug);
+    const tarifa = tarifas.get(c.slug);
+
+    return {
+      slug: c.slug,
+      titulo: c.titulo || info?.titulo || c.slug,
+      resumen: info?.resumen || "",
+      horas: info?.horas || 0,
+      sesiones: info?.lecciones.length || 0,
+      icono: info?.icono,
+      area: info?.area,
+      nivel: info?.nivel,
+      formato: info?.formato,
+      precio: tarifa?.precio || 0,
+      matriculado: matricula?.estado === "activa" || matricula?.estado === "completada",
+      completado: matricula?.estado === "completada",
+      posicion: index + 1,
+      requisitos: c.requisitos || [],
+    };
   });
 
-  const completados = new Set(pasos.filter((p) => p.completado).map((p) => p.slug));
-  const hechos = completados.size;
-  const horas = pasos.reduce((n, p) => n + p.curso.horas, 0);
-  const siguiente = pasos.find((p) => !p.completado) ?? pasos[0];
-  const iconos = [...new Set(pasos.map((p) => p.curso.icono).filter(Boolean))];
+  const horasTotales = cursosConDetalle.reduce((acc, c) => acc + c.horas, 0);
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
-      <CabeceraApp
-        nombre={perfil?.nombre?.trim().split(" ")[0] ?? ""}
-        correo={usuario.email}
-        foto={perfil?.foto}
-        onSalir={cerrarSesion}
+    <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
+      <Migas
+        items={[
+          { texto: "Cursos", href: "/cursos" },
+          { texto: `Ruta: ${ruta.nombre}` },
+        ]}
       />
 
-      <div className="mt-8">
-        <Migas items={[{ texto: "Cursos", href: "/cursos" }, { texto: ruta.nombre }]} />
-      </div>
+      <header className="mt-6 border-b border-borde pb-8">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-borde bg-superficie px-3 py-1 text-xs font-semibold text-rojo-acento">
+          <RutaIcono size={13} />
+          Ruta de Especialización
+        </div>
 
-      <header className="flex flex-wrap items-start gap-5">
-        <span className="flex items-center">
-          {iconos.map((nombre, i) => (
-            <span
-              key={nombre}
-              className={`flex size-14 shrink-0 items-center justify-center rounded-full border border-borde bg-superficie ${
-                i > 0 ? "-ml-4" : ""
-              }`}
-            >
-              <Icono nombre={nombre!} className="size-7 text-texto-suave" />
-            </span>
-          ))}
-        </span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight text-texto sm:text-4xl">
+          {ruta.nombre}
+        </h1>
 
-        <div className="min-w-0 flex-1">
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-texto-tenue">
-            <RouteIcon size={12} aria-hidden="true" />
-            Ruta de aprendizaje
-          </span>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight">{ruta.nombre}</h1>
-          {ruta.descripcion && (
-            <p className="mt-2 text-sm leading-relaxed text-texto-suave">{ruta.descripcion}</p>
-          )}
-          <p className="mt-2 text-xs text-texto-tenue">
-            {pasos.length} cursos · {horas} h · {hechos} completado
-            {hechos === 1 ? "" : "s"}
+        {ruta.descripcion && (
+          <p className="mt-3 max-w-3xl text-base leading-relaxed text-texto-suave">
+            {ruta.descripcion}
           </p>
+        )}
+
+        <div className="mt-6 flex flex-wrap items-center gap-5 text-xs text-texto-tenue">
+          <span className="flex items-center gap-1.5">
+            <BookOpen size={14} className="text-rojo-acento" />
+            <strong className="text-texto">{cursosConDetalle.length}</strong> Cursos
+          </span>
+          <span>·</span>
+          <span className="flex items-center gap-1.5">
+            <Clock size={14} className="text-rojo-acento" />
+            <strong className="text-texto">{horasTotales}</strong> Horas lectivas
+          </span>
         </div>
       </header>
 
-      {hechos > 0 && hechos < pasos.length && (
-        <div className="mt-6">
-          <div
-            role="progressbar"
-            aria-valuenow={hechos}
-            aria-valuemin={0}
-            aria-valuemax={pasos.length}
-            aria-label={`Avance de ${ruta.nombre}`}
-            className="h-1.5 overflow-hidden rounded-full bg-borde"
-          >
+      {/* Secuencia de la Ruta */}
+      <section className="mt-10" aria-label="Cursos en esta ruta">
+        <h2 className="text-xl font-bold tracking-tight text-texto">
+          Secuencia Pedagógica Recomendada
+        </h2>
+        <p className="mt-1 text-xs text-texto-suave">
+          Sigue el orden diseñado para garantizar que dominas las bases antes de avanzar a los módulos avanzados.
+        </p>
+
+        <div className="mt-8 flex flex-col gap-4">
+          {cursosConDetalle.map((c, i) => (
             <div
-              className="h-full rounded-full bg-rojo"
-              style={{ width: `${(hechos / pasos.length) * 100}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {siguiente && (
-        <Link
-          href={`/cursos/${siguiente.slug}/${siguiente.curso.lecciones[0].slug}`}
-          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-rojo px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-rojo-hover"
-        >
-          <Play size={15} aria-hidden="true" />
-          {hechos > 0 ? "Continuar" : "Empezar"}: {siguiente.curso.titulo}
-        </Link>
-      )}
-
-      {pasos.some(p => p.curso.icono === "fortran") && (
-        <section className="mt-6 rounded-xl border border-borde bg-superficie p-5">
-          <h2 className="flex items-center gap-2 font-semibold"><FlaskConical size={18} aria-hidden="true" className="text-rojo-acento" />Sandbox de Fortran</h2>
-          <p className="mt-2 text-sm leading-relaxed text-texto-suave">Un espacio para practicar a lo largo de la ruta: escribe, modifica y ejecuta tus propios programas.</p>
-          <Link href={`/rutas/${ruta.slug}/sandbox`} className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-rojo-acento hover:underline">Abrir sandbox<ArrowRight size={15} aria-hidden="true" /></Link>
-        </section>
-      )}
-
-      <ol className="mt-8 divide-y divide-borde rounded-xl border border-borde">
-        {pasos.map((paso, i) => {
-          const falta = paso.requisitos.some((r) => !completados.has(r));
-          const dePago = !paso.acceso_libre && !matriculado.has(paso.slug);
-
-          return (
-            <li key={paso.slug}>
-              <Link
-                href={`/cursos/${paso.slug}/${paso.curso.lecciones[0].slug}`}
-                className="group flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-superficie"
-              >
-                <span className="w-6 shrink-0 text-center font-mono text-xs text-texto-tenue">
-                  {String(i + 1).padStart(2, "0")}
+              key={c.slug}
+              className="group relative flex flex-col gap-4 rounded-2xl border border-borde bg-superficie p-6 transition-all hover:border-rojo-acento hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-fondo text-xs font-bold text-rojo-acento ring-1 ring-borde">
+                  {i + 1}
                 </span>
 
-                <Icono
-                    nombre={paso.curso.icono}
-                    className="size-8 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
-                  />
-
-                <span className="min-w-0 flex-1">
-                  <span
-                    className={`block truncate text-sm font-medium ${
-                      paso.completado ? "text-texto-suave" : "group-hover:text-rojo-acento"
-                    }`}
-                  >
-                    {paso.curso.titulo}
-                  </span>
-                  <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-texto-tenue">
-                    <span>{paso.total} sesiones</span>
-                    <span className="flex items-center gap-1">
-                      <Clock size={10} aria-hidden="true" />
-                      {paso.curso.horas} h
-                    </span>
-                    {/* El avance solo se menciona si se empezó: «0 de 4» en algo
-                        que nadie abrió es ruido. */}
-                    {paso.hechas > 0 && !paso.completado && (
-                      <span className="text-texto-suave">
-                        {paso.hechas} de {paso.total} vistas
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {c.icono && <Icono nombre={c.icono} className="size-5 text-texto-tenue" />}
+                    <h3 className="text-base font-semibold text-texto group-hover:text-rojo-acento">
+                      <Link href={`/cursos/${c.slug}`}>{c.titulo}</Link>
+                    </h3>
+                    {c.formato === "microcurso" && (
+                      <span className="rounded-full bg-rojo-tenue px-2 py-0.5 text-[9px] font-bold uppercase text-rojo-acento">
+                        Microcurso
                       </span>
                     )}
-                    {dePago && <span>de pago</span>}
-                    {/* El orden ya lo dice la numeración: repetir la frase en
-                        cada fila es ruido. Queda el candado, con su etiqueta. */}
-                    {falta && !paso.completado && (
-                      <Lock
-                        size={10}
-                        aria-label="conviene hacer antes los cursos anteriores"
-                      />
-                    )}
-                  </span>
-                </span>
+                  </div>
 
-                <span className="shrink-0">
-                  {paso.completado ? (
-                    <Check size={17} className="text-exito" aria-label="completado" />
-                  ) : (
-                    <Play
-                      size={15}
-                      className="text-texto-tenue transition-colors group-hover:text-rojo-acento"
-                      aria-hidden="true"
-                    />
+                  {c.resumen && (
+                    <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-texto-suave">
+                      {c.resumen}
+                    </p>
                   )}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ol>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-texto-tenue">
+                    <span>{c.sesiones} sesiones</span>
+                    <span>·</span>
+                    <span>{c.horas} horas</span>
+                    {c.requisitos.length > 0 && (
+                      <>
+                        <span>·</span>
+                        <span className="text-amber-600 dark:text-amber-400">
+                          Requiere: {c.requisitos.join(", ")}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 self-end sm:self-center">
+                {c.completado ? (
+                  <span className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    <Check size={13} />
+                    Completado
+                  </span>
+                ) : c.matriculado ? (
+                  <Link
+                    href={`/cursos/${c.slug}`}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-superficie px-4 py-2 text-xs font-semibold text-texto ring-1 ring-borde hover:bg-fondo"
+                  >
+                    Continuar
+                    <ChevronRight size={13} />
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/cursos/${c.slug}`}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-rojo px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
+                  >
+                    Ver curso
+                    <ChevronRight size={13} />
+                  </Link>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
