@@ -109,7 +109,6 @@ export default async function Page() {
             )}
 
             <div className="mt-2 flex flex-wrap items-center gap-3">
-              {/* Título principal de la página: editable en modo admin */}
               <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
                 <TituloEditable
                   clave="cursos-titulo-pagina"
@@ -122,16 +121,20 @@ export default async function Page() {
                   Bienvenido, <span className="font-medium text-texto">{nombre}</span>
                 </span>
               )}
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-borde bg-superficie px-3 py-1 text-xs font-medium text-texto-suave">
-                {plan.ilimitado ? (
-                  <>
-                    <Infinito size={13} className="text-rojo-acento" aria-hidden="true" />
-                    Cursos sin límite
-                  </>
-                ) : (
-                  `${plan.activas} de ${plan.limite} cursos gratis en uso`
-                )}
-              </span>
+              {/* Badge de plan: solo se muestra cuando NO se está al tope.
+                  Si alTope=true, el AvisoTope de abajo ya comunica ese estado. */}
+              {!plan.alTope && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-borde bg-superficie px-3 py-1 text-xs font-medium text-texto-suave">
+                  {plan.ilimitado ? (
+                    <>
+                      <Infinito size={13} className="text-rojo-acento" aria-hidden="true" />
+                      Cursos sin límite
+                    </>
+                  ) : (
+                    `${plan.activas} de ${plan.limite} cursos gratis en uso`
+                  )}
+                </span>
+              )}
             </div>
 
             {plan.alTope && (
