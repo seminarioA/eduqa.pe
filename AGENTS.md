@@ -37,10 +37,15 @@ todavía están en TypeScript. Al tocarlos, conviene pasarlos a Markdown.
 
 # Publicación
 
-- Subir los cambios a una rama y abrir un pull request hacia `main`. Esperar a que
-  todos los checks de GitHub Actions terminen correctamente antes de integrarlo.
-  Un push directo a `main` inicia el CI después de subir el código y no espera
-  sus resultados; por eso no sirve como comprobación previa.
+- Trabajar en `dev`. Los pull requests se dirigen a `dev`, no a `main`.
+- El workflow valida mensajes, lint, tipos y pruebas rápidas en `dev`.
+  Solo cuando pasa ejecuta en QA el build y las pruebas completas. Si todo pasa,
+  promueve exactamente ese commit a `qa` y después de `qa` a `main`. GitHub
+  Actions no vuelve a compilar en `main`; el despliegue de Vercel es independiente.
+  No hacer pushes manuales a `qa` ni a `main`.
+- La prohibición técnica de pushes directos exige protección de ramas en GitHub.
+  Mientras el plan del repositorio privado no permita activarla, el workflow
+  expresa el proceso de publicación pero no impide que un administrador lo eluda.
 - La tipografía de EDUQA.PE en ambas barras usa `MarcaTextoLateral`. Ejecutar
   `npm run test:marca` al cambiarla; la misma prueba corre en CI y en el build.
 
