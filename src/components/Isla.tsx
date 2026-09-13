@@ -12,9 +12,11 @@ import {
   LogIn,
   LogOut,
   Megaphone,
+  Newspaper,
   PanelLeftClose,
   PanelLeftOpen,
   Receipt,
+  Route,
   Settings,
   Stamp,
   UserRoundPlus,
@@ -109,13 +111,14 @@ export function Isla({
   if (/^\/cursos\/[^/]+\/[^/]+/.test(ruta)) return null;
 
   /*
-   * No hay entrada de "Inicio": para un alumno el inicio son sus cursos, y
-   * dos etiquetas para el mismo destino solo hacen dudar de si llevan a
-   * sitios distintos.
+   * Enlaces principales organizados por áreas de uso:
+   * Alumnos y navegación pública disponen de Cursos, Blog, Calendario y Compras.
+   * Administradores cuentan con submenús dedicados de gestión (Cursos, Rutas, Blog).
    */
   const enlaces: Enlace[] = autenticado
     ? [
         { href: "/cursos", etiqueta: "Cursos", Icono: GraduationCap },
+        { href: "/blog", etiqueta: "Blog", Icono: Newspaper },
         { href: "/calendario", etiqueta: "Calendario", Icono: CalendarDays },
         { href: "/compras", etiqueta: "Mis compras", Icono: Receipt },
         {
@@ -130,6 +133,9 @@ export function Isla({
         ...(esAdmin
           ? [
               { href: "/panel", etiqueta: "Panel", Icono: LayoutDashboard },
+              { href: "/panel/cursos", etiqueta: "Gestión Cursos", Icono: GraduationCap },
+              { href: "/panel/rutas", etiqueta: "Gestión Rutas", Icono: Route },
+              { href: "/panel/blog", etiqueta: "Blog Medium", Icono: Newspaper },
               { href: "/panel/avisos", etiqueta: "Avisos", Icono: Megaphone },
               { href: "/panel/reportes", etiqueta: "Reportes", Icono: Bug },
               { href: "/panel/marca", etiqueta: "Marca", Icono: Stamp },
@@ -139,6 +145,7 @@ export function Isla({
     : [
         { href: "/acceder", etiqueta: "Entrar", Icono: LogIn },
         { href: "/registro", etiqueta: "Crear cuenta", Icono: UserRoundPlus },
+        { href: "/blog", etiqueta: "Blog", Icono: Newspaper },
       ];
 
   return (
@@ -155,70 +162,63 @@ export function Isla({
           className="sidebar-marca flex min-w-0 flex-1 items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-superficie"
         >
           <MarcaInline svg={marcaSidebar} className="h-8 w-auto shrink-0 text-rojo-acento" />
-          <span className="sidebar-etiqueta whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
-            EDUQA.PE
+          <span className="sidebar-etiqueta whitespace-nowrap text-lg font-bold tracking-tight">
+            EDUQA<span className="text-rojo-acento">.PE</span>
           </span>
         </Link>
         <button
           type="button"
           onClick={alternarBarra}
           aria-label={colapsada ? "Expandir barra lateral" : "Colapsar barra lateral"}
-          aria-pressed={colapsada}
-          title={colapsada ? "Expandir barra lateral" : "Colapsar barra lateral"}
-          className="sidebar-control flex size-8 shrink-0 items-center justify-center rounded-lg text-texto-suave transition-colors hover:bg-superficie hover:text-texto focus-visible:outline-2 focus-visible:outline-rojo-acento"
+          title={colapsada ? "Expandir (o)" : "Colapsar (o)"}
+          className="sidebar-toggle rounded-lg p-1.5 text-texto-tenue transition-colors hover:bg-superficie hover:text-texto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
         >
-          <PanelLeftClose size={18} className="sidebar-icono-expandido" aria-hidden="true" />
-          <PanelLeftOpen size={18} className="sidebar-icono-colapsado" aria-hidden="true" />
+          {colapsada ? (
+            <PanelLeftOpen size={16} aria-hidden="true" />
+          ) : (
+            <PanelLeftClose size={16} aria-hidden="true" />
+          )}
         </button>
       </div>
 
-      <span className="my-2 h-px w-full bg-borde" aria-hidden="true" />
-
-      {/* El grupo de enlaces crece y, si algún día no cupieran, se desplaza
-          solo él: la marca y el pie se quedan fijos donde están. */}
-      <ul className="flex flex-1 flex-col gap-0.5 overflow-y-auto">
+      <div className="mt-6 flex flex-1 flex-col gap-1">
         {enlaces.map(({ href, etiqueta, Icono }) => {
-          // Solo se marca el destino exacto: estando en /panel/reportes, la
-          // entrada de /panel no debe aparecer también como activa.
-          const activo = ruta === href;
+          const activo = ruta === href || (href !== "/cursos" && href !== "/" && ruta.startsWith(href));
           return (
-            <li key={href}>
-              <Link
-                href={href}
-                aria-label={etiqueta}
-                aria-current={activo ? "page" : undefined}
-                title={etiqueta}
-                className={`sidebar-enlace flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
-                  activo
-                    ? "bg-rojo-tenue font-medium text-rojo-acento"
-                    : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
-                }`}
-              >
-                <Icono size={17} className="shrink-0" />
-                <span className="sidebar-etiqueta whitespace-nowrap">{etiqueta}</span>
-              </Link>
-            </li>
+            <Link
+              key={href}
+              href={href}
+              title={etiqueta}
+              aria-label={etiqueta}
+              className={`sidebar-enlace flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                activo
+                  ? "bg-superficie text-texto shadow-sm ring-1 ring-borde"
+                  : "text-texto-suave hover:bg-superficie/60 hover:text-texto"
+              }`}
+            >
+              <Icono size={18} className={`shrink-0 ${activo ? "text-rojo-acento" : ""}`} />
+              <span className="sidebar-etiqueta truncate">{etiqueta}</span>
+            </Link>
           );
         })}
-      </ul>
+      </div>
 
-      <span className="mt-2 h-px w-full bg-borde" aria-hidden="true" />
-
-      <div className="sidebar-pie mt-2 flex items-center justify-between gap-2 px-1">
-        <SelectorTemaCompacto />
-
+      <div className="sidebar-pie mt-auto flex flex-col gap-2 border-t border-borde pt-3">
+        <div className="sidebar-tema flex items-center justify-between px-2">
+          <span className="sidebar-etiqueta text-xs text-texto-tenue">Tema</span>
+          <SelectorTemaCompacto />
+        </div>
         {autenticado && (
-          <form action={onSalir}>
-            <button
-              type="submit"
-              aria-label="Salir"
-              title="Salir"
-              className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
-            >
-              <LogOut size={16} aria-hidden="true" />
-              <span className="sidebar-etiqueta">Salir</span>
-            </button>
-          </form>
+          <button
+            type="button"
+            onClick={onSalir}
+            title="Cerrar sesión"
+            aria-label="Cerrar sesión"
+            className="sidebar-enlace flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
+          >
+            <LogOut size={16} className="shrink-0" />
+            <span className="sidebar-etiqueta truncate">Cerrar sesión</span>
+          </button>
         )}
       </div>
     </nav>

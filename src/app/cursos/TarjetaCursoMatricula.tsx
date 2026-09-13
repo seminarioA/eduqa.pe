@@ -2,7 +2,7 @@
 
 import { useActionState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Check, Clock, Loader2, Lock } from "lucide-react";
+import { ArrowRight, BookOpen, Check, Clock, Loader2, Lock, Sparkles } from "lucide-react";
 import { matricularse, type EstadoMatricula } from "./acciones";
 import { Icono, type IconoNombre } from "@/components/Iconos";
 import { Boton } from "@/components/ui";
@@ -11,6 +11,7 @@ import {
   modoAdminActivo,
   suscribirseModoAdmin,
 } from "@/lib/modo-admin";
+import type { FormatoCurso } from "@/lib/curso-tipos";
 
 export type DatosCurso = {
   slug: string;
@@ -22,6 +23,7 @@ export type DatosCurso = {
   /** Sesiones marcadas como completadas por el usuario. */
   vistas: number;
   primeraLeccion: string;
+  formato?: FormatoCurso;
   icono?: IconoNombre;
   matriculado: boolean;
   completado: boolean;
@@ -55,18 +57,27 @@ export function TarjetaCursoMatricula({
   // ofrecer una compra que para esta cuenta no tiene sentido.
   const comoAdmin = esAdmin && revisando;
   const bloqueado = !comoAdmin && !curso.matriculado && alTope;
+  const esMicro = curso.formato === "microcurso" || curso.formato === "pildora";
 
   const cabecera = (
     <>
       <div className="flex items-start justify-between gap-3">
         <Icono
-            nombre={curso.icono}
-            className="size-14 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
-          />
+          nombre={curso.icono}
+          className="size-14 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
+        />
         <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900">
-            {curso.nivel}
-          </span>
+          <div className="flex items-center gap-1.5">
+            {esMicro && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-rojo-tenue px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-rojo-acento ring-1 ring-inset ring-rojo-acento/30">
+                <Sparkles size={10} />
+                Microcurso
+              </span>
+            )}
+            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900">
+              {curso.nivel}
+            </span>
+          </div>
           {curso.completado && (
             <span className="flex items-center gap-1 rounded-full bg-superficie px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-texto-tenue ring-1 ring-inset ring-borde">
               <Check size={9} aria-hidden="true" />
@@ -125,9 +136,6 @@ export function TarjetaCursoMatricula({
           {curso.horas} h
         </span>
       </span>
-      {/* Sin valoraciones no se pinta nada: cinco estrellas vacías dirían que
-          el curso está mal valorado, y lo que pasa es que aún no lo valoró
-          nadie. */}
       {curso.valoracion && (
         <Estrellas
           promedio={curso.valoracion.promedio}

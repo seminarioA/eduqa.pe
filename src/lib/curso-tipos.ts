@@ -12,6 +12,14 @@ import type { IconoNombre } from "@/components/Iconos";
 export type Doc = { titulo: string; url: string };
 
 /**
+ * Formato del contenido educativo:
+ * - curso: Formato estándar de sesiones completas.
+ * - microcurso: Formación intensiva y concentrada de alta densidad práctica.
+ * - pildora: Cápsula formativa ultra-corta enfocada en un concepto específico.
+ */
+export type FormatoCurso = "curso" | "microcurso" | "pildora";
+
+/**
  * `nota` es la precisión técnica que no cabe en el texto principal sin
  * enturbiarlo: va debajo, en pequeño. Que algo sea introductorio no autoriza
  * a que sea impreciso.
@@ -146,6 +154,8 @@ export type Curso = {
   area: Area;
   nivel: string;
   horas: number;
+  /** Formato del contenido: curso estándar, microcurso intensivo o píldora rápida. */
+  formato?: FormatoCurso;
   /** Obligatorio: logotipo del producto o símbolo de la materia. */
   icono: IconoNombre;
   /**

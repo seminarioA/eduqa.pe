@@ -19,12 +19,11 @@ import { Listado } from "./Listado";
 import { AvisoTope } from "./AvisoTope";
 
 export const metadata: Metadata = {
-  title: "Cursos — EDUQA.PE",
+  title: "Cursos & Microcursos — EDUQA.PE",
   robots: { index: false, follow: false },
 };
 
 export default async function Page() {
-  // Se repite la comprobación de proxy.ts: es la que autoriza de verdad.
   const usuario = await usuarioActual();
   if (!usuario) redirect("/acceder?volverA=/cursos");
 
@@ -38,8 +37,6 @@ export default async function Page() {
   const vistasPorCurso = contarPorCurso(progreso);
   const plan = resumenPlan(perfil, matriculas);
 
-  // El nombre sale del perfil. Si aún no lo puso, se pide en /perfil:
-  // hace falta el nombre real para emitir certificados.
   const nombre =
     perfil?.nombre?.trim().split(" ")[0] ?? usuario.email?.split("@")[0] ?? "";
 
@@ -71,7 +68,7 @@ export default async function Page() {
   }));
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 lg:pl-64 xl:pl-32 2xl:pl-6 py-14">
+    <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
       <Listado
         populares={ordenarPorPopularidad(disponibles, cuentas).map((c) => ({
           slug: c.slug,
@@ -109,7 +106,7 @@ export default async function Page() {
 
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                Cursos
+                Cursos & Microcursos
               </h1>
               {nombre && (
                 <span className="text-sm text-texto-suave">
@@ -133,7 +130,6 @@ export default async function Page() {
             )}
           </>
         }
-
         rutas={ordenarRutasPorPopularidad(rutasVisibles, cuentas)}
         alTope={plan.alTope}
         esAdmin={perfil?.es_admin ?? false}
@@ -147,6 +143,7 @@ export default async function Page() {
             area: c.area,
             nivel: c.nivel,
             horas: c.horas,
+            formato: c.formato,
             sesiones: c.lecciones.length,
             primeraLeccion: c.lecciones[0].slug,
             valoracion: notas.get(c.slug),

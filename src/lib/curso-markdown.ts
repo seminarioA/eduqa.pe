@@ -35,7 +35,7 @@ type Frontmatter = Record<string, unknown>;
 
 /** Separa el frontmatter del cuerpo. Sin frontmatter, todo es cuerpo. */
 function separarFrontmatter(texto: string): [Frontmatter, string] {
-  const limpio = texto.replace(/^﻿/, "");
+  const limpio = texto.replace(/^\uFEFF/, "");
   if (!limpio.startsWith("---")) return [{}, limpio];
 
   const cierre = limpio.indexOf("\n---", 3);
@@ -298,102 +298,4 @@ function construirSesion(donde: string, texto: string): Leccion {
   }
 
   return {
-    slug: String(frontmatter.slug ?? `sesion-${numero}`),
-    numero,
-    titulo,
-    bloques,
-    secciones: derivarSecciones(bloques),
-    ...(Object.keys(ejercicios).length > 0 ? { ejercicios } : {}),
-    ...(frontmatter.paquetes ? { paquetes: frontmatter.paquetes as string[] } : {}),
-    ...(frontmatter.preludio ? { preludio: String(frontmatter.preludio) } : {}),
-  };
-}
-
-/**
- * Construye un curso a partir de sus archivos ya leídos.
- *
- * Recibe el contenido, no rutas, para no atarse a que los archivos estén en el
- * disco: los mismos textos pueden venir de la base de datos, y así publicar un
- * curso nuevo no obliga a volver a desplegar la aplicación.
- *
- * Las sesiones se ordenan por su número, no por el nombre del archivo:
- * renombrarlos no debe cambiar el orden del temario.
- */
-export function construirCurso(
-  nombre: string,
-  archivos: Map<string, string>,
-  /**
-   * Sesiones que existen aunque su texto no se haya podido leer. Con el
-   * material en la base, a quien no está matriculado las políticas solo le
-   * dejan ver la ficha; el temario sí es público, así que las sesiones que
-   * falten se rellenan vacías para que el catálogo cuente bien y el enlace
-   * lleve a la pantalla de compra en lugar de a un 404.
-   */
-  indice: { numero: number; titulo: string; slug: string }[] = [],
-): Curso {
-  const fichaTexto = archivos.get("curso.md");
-  if (!fichaTexto) {
-    throw new Error(`El curso ${nombre} no tiene curso.md.`);
-  }
-  const [ficha, cuerpo] = separarFrontmatter(fichaTexto);
-
-  // El preludio del curso va como una valla dentro de curso.md: es código y
-  // en el frontmatter habría que escaparlo.
-  let preludio: string | undefined;
-  const lineas = cuerpo.split("\n");
-  for (let i = 0; i < lineas.length; i++) {
-    if (esValla(lineas[i])) {
-      const [valla] = leerValla(lineas, i);
-      if (valla.lenguaje === "preludio") preludio = valla.contenido;
-    }
-  }
-
-  const lecciones = [...archivos.entries()]
-    .filter(([archivo]) => archivo.endsWith(".md") && archivo !== "curso.md")
-    .map(([archivo, texto]) => construirSesion(`${nombre}/${archivo}`, texto));
-
-  const leidas = new Set(lecciones.map((l) => l.slug));
-  for (const s of indice) {
-    if (!leidas.has(s.slug)) {
-      lecciones.push({ ...s, bloques: [], secciones: [] });
-    }
-  }
-  lecciones.sort((a, b) => a.numero - b.numero);
-
-  if (lecciones.length === 0) {
-    throw new Error(`El curso ${nombre} no tiene ninguna sesión.`);
-  }
-
-  return {
-    slug: String(ficha.slug ?? nombre),
-    titulo: String(ficha.titulo ?? ""),
-    resumen: String(ficha.resumen ?? ""),
-    area: ficha.area as Curso["area"],
-    nivel: String(ficha.nivel ?? "INTRODUCCIÓN"),
-    horas: Number(ficha.horas ?? 0),
-    icono: resolverIconoCurso(String(ficha.slug ?? nombre), String(ficha.area ?? ""), ficha.icono),
-    ...(ficha.paquetes ? { paquetes: ficha.paquetes as string[] } : {}),
-    ...(preludio ? { preludio } : {}),
-    lecciones,
-  };
-}
-
-/** Carga un curso desde su carpeta en el repositorio. */
-export function cargarCurso(carpeta: string, raiz = RAIZ): Curso {
-  const dir = join(raiz, carpeta);
-  const archivos = new Map(
-    readdirSync(dir)
-      .filter((f) => f.endsWith(".md"))
-      .map((f) => [f, readFileSync(join(dir, f), "utf8")] as const),
-  );
-  return construirCurso(carpeta, archivos);
-}
-
-/** Descubre carpetas con ficha; agregar Markdown no requiere editar un registro. */
-export function cargarCursosLocales(raiz = RAIZ): Curso[] {
-  return readdirSync(raiz, { withFileTypes: true })
-    .filter((entrada) => entrada.isDirectory() && existsSync(join(raiz, entrada.name, "curso.md")))
-    .map((entrada) => entrada.name)
-    .sort()
-    .map((carpeta) => cargarCurso(carpeta, raiz));
-}
+    slug: String(frontmatter.slug ?? `sesion-${numero}`),\n    numero,\n    titulo,\n    bloques,\n    secciones: derivarSecciones(bloques),\n    ...(Object.keys(ejercicios).length > 0 ? { ejercicios } : {}),\n    ...(frontmatter.paquetes ? { paquetes: frontmatter.paquetes as string[] } : {}),\n    ...(frontmatter.preludio ? { preludio: String(frontmatter.preludio) } : {}),\n  };\n}\n\n/**\n * Construye un curso a partir de sus archivos ya leídos.\n *\n * Recibe el contenido, no rutas, para no atarse a que los archivos estén en el\n * disco: los mismos textos pueden venir de la base de datos, y así publicar un\n * curso nuevo no obliga a volver a desplegar la aplicación.\n *\n * Las sesiones se ordenan por su número, no por el nombre del archivo:\n * renombrarlos no debe cambiar el orden del temario.\n */\nexport function construirCurso(\n  nombre: string,\n  archivos: Map<string, string>,\n  /**\n   * Sesiones que existen aunque su texto no se haya podido leer. Con el\n   * material en la base, a quien no está matriculado las políticas solo le\n   * dejan ver la ficha; el temario sí es público, así que las sesiones que\n   * falten se rellenan vacías para que el catálogo cuente bien y el enlace\n   * lleve a la pantalla de compra en lugar de a un 404.\\\n   */\n  indice: { numero: number; titulo: string; slug: string }[] = [],\n): Curso {\n  const fichaTexto = archivos.get(\"curso.md\");\n  if (!fichaTexto) {\n    throw new Error(`El curso ${nombre} no tiene curso.md.`);\n  }\n  const [ficha, cuerpo] = separarFrontmatter(fichaTexto);\n\n  // El preludio del curso va como una valla dentro de curso.md: es código y\n  // en el frontmatter habría que escaparlo.\n  let preludio: string | undefined;\n  const lineas = cuerpo.split(\"\\n\");\n  for (let i = 0; i < lineas.length; i++) {\n    if (esValla(lineas[i])) {\n      const [valla] = leerValla(lineas, i);\n      if (valla.lenguaje === \"preludio\") preludio = valla.contenido;\n    }\n  }\n\n  const lecciones = [...archivos.entries()]\n    .filter(([archivo]) => archivo.endsWith(\".md\") && archivo !== \"curso.md\")\n    .map(([archivo, texto]) => construirSesion(`${nombre}/${archivo}`, texto));\n\n  const leidas = new Set(lecciones.map((l) => l.slug));\n  for (const s of indice) {\n    if (!leidas.has(s.slug)) {\n      lecciones.push({ ...s, bloques: [], secciones: [] });\n    }\n  }\n  lecciones.sort((a, b) => a.numero - b.numero);\n\n  if (lecciones.length === 0) {\n    throw new Error(`El curso ${nombre} no tiene ninguna sesión.`);\n  }\n\n  return {\n    slug: String(ficha.slug ?? nombre),\n    titulo: String(ficha.titulo ?? \"\"),\n    resumen: String(ficha.resumen ?? \"\"),\n    area: ficha.area as Curso[\"area\"],\n    nivel: String(ficha.nivel ?? \"INTRODUCCIÓN\"),\n    formato: (ficha.formato as Curso[\"formato\"]) ?? (ficha.tipo as Curso[\"formato\"]) ?? \"curso\",\n    horas: Number(ficha.horas ?? 0),\n    icono: resolverIconoCurso(String(ficha.slug ?? nombre), String(ficha.area ?? \"\"), ficha.icono),\n    ...(ficha.paquetes ? { paquetes: ficha.paquetes as string[] } : {}),\n    ...(preludio ? { preludio } : {}),\n    lecciones,\n  };\n}\n\n/** Carga un curso desde su carpeta en el repositorio. */\nexport function cargarCurso(carpeta: string, raiz = RAIZ): Curso {\n  const dir = join(raiz, carpeta);\n  const archivos = new Map(\n    readdirSync(dir)\n      .filter((f) => f.endsWith(\".md\"))\n      .map((f) => [f, readFileSync(join(dir, f), \"utf8\")] as const),\n  );\n  return construirCurso(carpeta, archivos);\n}\n\n/** Descubre carpetas con ficha; agregar Markdown no requiere editar un registro. */\nexport function cargarCursosLocales(raiz = RAIZ): Curso[] {\n  return readdirSync(raiz, { withFileTypes: true })\n    .filter((entrada) => entrada.isDirectory() && existsSync(join(raiz, entrada.name, \"curso.md\")))\n    .map((entrada) => entrada.name)\n    .sort()\n    .map((carpeta) => cargarCurso(carpeta, raiz));\n}\n
