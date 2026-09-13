@@ -392,4 +392,9 @@ export function cargarCurso(carpeta: string, raiz = RAIZ): Curso {
 
 /** Descubre carpetas con ficha; agregar Markdown no requiere editar un registro. */
 export function cargarCursosLocales(raiz = RAIZ): Curso[] {
-  return readdirSync(raiz, { withFileTypes: true })\n    .filter((entrada) => entrada.isDirectory() && existsSync(join(raiz, entrada.name, \"curso.md\")))\n    .map((entrada) => entrada.name)\n    .sort()\n    .map((carpeta) => cargarCurso(carpeta, raiz));\n}\n
+  return readdirSync(raiz, { withFileTypes: true })
+    .filter((entrada) => entrada.isDirectory() && existsSync(join(raiz, entrada.name, "curso.md")))
+    .map((entrada) => entrada.name)
+    .sort()
+    .map((carpeta) => cargarCurso(carpeta, raiz));
+}
