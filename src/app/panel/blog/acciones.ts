@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { perfilActual } from "@/lib/matriculas";
 
 export async function refrescarSincronizacionMedium() {
@@ -9,7 +9,6 @@ export async function refrescarSincronizacionMedium() {
     throw new Error("No tienes permisos para re-sincronizar el blog.");
   }
 
-  revalidateTag("medium-blog");
   revalidatePath("/blog");
   revalidatePath("/panel/blog");
 }
