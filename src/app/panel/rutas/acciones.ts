@@ -1,7 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { usuarioEsAdmin } from "@/lib/supabase/servidor";
+import { perfilActual } from "@/lib/matriculas";
 import {
   crearRutaBD,
   actualizarRutaBD,
@@ -9,17 +8,15 @@ import {
   asignarCursoARutaBD,
 } from "@/lib/rutas-bd";
 
-export type EstadoAccionRuta = {
-  ok: boolean;
-  error?: string;
-};
+async function exigirAdmin() {
+  const perfil = await perfilActual();
+  if (!perfil?.es_admin) {
+    throw new Error("No tienes permisos de administrador para realizar esta acción.");
+  }
+}
 
-export async function crearRutaAction(
-  _previo: EstadoAccionRuta | null,
-  formData: FormData,
-): Promise<EstadoAccionRuta> {
-  const esAdmin = await usuarioEsAdmin();
-  if (!esAdmin) return { ok: false, error: "No autorizado." };
+export async function accionCrearRuta(formData: FormData) {
+  await exigirAdmin();
 
   const slug = String(formData.get("slug") ?? "").trim();
   const nombre = String(formData.get("nombre") ?? "").trim();
@@ -27,66 +24,62 @@ export async function crearRutaAction(
   const orden = Number(formData.get("orden") ?? 0);
 
   if (!slug || !nombre) {
-    return { ok: false, error: "El slug y el nombre son obligatorios." };
+    throw new Error("El slug y el nombre de la ruta son obligatorios.");
   }
 
-  try {
-    await crearRutaBD({ slug, nombre, descripcion, orden });
-    revalidatePath("/panel/rutas");
-    revalidatePath("/rutas");
-    revalidatePath("/cursos");
-    return { ok: true };
-  } catch (error) {
-    return {
-      ok: false,
-      error: error instanceof Error ? error.message : "Error al crear la ruta.",
-    };
-  }
+  await crearRutaBD({
+    slug,
+    nombre,
+    descripcion: descripcion || null,
+    orden,
+  });
 }
 
-export async function eliminarRutaAction(
-  _previo: EstadoAccionRuta | null,
-  formData: FormData,
-): Promise<EstadoAccionRuta> {
-  const esAdmin = await usuarioEsAdmin();
-  if (!esAdmin) return { ok: false, error: "No autorizado." };
+export async function accionActualizarRuta(formData: FormData) {
+  await exigirAdmin();
 
   const slug = String(formData.get("slug") ?? "").trim();
-  if (!slug) return { ok: false, error: "Slug no especificado." };
+  const nombre = String(formData.get("nombre") ?? "").trim();
+  const descripcion = String(formData.get("descripcion") ?? "").trim();
+  const orden = Number(formData.get("orden") ?? 0);
 
-  try {
-    await eliminarRutaBD(slug);
-    revalidatePath("/panel/rutas");
-    revalidatePath("/rutas");
-    revalidatePath("/cursos");
-    return { ok: true };
-  } catch (error) {
-    return {
-      ok: false,
-      error: error instanceof Error ? error.message : "Error al eliminar la ruta.",
-    };
+  if (!slug || !nombre) {
+    throw new Error("El slug y el nombre de la ruta son obligatorios.");
   }
+
+  await actualizarRutaBD(slug, {
+    nombre,
+    descripcion: descripcion || null,
+    orden,
+  });
 }
 
-export async function asignarCursoAction(datos: {
-  cursoSlug: string;
-  rutaSlug: string | null;
-  posicion: number;
-  requisitos?: string[];
-}): Promise<EstadoAccionRuta> {
-  const esAdmin = await usuarioEsAdmin();
-  if (!esAdmin) return { ok: false, error: "No autorizado." };
+export async function accionEliminarRuta(slug: string) {
+  await exigirAdmin();
+  if (!slug) throw new Error("Slug inválido.");
+  await eliminarRutaBD(slug);
+}
 
-  try {
-    await asignarCursoARutaBD(datos);
-    revalidatePath("/panel/rutas");
-    revalidatePath("/rutas");
-    revalidatePath("/cursos");
-    return { ok: true };
-  } catch (error) {
-    return {
-      ok: false,
-      error: error instanceof Error ? error.message : "Error al asignar curso.",
-    };
-  }
+export async function accionAsignarCursoARuta(formData: FormData) {
+  await exigirAdmin();
+
+  const cursoSlug = String(formData.get("cursoSlug") ?? "").trim();
+  const rutaSlug = String(formData.get("rutaSlug") ?? "").trim() || null;
+  const posicion = Number(formData.get("posicion") ?? 1);
+  const requisitosRaw = String(formData.get("requisitos") ?? "").trim();
+  const requisitos = requisitosRaw
+    ? requisitosRaw
+        .split(",")
+        .map((r) => r.trim())
+        .filter(Boolean)
+    : [];
+
+  if (!cursoSlug) throw new Error("Debes indicar un curso.");
+
+  await asignarCursoARutaBD({
+    cursoSlug,
+    rutaSlug,
+    posicion,
+    requisitos,
+  });
 }
