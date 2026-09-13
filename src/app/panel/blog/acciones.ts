@@ -1,17 +1,15 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { perfilActual } from "@/lib/matriculas";
 
-export async function sincronizarBlogAction() {
-  try {
-    revalidateTag("medium-blog", "max-age=0" as unknown as undefined);
-  } catch {
-    // Si la versión de next revalidateTag sólo acepta 1 argumento
-    try {
-      revalidateTag("medium-blog");
-    } catch {}
+export async function refrescarSincronizacionMedium() {
+  const perfil = await perfilActual();
+  if (!perfil?.es_admin) {
+    throw new Error("No tienes permisos para re-sincronizar el blog.");
   }
+
+  revalidateTag("medium-blog");
   revalidatePath("/blog");
   revalidatePath("/panel/blog");
-  return { ok: true };
 }
