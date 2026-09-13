@@ -6,6 +6,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import { ChevronRight, FlaskConical, Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import type { Curso, Leccion } from "@/lib/cursos";
 import { Llama } from "@/components/Llama";
+import { MarcaTextoLateral } from "@/components/MarcaTextoLateral";
 
 /**
  * Devuelve el id de la sección que se está leyendo.
@@ -171,9 +172,7 @@ function Contenido({
         className="flex items-center gap-2 border-b border-borde px-4 py-4"
       >
         <Llama className="h-9 w-auto text-rojo-acento" />
-        <span className="text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
-          EDUQA.PE
-        </span>
+        <MarcaTextoLateral />
       </Link>
 
       <div className="border-b border-borde px-4 py-3">

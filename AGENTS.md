@@ -35,6 +35,15 @@ todavía están en TypeScript. Al tocarlos, conviene pasarlos a Markdown.
 - Si la primera comprobación revela un defecto, la tarea continúa hasta corregirlo y
   verificar nuevamente el resultado completo.
 
+# Publicación
+
+- Subir los cambios a una rama y abrir un pull request hacia `main`. Esperar a que
+  todos los checks de GitHub Actions terminen correctamente antes de integrarlo.
+  Un push directo a `main` inicia el CI después de subir el código y no espera
+  sus resultados; por eso no sirve como comprobación previa.
+- La tipografía de EDUQA.PE en ambas barras usa `MarcaTextoLateral`. Ejecutar
+  `npm run test:marca` al cambiarla; la misma prueba corre en CI y en el build.
+
 # Iconos de cursos
 
 - Todos los cursos deben mostrar un icono, por instrucción del usuario.

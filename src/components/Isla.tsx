@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useSyncExternalStore, type ComponentType } from "react";
 import { MarcaInline } from "@/components/LlamaMarca";
+import { MarcaTextoLateral } from "@/components/MarcaTextoLateral";
 import { SelectorTemaCompacto } from "@/components/Tema";
 import { CLAVE_BARRA_LATERAL } from "@/lib/barra-lateral";
 
@@ -161,9 +162,7 @@ export function Isla({
         className="sidebar-marca flex items-center gap-2 border-b border-borde px-4 py-4 transition-colors hover:bg-superficie"
       >
         <MarcaInline svg={marcaSidebar} className="h-9 w-auto text-rojo-acento" />
-        <span className="sidebar-etiqueta text-sm font-bold uppercase tracking-[0.18em] text-rojo-acento">
-          EDUQA.PE
-        </span>
+        <MarcaTextoLateral ocultarAlColapsar />
       </Link>
 
       <div className="mx-3 mt-3 flex flex-1 flex-col gap-1 overflow-y-auto">
