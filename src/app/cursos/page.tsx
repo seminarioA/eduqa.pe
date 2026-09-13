@@ -10,6 +10,7 @@ import { misMatriculas, perfilActual, resumenPlan } from "@/lib/matriculas";
 import { precios } from "@/lib/precios";
 import { contarPorCurso, miProgreso } from "@/lib/progreso";
 import { avisosVisibles } from "@/lib/avisos";
+import { titulosSeccion } from "@/lib/titulos-seccion";
 import { Tablero } from "@/components/Tablero";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { cerrarSesion } from "@/app/acceder/acciones";
@@ -27,12 +28,13 @@ export default async function Page() {
   const usuario = await usuarioActual();
   if (!usuario) redirect("/acceder?volverA=/cursos");
 
-  const [perfil, matriculas, tarifas, progreso, avisos] = await Promise.all([
+  const [perfil, matriculas, tarifas, progreso, avisos, titulos] = await Promise.all([
     perfilActual(),
     misMatriculas(),
     precios(),
     miProgreso(),
     avisosVisibles(),
+    titulosSeccion(),
   ]);
   const vistasPorCurso = contarPorCurso(progreso);
   const plan = resumenPlan(perfil, matriculas);
@@ -106,7 +108,7 @@ export default async function Page() {
 
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                Cursos & Microcursos
+                {titulos["cursos-titulo-pagina"]}
               </h1>
               {nombre && (
                 <span className="text-sm text-texto-suave">
@@ -133,6 +135,7 @@ export default async function Page() {
         rutas={ordenarRutasPorPopularidad(rutasVisibles, cuentas)}
         alTope={plan.alTope}
         esAdmin={perfil?.es_admin ?? false}
+        titulosSeccion={titulos}
         cursos={disponibles.map((c) => {
           const m = porCurso.get(c.slug);
           const t = tarifas.get(c.slug);
