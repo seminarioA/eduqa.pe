@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { BookOpen, ExternalLink, Newspaper, Sparkles, Tag } from "lucide-react";
+import { BookOpen, ExternalLink, Newspaper, Tag } from "lucide-react";
 import { obtenerArticulosMedium, obtenerCategoriasBlog } from "@/lib/blog-medium";
 import { BlogCard } from "@/components/BlogCard";
 import { Migas } from "@/components/Migas";
@@ -14,15 +14,22 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-export default async function BlogPage() {
-  const [articulos, categorias, perfil] = await Promise.all([
+export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
+  const [articulos, categorias, perfil, consulta] = await Promise.all([
     obtenerArticulosMedium(),
     obtenerCategoriasBlog(),
     perfilActual(),
+    searchParams,
   ]);
 
-  const destacado = articulos[0];
-  const lista = articulos.slice(1);
+  const tema = typeof consulta.tema === "string" && categorias.includes(consulta.tema)
+    ? consulta.tema
+    : "";
+  const filtrados = tema
+    ? articulos.filter((articulo) => articulo.categorias.includes(tema))
+    : articulos;
+  const destacado = filtrados[0];
+  const lista = filtrados.slice(1);
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
@@ -41,12 +48,8 @@ export default async function BlogPage() {
         )}
       </div>
 
-      <header className="mt-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-borde bg-superficie px-3 py-1 text-xs font-medium text-rojo-acento">
-          <Sparkles size={13} />
-          Publicaciones de Medium
-        </div>
-        <h1 className="mt-3 text-3xl font-bold tracking-tight text-texto sm:text-4xl">
+      <header className="mt-8">
+        <h1 className="text-3xl font-bold tracking-tight text-texto sm:text-4xl">
           Blog
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-texto-suave">
@@ -56,22 +59,26 @@ export default async function BlogPage() {
 
       {perfil?.es_admin && <GestionMedium articulos={articulos.length} />}
 
-      {/* Categorías */}
+      {/* Un selector sigue ocupando una línea aunque el feed traiga decenas de temas. */}
       {categorias.length > 0 && (
-        <div className="mt-8 flex flex-wrap items-center gap-2 border-y border-borde py-4">
-          <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-texto-tenue">
-            <Tag size={13} />
-            Temas:
-          </span>
-          {categorias.map((cat) => (
-            <span
-              key={cat}
-              className="rounded-lg border border-borde bg-superficie px-3 py-1 text-xs font-medium text-texto-suave transition-colors hover:border-rojo-acento hover:text-texto"
-            >
-              {cat}
-            </span>
-          ))}
-        </div>
+        <form action="/blog" method="get" className="mt-8 flex flex-wrap items-center gap-3 border-y border-borde py-4">
+          <label htmlFor="tema-blog" className="flex items-center gap-1.5 text-sm font-medium text-texto-suave">
+            <Tag size={15} aria-hidden="true" /> Tema
+          </label>
+          <select
+            id="tema-blog"
+            name="tema"
+            defaultValue={tema}
+            className="max-w-full rounded-lg border border-borde bg-fondo px-3 py-2 text-sm text-texto focus:border-rojo-acento focus:outline-2 focus:outline-rojo-acento"
+          >
+            <option value="">Todos los temas</option>
+            {categorias.map((categoria) => <option key={categoria} value={categoria}>{categoria}</option>)}
+          </select>
+          <button type="submit" className="rounded-lg border border-borde px-3 py-2 text-sm font-medium text-texto transition-colors hover:bg-superficie">
+            Filtrar
+          </button>
+          {tema && <Link href="/blog" className="text-sm text-texto-suave hover:text-rojo-acento">Limpiar</Link>}
+        </form>
       )}
 
       {/* Artículo destacado */}

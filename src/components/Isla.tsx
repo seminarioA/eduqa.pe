@@ -170,10 +170,10 @@ export function Isla({
               href={href}
               title={etiqueta}
               aria-label={etiqueta}
-              className={`sidebar-enlace flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+              className={`sidebar-enlace flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
                 activo
-                  ? "bg-superficie text-texto shadow-sm ring-1 ring-borde"
-                  : "text-texto-suave hover:bg-superficie/60 hover:text-texto"
+                  ? "bg-superficie font-medium text-texto shadow-sm ring-1 ring-borde"
+                  : "text-texto-suave hover:bg-superficie"
               }`}
             >
               <Icono size={18} className={`shrink-0 ${activo ? "text-rojo-acento" : ""}`} />
@@ -190,7 +190,7 @@ export function Isla({
             title="Ajustes"
             aria-label="Ajustes"
             aria-current={ruta.startsWith("/ajustes") ? "page" : undefined}
-            className={`sidebar-enlace flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${ruta.startsWith("/ajustes") ? "bg-superficie text-texto shadow-sm ring-1 ring-borde" : "text-texto-suave hover:bg-superficie/60 hover:text-texto"}`}
+            className={`sidebar-enlace flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${ruta.startsWith("/ajustes") ? "bg-superficie font-medium text-texto shadow-sm ring-1 ring-borde" : "text-texto-suave hover:bg-superficie"}`}
           >
             <Settings size={18} className={`shrink-0 ${ruta.startsWith("/ajustes") ? "text-rojo-acento" : ""}`} />
             <span className="sidebar-etiqueta truncate">Ajustes</span>
@@ -218,7 +218,7 @@ export function Isla({
             onClick={onSalir}
             title="Cerrar sesión"
             aria-label="Cerrar sesión"
-            className="sidebar-enlace flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
+            className="sidebar-enlace flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-texto-suave transition-colors hover:bg-superficie"
           >
             <LogOut size={16} className="shrink-0" />
             <span className="sidebar-etiqueta truncate">Cerrar sesión</span>

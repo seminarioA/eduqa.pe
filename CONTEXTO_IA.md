@@ -25,7 +25,7 @@ Documento vivo y máquina de estado para sincronizar cualquier instancia de IA o
 - **Transformers:** `src/content/transformers-atencionales/curso.md` reclasificado como **Microcurso** (`formato: microcurso`) con badge visual de atención en catálogo y panel.
 
 ### B. Módulo de Blog Sincronizado con Medium
-- **Lector RSS en Servidor:** `src/lib/blog-medium.ts` lee de `https://medium.com/feed/@seminarioA` con fallback a artículos técnicos de respaldo y revalidación de caché (`next: { revalidate: 3600, tags: ["medium-blog"] }`).
+- **Lector RSS en Servidor:** `src/lib/blog-medium.ts` consulta el feed configurado de Medium y revalida la caché (`next: { revalidate: 3600, tags: ["medium-blog"] }`). Si el feed no responde o no trae entradas, el blog queda vacío; nunca se publican artículos de ejemplo.
 - **Rutas Públicas:**
   - `/blog`: Catálogo con artículo destacado, pills de filtros por categoría y grid responsivo.
   - `/blog/[slug]`: Lector completo con enlace canónico a Medium y banner de conversión hacia cursos de EDUQA.PE.
