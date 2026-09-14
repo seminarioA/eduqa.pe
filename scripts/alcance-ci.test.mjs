@@ -33,3 +33,8 @@ test('un visor PDF nuevo no afecta al runtime ni a los ejercicios Fortran', () =
   assert.equal(requierePruebasFortran(['package.json', 'package-lock.json'], []), false);
   assert.equal(requierePruebasFortran(['package-lock.json'], ['pdfjs-dist']), false);
 });
+
+test('el catálogo de marketing no activa Fortran; el catálogo de cursos sí', () => {
+  assert.equal(requierePruebasFortran(['src/lib/catalogo.ts']), false);
+  assert.equal(requierePruebasFortran(['src/lib/catalogo-cursos.ts']), true);
+});

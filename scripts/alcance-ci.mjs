@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 
 const rutasFortran = [
   /^src\/content\/fortran-[^/]+\//,
-  /^src\/lib\/(?:fortran-|borrador-fortran|curso-markdown\.ts$|curso-tipos\.ts$|catalogo(?:-cursos)?\.ts$|iconos-curso\.ts$)/,
+  /^src\/lib\/(?:fortran-|borrador-fortran|curso-markdown\.ts$|curso-tipos\.ts$|catalogo-cursos\.ts$|iconos-curso\.ts$)/,
   /^src\/components\/curso\/(?:ConsolaFortran|PreparacionFortran|SandboxFortran|Consola|EjercicioPunto|BloqueCodigo)\.tsx$/,
   /^src\/components\/Iconos\.tsx$/,
   /^src\/app\/rutas\/\[ruta\]\/sandbox\//,
