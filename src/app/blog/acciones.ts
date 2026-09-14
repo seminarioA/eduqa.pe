@@ -2,6 +2,7 @@
 
 import { revalidatePath, updateTag } from "next/cache";
 import { perfilActual } from "@/lib/matriculas";
+import { obtenerArticulosMedium } from "@/lib/blog-medium";
 
 export async function actualizarArticulosMedium() {
   const perfil = await perfilActual();
@@ -11,4 +12,5 @@ export async function actualizarArticulosMedium() {
 
   updateTag("medium-blog");
   revalidatePath("/blog");
+  return (await obtenerArticulosMedium()).length;
 }

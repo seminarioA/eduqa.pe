@@ -74,7 +74,7 @@ export const SNAPSHOT_ACTUAL: SnapshotMemoria = {
     {
       nombre: "Blog Sincronizado con Medium",
       descripcion:
-        "Lector RSS con fallback seguro, revalidación bajo demanda, catálogo público (/blog), lector (/blog/[slug]) y panel admin (/panel/blog).",
+        "Lector RSS sin artículos ficticios, revalidación bajo demanda, catálogo público (/blog), lector (/blog/[slug]) y panel admin (/panel/blog).",
       archivos_clave: [
         "src/lib/blog-medium.ts",
         "src/components/BlogCard.tsx",

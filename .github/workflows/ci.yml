@@ -45,7 +45,9 @@ jobs:
           else
             BASE_SHA="$BEFORE_SHA"
           fi
-          git log --format=%s "$BASE_SHA..HEAD" | npx --no -- commitlint
+          # Valida los commits de dev; un merge de main puede contener commits
+          # ya publicados con otro formato que no pertenecen a esta entrega.
+          git log --first-parent --format=%s "$BASE_SHA..HEAD" | npx --no -- commitlint
           git diff --name-only "$BASE_SHA" HEAD | node scripts/alcance-ci.mjs "$BASE_SHA" >> "$GITHUB_OUTPUT"
       - run: node --test scripts/alcance-ci.test.mjs
       - run: npm run lint
@@ -111,11 +113,11 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
-      - name: Avanzar main solo desde qa por fast-forward
+      - name: Promover qa a main sin reescribir historial
         env:
           CANDIDATE_SHA: ${{ github.sha }}
         run: |
           git fetch origin qa main
           test "$(git rev-parse origin/qa)" = "$CANDIDATE_SHA"
-          git merge-base --is-ancestor origin/main "$CANDIDATE_SHA"
-          git push origin "$CANDIDATE_SHA:refs/heads/main"
+          git merge-base --is-ancestor origin/main origin/qa
+          git push origin origin/qa:refs/heads/main

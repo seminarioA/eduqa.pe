@@ -19,9 +19,9 @@ export function BotonActualizar() {
           setMensaje("");
           iniciar(async () => {
             try {
-              await actualizarArticulosMedium();
+              const cantidad = await actualizarArticulosMedium();
               router.refresh();
-              setMensaje("Actualización solicitada");
+              setMensaje(cantidad > 0 ? `${cantidad} artículos disponibles` : "No hay artículos disponibles en el feed configurado");
             } catch (error) {
               setMensaje(error instanceof Error ? error.message : "No se pudo actualizar el blog");
             }

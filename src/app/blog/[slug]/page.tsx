@@ -6,7 +6,6 @@ import {
   Clock,
   ExternalLink,
   GraduationCap,
-  Share2,
   Tag,
   ArrowLeft,
   BookOpen,
@@ -137,8 +136,7 @@ export default async function ArticuloPage({
           ¿Quieres dominar estos conceptos con código interactivo?
         </h3>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-texto-suave">
-          En EDUQA.PE no solo lees teoría: ejecutas código Python y Fortran en el navegador,
-          resuelves problemas reales y obtienes certificaciones universitarias verificables.
+          En EDUQA.PE puedes estudiar cursos y ejecutar código en el navegador.
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link

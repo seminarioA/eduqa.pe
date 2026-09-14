@@ -9,8 +9,7 @@ import { GestionMedium } from "@/components/blog/GestionMedium";
 
 export const metadata: Metadata = {
   title: "Blog Técnico — EDUQA.PE",
-  description:
-    "Artículos técnicos sobre IA, Machine Learning, Ingeniería de Datos, Backend y Matemáticas aplicadas, sincronizados desde nuestro canal oficial de Medium.",
+  description: "Artículos disponibles desde el canal Medium de EDUQA.PE.",
 };
 
 export const revalidate = 3600;
@@ -29,28 +28,29 @@ export default async function BlogPage() {
     <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
       <div className="flex items-center justify-between">
         <Migas items={[{ texto: "Blog Técnico" }]} />
-        <a
-          href="https://medium.com/@seminarioA"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs font-medium text-texto-tenue transition-colors hover:text-rojo-acento"
-        >
-          <span>Canal Medium</span>
-          <ExternalLink size={13} aria-hidden="true" />
-        </a>
+        {destacado && (
+          <a
+            href={destacado.enlaceMedium}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs font-medium text-texto-tenue transition-colors hover:text-rojo-acento"
+          >
+            <span>Ver en Medium</span>
+            <ExternalLink size={13} aria-hidden="true" />
+          </a>
+        )}
       </div>
 
       <header className="mt-6">
         <div className="inline-flex items-center gap-1.5 rounded-full border border-borde bg-superficie px-3 py-1 text-xs font-medium text-rojo-acento">
           <Sparkles size={13} />
-          Publicaciones Técnicas & Casos Reales
+          Publicaciones de Medium
         </div>
         <h1 className="mt-3 text-3xl font-bold tracking-tight text-texto sm:text-4xl">
-          Blog de Ingeniería & Inteligencia Artificial
+          Blog
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-texto-suave">
-          Artículos profundos, análisis arquitectónicos y tutoriales escritos por el equipo de
-          EDUQA.PE para conectar teoría matemática con código en producción.
+          Artículos publicados en el canal Medium de EDUQA.PE.
         </p>
       </header>
 
@@ -146,7 +146,7 @@ export default async function BlogPage() {
           <div className="mt-6 rounded-2xl border border-dashed border-borde p-12 text-center">
             <Newspaper size={32} className="mx-auto text-texto-tenue" />
             <p className="mt-3 text-sm text-texto-suave">
-              Pronto publicaremos nuevos artículos técnicos.
+              No hay artículos disponibles desde el canal Medium en este momento.
             </p>
           </div>
         ) : null}

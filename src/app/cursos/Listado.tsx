@@ -6,6 +6,7 @@ import { TarjetaCursoMatricula, type DatosCurso } from "./TarjetaCursoMatricula"
 import { Selector } from "@/components/Selector";
 import { TarjetaRuta, type DatosRuta } from "@/components/TarjetaRuta";
 import { TarjetaPopular } from "@/components/Populares";
+import { TituloEditable } from "@/components/TituloEditable";
 
 /**
  * `inscritoEn` es la fecha de inscripción en milisegundos, o null si el
@@ -45,6 +46,7 @@ export function Listado({
   cabecera,
   acciones,
   entreBarraYRejilla,
+  titulosSeccion = {},
 }: {
   cursos: CursoListado[];
   rutas?: DatosRuta[];
@@ -58,6 +60,8 @@ export function Listado({
   acciones?: ReactNode;
   /** Migas y título, entre la barra y la rejilla. */
   entreBarraYRejilla?: ReactNode;
+  /** Títulos de sección personalizados (precargados en servidor). */
+  titulosSeccion?: Partial<Record<string, string>>;
 }) {
   const [busqueda, setBusqueda] = useState("");
   const [area, setArea] = useState<string>(TODAS);
@@ -125,10 +129,13 @@ export function Listado({
     });
   }, [cursos, area, orden, busqueda]);
 
+  const tPopulares = titulosSeccion["catalogo-populares"] ?? "Más elegidos";
+  const tRutas = titulosSeccion["catalogo-rutas"] ?? "Rutas populares";
+  const tTodos = titulosSeccion["catalogo-todos"] ?? "Todos los cursos";
+
   return (
     <>
-      {/* Una sola fila: marca, búsqueda, filtros y cuenta. Antes eran tres
-          filas apiladas y la del avatar iba casi vacía. */}
+      {/* Una sola fila: marca, búsqueda, filtros y cuenta. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
         {cabecera}
 
@@ -191,8 +198,6 @@ export function Listado({
         </p>
       ) : (
         <div className="mt-8 space-y-8">
-          {/* Cada grupo ocupa su propia rejilla. Así una fila incompleta en
-              tableta no se mezcla con las tarjetas del grupo siguiente. */}
           {sinFiltrar && populares.length > 0 && (
             <section aria-labelledby="catalogo-populares">
               <h2
@@ -200,7 +205,11 @@ export function Listado({
                 className="mb-4 flex items-center gap-2 text-xl font-semibold tracking-tight"
               >
                 <Flame size={20} strokeWidth={1.5} className="shrink-0" aria-hidden="true" />
-                Más elegidos
+                <TituloEditable
+                  clave="catalogo-populares"
+                  valorInicial={tPopulares}
+                  esAdmin={esAdmin}
+                />
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {populares.map((c) => <TarjetaPopular key={c.slug} curso={c} />)}
@@ -217,7 +226,11 @@ export function Listado({
                 className="mb-4 flex items-center gap-2 text-xl font-semibold tracking-tight"
               >
                 <Route size={20} strokeWidth={1.5} className="shrink-0" aria-hidden="true" />
-                Rutas populares
+                <TituloEditable
+                  clave="catalogo-rutas"
+                  valorInicial={tRutas}
+                  esAdmin={esAdmin}
+                />
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {rutas.map((r) => (
@@ -243,7 +256,11 @@ export function Listado({
                 className="flex items-center gap-2 text-xl font-semibold tracking-tight"
               >
                 <BookOpen size={20} strokeWidth={1.5} className="shrink-0" aria-hidden="true" />
-                {sinFiltrar ? "Todos los cursos" : "Resultados"}
+                <TituloEditable
+                  clave="catalogo-todos"
+                  valorInicial={sinFiltrar ? tTodos : "Resultados"}
+                  esAdmin={esAdmin && sinFiltrar}
+                />
               </h2>
               <p className="text-sm text-texto-suave">
                 {visibles.length} {visibles.length === 1 ? "curso" : "cursos"}

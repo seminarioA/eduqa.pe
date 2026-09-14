@@ -176,12 +176,6 @@ export const instructor = {
       etiqueta: "GitHub",
       url: "https://github.com/seminarioA",
     },
-    // OJO: este usuario de Instagram es un marcador, corrígelo o borra la entrada.
-    {
-      red: "instagram" as const,
-      etiqueta: "Instagram",
-      url: "https://instagram.com/TU-USUARIO",
-    },
   ],
 };
 

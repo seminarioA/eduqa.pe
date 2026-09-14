@@ -1,4 +1,7 @@
 import { Certificado, VistaPrevia, type Variante } from "@/components/Certificado";
+import { notFound } from "next/navigation";
+
+// Esta página usa datos de prueba para comprobar el diseño; no es un certificado emitido.
 
 const MUESTRA = {
   alumno: "Ana Lucía Quispe Rojas",
@@ -34,6 +37,7 @@ const CASOS_BORDE = [
 ];
 
 export default function Page() {
+  if (process.env.NODE_ENV === "production") notFound();
   return (
     <main className="mx-auto max-w-6xl px-6 py-14">
       <h1 className="text-3xl font-semibold tracking-tight">Certificados</h1>

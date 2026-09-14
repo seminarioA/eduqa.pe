@@ -12,7 +12,6 @@ import {
   UserPlus,
 } from "lucide-react";
 import {
-  areas,
   comoFunciona,
   faq,
   instructor,
@@ -24,13 +23,10 @@ import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { LIMITE_PLAN_GRATIS } from "@/lib/matriculas";
 import { precios } from "@/lib/precios";
 import { usuarioActual } from "@/lib/supabase/servidor";
-import { AreaCatalogo, FichaCurso } from "@/components/Catalogo";
 import { Icono, IconoRed, Stack } from "@/components/Iconos";
 import { Llama } from "@/components/Llama";
 import { SelectorTema } from "@/components/Tema";
 import { Boton, Seccion } from "@/components/ui";
-
-const totalCursos = areas.reduce((n, a) => n + a.cursos.length, 0);
 
 export default async function Page() {
   // La portada cambia según haya sesión: a quien ya entró no se le ofrece
@@ -277,36 +273,7 @@ export default async function Page() {
                 de emisión. Es una constancia, no un título universitario, y no se
                 vende como tal.
               </p>
-              <p className="mt-3 font-mono text-xs text-texto-tenue">
-                EDUQA-DK03-2026-XGPGBC
-              </p>
             </div>
-          </div>
-        </Seccion>
-
-        {/* Catálogo por abrir */}
-        <Seccion titulo="Lo que viene" ancho="amplio">
-          <p className="-mt-4 mb-8 max-w-2xl leading-relaxed text-texto-suave">
-            {totalCursos} cursos en {areas.length} áreas, todos a {marca.moneda}
-            {marca.precio}. Se van abriendo por tandas: cuando a uno le toca fecha,
-            aparece arriba con su material.
-          </p>
-
-          <div className="space-y-10">
-            {areas.map((a) => (
-              <AreaCatalogo
-                key={a.id}
-                nombre={a.nombre}
-                descripcion={a.descripcion}
-                total={a.cursos.length}
-              >
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                  {a.cursos.map((c) => (
-                    <FichaCurso key={c.id} {...c} />
-                  ))}
-                </div>
-              </AreaCatalogo>
-            ))}
           </div>
         </Seccion>
 

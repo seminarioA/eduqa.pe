@@ -1,0 +1,23 @@
+name: Mantener ramas de entornos
+
+on:
+  create:
+  push:
+    branches-ignore: [main, dev, qa]
+
+permissions:
+  contents: write
+
+jobs:
+  retirar-rama:
+    if: github.ref_type == 'branch' && github.ref_name != 'main' && github.ref_name != 'dev' && github.ref_name != 'qa'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retirar rama fuera de los entornos
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAMA: ${{ github.ref_name }}
+          REPOSITORIO: ${{ github.repository }}
+        run: |
+          echo "Retirando la rama $RAMA: solo se mantienen main, dev y qa."
+          gh api --method DELETE "repos/$REPOSITORIO/git/refs/heads/$RAMA"

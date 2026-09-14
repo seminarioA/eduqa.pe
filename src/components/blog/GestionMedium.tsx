@@ -10,7 +10,7 @@ export function GestionMedium({ articulos }: { articulos: number }) {
       <div>
         <h2 className="text-sm font-semibold text-texto">Publicación desde Medium</h2>
         <p className="mt-1 text-sm text-texto-suave">
-          {articulos} artículos disponibles · Actualización automática cada hora
+          {articulos} artículos disponibles · Consulta del feed con caché de hasta una hora
         </p>
       </div>
       <BotonActualizar />
