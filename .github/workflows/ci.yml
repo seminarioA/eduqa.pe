@@ -46,7 +46,7 @@ jobs:
             BASE_SHA="$BEFORE_SHA"
           fi
           git log --format=%s "$BASE_SHA..HEAD" | npx --no -- commitlint
-          git diff --name-only "$BASE_SHA" HEAD | node scripts/alcance-ci.mjs >> "$GITHUB_OUTPUT"
+          git diff --name-only "$BASE_SHA" HEAD | node scripts/alcance-ci.mjs "$BASE_SHA" >> "$GITHUB_OUTPUT"
       - run: node --test scripts/alcance-ci.test.mjs
       - run: npm run lint
       - run: npm run typecheck

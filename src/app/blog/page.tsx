@@ -4,6 +4,8 @@ import { BookOpen, ExternalLink, Newspaper, Sparkles, Tag } from "lucide-react";
 import { obtenerArticulosMedium, obtenerCategoriasBlog } from "@/lib/blog-medium";
 import { BlogCard } from "@/components/BlogCard";
 import { Migas } from "@/components/Migas";
+import { perfilActual } from "@/lib/matriculas";
+import { GestionMedium } from "@/components/blog/GestionMedium";
 
 export const metadata: Metadata = {
   title: "Blog Técnico — EDUQA.PE",
@@ -14,9 +16,10 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function BlogPage() {
-  const [articulos, categorias] = await Promise.all([
+  const [articulos, categorias, perfil] = await Promise.all([
     obtenerArticulosMedium(),
     obtenerCategoriasBlog(),
+    perfilActual(),
   ]);
 
   const destacado = articulos[0];
@@ -50,6 +53,8 @@ export default async function BlogPage() {
           EDUQA.PE para conectar teoría matemática con código en producción.
         </p>
       </header>
+
+      {perfil?.es_admin && <GestionMedium articulos={articulos.length} />}
 
       {/* Categorías */}
       {categorias.length > 0 && (

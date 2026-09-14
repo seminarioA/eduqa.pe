@@ -16,7 +16,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Receipt,
-  Route,
   Settings,
   Stamp,
   UserRoundPlus,
@@ -114,7 +113,7 @@ export function Isla({
   /*
    * Enlaces principales organizados por áreas de uso:
    * Alumnos y navegación pública disponen de Cursos, Blog, Calendario y Compras.
-   * Administradores cuentan con submenús dedicados de gestión (Cursos, Rutas, Blog).
+   * La administración educativa tiene un solo módulo para cursos y rutas.
    */
   const enlaces: Enlace[] = autenticado
     ? [
@@ -127,16 +126,13 @@ export function Isla({
           etiqueta: "Mis certificaciones",
           Icono: BadgeCheck,
         },
-        { href: "/ajustes", etiqueta: "Ajustes", Icono: Settings },
         ...(esInterno
           ? [{ href: "/recursos", etiqueta: "Recursos", Icono: Library }]
           : []),
         ...(esAdmin
           ? [
               { href: "/panel", etiqueta: "Panel", Icono: LayoutDashboard },
-              { href: "/panel/cursos", etiqueta: "Gestión Cursos", Icono: GraduationCap },
-              { href: "/panel/rutas", etiqueta: "Gestión Rutas", Icono: Route },
-              { href: "/panel/blog", etiqueta: "Blog Medium", Icono: Newspaper },
+              { href: "/panel/cursos", etiqueta: "Gestión académica", Icono: GraduationCap },
               { href: "/panel/avisos", etiqueta: "Avisos", Icono: Megaphone },
               { href: "/panel/reportes", etiqueta: "Reportes", Icono: Bug },
               { href: "/panel/marca", etiqueta: "Marca", Icono: Stamp },
@@ -167,7 +163,7 @@ export function Isla({
 
       <div className="mx-3 mt-3 flex flex-1 flex-col gap-1 overflow-y-auto">
         {enlaces.map(({ href, etiqueta, Icono }) => {
-          const activo = ruta === href || (href !== "/cursos" && href !== "/" && ruta.startsWith(href));
+          const activo = ruta === href || (href !== "/cursos" && href !== "/" && ruta.startsWith(href)) || (href === "/panel/cursos" && ruta.startsWith("/panel/rutas"));
           return (
             <Link
               key={href}
@@ -186,6 +182,21 @@ export function Isla({
           );
         })}
       </div>
+
+      {autenticado && (
+        <div className="mx-3 border-t border-borde pt-2">
+          <Link
+            href="/ajustes"
+            title="Ajustes"
+            aria-label="Ajustes"
+            aria-current={ruta.startsWith("/ajustes") ? "page" : undefined}
+            className={`sidebar-enlace flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${ruta.startsWith("/ajustes") ? "bg-superficie text-texto shadow-sm ring-1 ring-borde" : "text-texto-suave hover:bg-superficie/60 hover:text-texto"}`}
+          >
+            <Settings size={18} className={`shrink-0 ${ruta.startsWith("/ajustes") ? "text-rojo-acento" : ""}`} />
+            <span className="sidebar-etiqueta truncate">Ajustes</span>
+          </Link>
+        </div>
+      )}
 
       <div className="sidebar-pie mx-3 mb-4 mt-2 flex items-center justify-between gap-1 border-t border-borde px-1 pt-3">
         <SelectorTemaCompacto />

@@ -30,6 +30,7 @@ import { rutaDeCadaCurso } from "@/lib/rutas";
 import { Ejercicios } from "@/components/curso/Ejercicios";
 import { EjercicioPunto } from "@/components/curso/EjercicioPunto";
 import { ejerciciosPython1 } from "@/content/python-ejercicios";
+import { VistaDiapositivas } from "@/components/sqlite/VistaDiapositivas";
 
 /** Pinta el árbol de secciones. Las hijas van dentro de la madre, de modo
  *  que plegar un encabezado pliega también todo lo que cuelga de él. */
@@ -45,13 +46,11 @@ type Opciones = {
   preludio?: string;
 };
 
-function renderSecciones(secciones: Seccion[], op: Opciones = {}) {
+function renderCuerpoSeccion(sec: Seccion, op: Opciones) {
   const { ejecutable = false, ejercicios } = op;
-
-  return secciones.map((sec) => {
-    const cuerpo = (
-      <>
-        {sec.bloques.map((b, i) =>
+  return (
+    <>
+      {sec.bloques.map((b, i) =>
           b.tipo === "teoria" ? (
             <Teoria key={i} contenido={b.contenido} docs={b.docs} nota={b.nota} />
           ) : b.tipo === "venn" ? (
@@ -78,16 +77,20 @@ function renderSecciones(secciones: Seccion[], op: Opciones = {}) {
             />
           ),
         )}
-        {ejercicios?.[sec.id] && (
+      {ejercicios?.[sec.id] && (
           <EjercicioPunto
             ejercicio={ejercicios[sec.id]}
             paquetes={op.paquetes}
             preludio={op.preludio}
           />
         )}
-        {renderSecciones(sec.hijas, op)}
-      </>
-    );
+    </>
+  );
+}
+
+function renderSecciones(secciones: Seccion[], op: Opciones = {}) {
+  return secciones.map((sec) => {
+    const cuerpo = <>{renderCuerpoSeccion(sec, op)}{renderSecciones(sec.hijas, op)}</>;
 
     // Los bloques anteriores al primer encabezado no tienen nada que plegar.
     if (!sec.titulo) return <div key={sec.id}>{cuerpo}</div>;
@@ -182,6 +185,13 @@ export default async function Page({
   const vistas = usuario ? await vistasDe(cursoSlug) : new Set<string>();
   // La pantalla de cierre pinta la marca personalizada si la hay.
   const marca = await marcaActual();
+  const secciones = agruparEnSecciones(leccion.bloques);
+  const opciones: Opciones = {
+    ejecutable,
+    ejercicios: leccion.ejercicios,
+    paquetes: leccion.paquetes ?? curso.paquetes,
+    preludio: leccion.preludio ?? curso.preludio,
+  };
 
   return (
     <div className="flex min-h-dvh">
@@ -216,13 +226,13 @@ export default async function Page({
           </header>
 
           <div className="mt-8">
-            {renderSecciones(agruparEnSecciones(leccion.bloques), {
-              ejecutable,
-              ejercicios: leccion.ejercicios,
-              // Lo de la sesión manda sobre lo del curso.
-              paquetes: leccion.paquetes ?? curso.paquetes,
-              preludio: leccion.preludio ?? curso.preludio,
-            })}
+            {cursoSlug === "sqlite" ? (
+              <VistaDiapositivas
+                archivo={`/cursos/sqlite/${leccionSlug}.pdf`}
+                titulo={leccion.titulo}
+                lectura={renderSecciones(secciones, opciones)}
+              />
+            ) : renderSecciones(secciones, opciones)}
           </div>
 
           {/* El curso de Python agrupa sus ejercicios al final. Los cursos

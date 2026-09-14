@@ -5,6 +5,7 @@ import { perfilActual } from "@/lib/matriculas";
 import { rutas } from "@/lib/rutas";
 import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { Migas } from "@/components/Migas";
+import { PanelFormacionNav } from "@/components/PanelFormacionNav";
 import { GestionRutasForm } from "./FormularioRuta";
 
 export const metadata: Metadata = {
@@ -47,6 +48,7 @@ export default async function PanelRutasPage() {
       <Migas
         items={[
           { texto: "Panel", href: "/panel" },
+          { texto: "Gestión académica", href: "/panel/cursos" },
           { texto: "Rutas de aprendizaje" },
         ]}
       />
@@ -59,6 +61,8 @@ export default async function PanelRutasPage() {
           Organiza los cursos en secuencias pedagógicas lógicas, define el orden de avance y establece los prerrequisitos necesarios para que los alumnos sigan una especialización técnica completa.
         </p>
       </div>
+
+      <PanelFormacionNav activo="rutas" />
 
       <div className="mt-8">
         <GestionRutasForm rutas={rutasFormateadas} cursos={cursosFormateados} />

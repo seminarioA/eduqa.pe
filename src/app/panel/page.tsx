@@ -5,7 +5,6 @@ import {
   BookOpen,
   Bug,
   Megaphone,
-  Route,
   Newspaper,
   Stamp,
   ArrowUpRight,
@@ -183,7 +182,7 @@ export default async function Page() {
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {/* 1. Gestión Cursos */}
+            {/* Gestión académica: cursos, microcursos y rutas */}
             <Link
               href="/panel/cursos"
               className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
@@ -193,37 +192,18 @@ export default async function Page() {
                   <BookOpen size={18} />
                 </div>
                 <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
-                  Gestión de Cursos
+                  Gestión académica
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-texto-suave">
-                  Publica Markdown, ajusta precios y visibilidad.
+                  Cursos, microcursos y rutas de aprendizaje.
                 </p>
               </div>
               <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
             </Link>
 
-            {/* 2. Rutas de Aprendizaje */}
+            {/* El mismo blog muestra la publicación y su gestión. */}
             <Link
-              href="/panel/rutas"
-              className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
-            >
-              <div>
-                <div className="flex size-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500">
-                  <Route size={18} />
-                </div>
-                <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
-                  Rutas Formativas
-                </h3>
-                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
-                  Especializaciones, itinerarios y prerrequisitos.
-                </p>
-              </div>
-              <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>
-            </Link>
-
-            {/* 3. Blog Medium */}
-            <Link
-              href="/panel/blog"
+              href="/blog#gestion-medium"
               className="group flex flex-col justify-between rounded-2xl border border-borde bg-superficie p-5 transition-all hover:border-rojo-acento hover:shadow-sm"
             >
               <div>
@@ -231,10 +211,10 @@ export default async function Page() {
                   <Newspaper size={18} />
                 </div>
                 <h3 className="mt-3 text-sm font-semibold text-texto group-hover:text-rojo-acento">
-                  Blog Medium
+                  Blog
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-texto-suave">
-                  Sincronización RSS y recarga de caché.
+                  Artículos y publicación desde Medium.
                 </p>
               </div>
               <span className="mt-4 text-[11px] font-semibold text-rojo-acento">Entrar →</span>

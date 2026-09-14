@@ -6,6 +6,7 @@ import { perfilActual } from "@/lib/matriculas";
 import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { precios } from "@/lib/precios";
 import { Migas } from "@/components/Migas";
+import { PanelFormacionNav } from "@/components/PanelFormacionNav";
 import { FormularioCurso } from "./Formulario";
 import { CrearCurso } from "./Crear";
 import { TarjetaGestion } from "../TarjetaGestion";
@@ -58,7 +59,7 @@ export default async function Page() {
       <Migas
         items={[
           { texto: "Panel", href: "/panel" },
-          { texto: "Cursos & Microcursos", href: "/panel/cursos" },
+          { texto: "Gestión académica", href: "/panel/cursos" },
         ]}
       />
 
@@ -76,6 +77,8 @@ export default async function Page() {
           </p>
         </div>
       </div>
+
+      <PanelFormacionNav activo="cursos" />
 
       <section className="mt-8 rounded-2xl border border-borde bg-superficie p-6 shadow-sm">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-texto-tenue">
