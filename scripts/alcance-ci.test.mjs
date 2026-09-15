@@ -34,7 +34,23 @@ test('un visor PDF nuevo no afecta al runtime ni a los ejercicios Fortran', () =
   assert.equal(requierePruebasFortran(['package-lock.json'], ['pdfjs-dist']), false);
 });
 
-test('el catálogo de marketing no activa Fortran; el catálogo de cursos sí', () => {
+test('los catálogos generales se validan sin ejecutar la batería Fortran', () => {
   assert.equal(requierePruebasFortran(['src/lib/catalogo.ts']), false);
-  assert.equal(requierePruebasFortran(['src/lib/catalogo-cursos.ts']), true);
+  assert.equal(requierePruebasFortran(['src/lib/catalogo-cursos.ts']), false);
+});
+
+test('la ficha y el parser general se cubren con catálogo sin ejecutar Fortran', () => {
+  assert.equal(requierePruebasFortran([
+    'src/content/fortran-fundamentos/curso.md',
+    'src/content/fortran-avanzado/curso.md',
+    'src/lib/curso-markdown.ts',
+    'src/lib/curso-tipos.ts',
+    'src/lib/iconos-curso.ts',
+    'src/components/Iconos.tsx',
+  ]), false);
+});
+
+test('las sesiones y el parser específico conservan la batería Fortran', () => {
+  assert.equal(requierePruebasFortran(['src/content/fortran-fundamentos/sesion-1.md']), true);
+  assert.equal(requierePruebasFortran(['src/lib/fortran-parser.ts']), true);
 });

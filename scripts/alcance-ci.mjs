@@ -3,10 +3,9 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
 const rutasFortran = [
-  /^src\/content\/fortran-[^/]+\//,
-  /^src\/lib\/(?:fortran-|borrador-fortran|curso-markdown\.ts$|curso-tipos\.ts$|catalogo-cursos\.ts$|iconos-curso\.ts$)/,
+  /^src\/content\/fortran-[^/]+\/(?!curso\.md$)/,
+  /^src\/lib\/(?:fortran-|borrador-fortran)/,
   /^src\/components\/curso\/(?:ConsolaFortran|PreparacionFortran|SandboxFortran|Consola|EjercicioPunto|BloqueCodigo)\.tsx$/,
-  /^src\/components\/Iconos\.tsx$/,
   /^src\/app\/rutas\/\[ruta\]\/sandbox\//,
   /^public\/(?:fortran|vendor\/xlfortran)\//,
   /^examples\/fortran\//,
