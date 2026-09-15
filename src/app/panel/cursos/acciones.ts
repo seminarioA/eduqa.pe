@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { parse as parseYaml } from "yaml";
 import { clienteServidor, usuarioActual } from "@/lib/supabase/servidor";
-import { construirCurso } from "@/lib/curso-markdown";
+import { codigoBaseDeFicha, construirCurso } from "@/lib/curso-markdown";
 import { esIconoCurso } from "@/lib/iconos-curso";
 
 export type EstadoPublicacion = { ok: boolean; error?: string; detalle?: string };
@@ -166,6 +166,12 @@ export async function publicarCurso(
   const ficha = frontmatter(archivos.get("curso.md")!);
   const slug = String(ficha.slug ?? "").trim();
   if (!slug) return { ok: false, error: "La ficha no declara un slug." };
+  let codigoBase: string | null;
+  try {
+    codigoBase = codigoBaseDeFicha(archivos.get("curso.md")!);
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
   if (!esIconoCurso(ficha.icono)) {
     return { ok: false, error: "Todo curso debe declarar un icono válido en curso.md." };
   }
@@ -181,10 +187,16 @@ export async function publicarCurso(
 
   const { data: existe, error: eExiste } = await supabase
     .from("cursos")
-    .select("slug, precio, estado, acceso_libre, orden, ruta, posicion, requisitos")
+    .select("slug, codigo_base, precio, estado, acceso_libre, orden, ruta, posicion, requisitos")
     .eq("slug", slug)
     .maybeSingle();
   if (eExiste) return { ok: false, error: `No se pudo leer la ficha actual: ${eExiste.message}` };
+  if (!existe && !codigoBase) {
+    return { ok: false, error: "Un curso nuevo debe declarar codigo: ABCD en curso.md." };
+  }
+  if (existe && codigoBase && codigoBase !== existe.codigo_base) {
+    return { ok: false, error: `El código de este curso es ${existe.codigo_base} y no cambia al republicarlo.` };
+  }
 
   const { publicacion, error: errorPublicacion } = leerPublicacion(ficha, existe);
   if (!publicacion) return { ok: false, error: errorPublicacion };
@@ -221,6 +233,7 @@ export async function publicarCurso(
   const { error: eCurso } = await supabase.from("cursos").upsert(
     {
       slug,
+      codigo_base: codigoBase ?? existe?.codigo_base,
       titulo: curso.titulo,
       resumen: curso.resumen,
       precio: publicacion.precio,
@@ -296,6 +309,12 @@ export async function publicarCurso(
     }
   }
 
+  const { data: codigoPublicado, error: eRevision } = await supabase
+    .rpc("registrar_revision_curso", { p_slug: slug });
+  if (eRevision) {
+    return { ok: false, error: `El material se guardó, pero no se pudo registrar su revisión: ${eRevision.message}` };
+  }
+
   revalidatePath("/cursos");
   revalidatePath("/panel/cursos");
   revalidatePath(`/cursos/${slug}`, "layout");
@@ -303,7 +322,7 @@ export async function publicarCurso(
 
   return {
     ok: true,
-    detalle: `«${curso.titulo}»: ${curso.lecciones.length} sesiones guardadas${
+    detalle: `«${curso.titulo}» (${codigoPublicado}): ${curso.lecciones.length} sesiones guardadas${
       publicacion.ruta ? ` en la ruta «${publicacion.ruta.nombre}»` : ""
     }. Ya está en línea, sin desplegar.`,
   };
@@ -328,6 +347,7 @@ export async function crearCurso(
   if (!usuario) return { ok: false, error: "Entra a tu cuenta primero." };
 
   const titulo = String(formData.get("titulo") ?? "").trim();
+  const codigoBase = String(formData.get("codigo") ?? "").trim().toUpperCase();
   const area = String(formData.get("area") ?? "").trim();
   const nivel = String(formData.get("nivel") ?? "INTRODUCCIÓN").trim();
   const icono = String(formData.get("icono") ?? "").trim();
@@ -335,6 +355,9 @@ export async function crearCurso(
   const precio = Number(formData.get("precio") ?? 20);
 
   if (titulo.length < 4) return { ok: false, error: "El título es muy corto." };
+  if (!/^[A-Z]{4}$/.test(codigoBase)) {
+    return { ok: false, error: "El código debe tener exactamente cuatro letras (por ejemplo, INPY)." };
+  }
   if (!area) return { ok: false, error: "Elige un área." };
   if (!esIconoCurso(icono)) return { ok: false, error: "Elige un icono válido para el curso." };
   if (!Number.isFinite(horas) || horas <= 0) return { ok: false, error: "Las horas no son válidas." };
@@ -359,8 +382,17 @@ export async function crearCurso(
     .maybeSingle();
   if (ocupado) return { ok: false, error: `Ya existe un curso en /${slug}.` };
 
+  const { data: codigoOcupado, error: eCodigo } = await supabase
+    .from("cursos")
+    .select("slug")
+    .eq("codigo_base", codigoBase)
+    .maybeSingle();
+  if (eCodigo) return { ok: false, error: `No se pudo comprobar el código: ${eCodigo.message}` };
+  if (codigoOcupado) return { ok: false, error: `${codigoBase} ya pertenece a otro curso.` };
+
   const { error: eCurso } = await supabase.from("cursos").insert({
     slug,
+    codigo_base: codigoBase,
     titulo,
     resumen: "",
     precio,
@@ -373,6 +405,7 @@ export async function crearCurso(
   const fichaMd = [
     "---",
     `slug: ${slug}`,
+    `codigo: ${codigoBase}`,
     `titulo: ${JSON.stringify(titulo)}`,
     'resumen: "Escribe aquí de qué va el curso y para quién es."',
     `area: ${JSON.stringify(area)}`,
@@ -414,6 +447,9 @@ export async function crearCurso(
     slug: "sesion-1",
   });
   if (eIndice) return { ok: false, error: `No se pudo guardar el temario: ${eIndice.message}` };
+
+  const { error: eRevision } = await supabase.rpc("registrar_revision_curso", { p_slug: slug });
+  if (eRevision) return { ok: false, error: `No se pudo registrar la revisión: ${eRevision.message}` };
 
   revalidatePath("/panel/cursos");
   revalidatePath("/cursos");

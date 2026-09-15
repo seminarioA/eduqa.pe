@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, Download, ExternalLink, Presentation } from "lucide-react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 
@@ -86,11 +86,31 @@ export function VistaDiapositivas({
     };
   }, [documento, modo, pagina]);
 
-  function cambiarPagina(siguiente: number) {
+  const cambiarPagina = useCallback((siguiente: number) => {
     if (!documento || siguiente < 1 || siguiente > documento.numPages) return;
     setPagina(siguiente);
     setPaginaEscrita(String(siguiente));
-  }
+  }, [documento]);
+
+  useEffect(() => {
+    if (modo !== "pdf" || !documento) return;
+    const navegar = (evento: KeyboardEvent) => {
+      const objetivo = evento.target as HTMLElement | null;
+      if (
+        objetivo?.matches("input, textarea, select, [contenteditable='true']")
+      ) return;
+
+      if (evento.key === "ArrowLeft") {
+        evento.preventDefault();
+        cambiarPagina(pagina - 1);
+      } else if (evento.key === "ArrowRight") {
+        evento.preventDefault();
+        cambiarPagina(pagina + 1);
+      }
+    };
+    window.addEventListener("keydown", navegar);
+    return () => window.removeEventListener("keydown", navegar);
+  }, [cambiarPagina, documento, modo, pagina]);
 
   function irAPagina(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();

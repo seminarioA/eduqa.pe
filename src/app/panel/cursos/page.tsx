@@ -9,7 +9,7 @@ import { Migas } from "@/components/Migas";
 import { PanelFormacionNav } from "@/components/PanelFormacionNav";
 import { FormularioCurso } from "./Formulario";
 import { CrearCurso } from "./Crear";
-import { TarjetaGestion } from "../TarjetaGestion";
+import { CatalogoGestion } from "./CatalogoGestion";
 
 export const metadata: Metadata = {
   title: "Gestión de Cursos & Microcursos — EDUQA.PE",
@@ -53,6 +53,26 @@ export default async function Page() {
     lista.push(nombrePorId.get(a.usuario_id) || "sin nombre");
     creadoresPorCurso.set(a.curso_slug, lista);
   }
+
+  const cursosGestion = catalogoCursos.map((curso) => {
+    const tarifa = tarifas.get(curso.slug);
+    return {
+      slug: curso.slug,
+      codigo: tarifa?.codigo ?? curso.codigoBase ?? null,
+      titulo: tarifa?.titulo ?? curso.titulo,
+      resumen: tarifa?.resumen ?? curso.resumen,
+      estado: tarifa?.estado ?? "publico",
+      precio: tarifa?.precio ?? 0,
+      accesoLibre: tarifa?.acceso_libre ?? false,
+      sesiones: curso.lecciones.length,
+      horas: curso.horas,
+      primeraLeccion: curso.lecciones[0].slug,
+      formato: curso.formato,
+      icono: curso.icono,
+      area: curso.area,
+      actualizadoEn: tarifa?.actualizado_en ?? "1970-01-01T00:00:00.000Z",
+    };
+  });
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-10 lg:pl-64 xl:pl-32 2xl:pl-6">
@@ -106,29 +126,7 @@ export default async function Page() {
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {catalogoCursos.map((c) => {
-            const t = tarifas.get(c.slug);
-            return (
-              <TarjetaGestion
-                key={c.slug}
-                curso={{
-                  slug: c.slug,
-                  titulo: t?.titulo ?? c.titulo,
-                  resumen: t?.resumen ?? c.resumen,
-                  estado: t?.estado ?? "publico",
-                  precio: t?.precio ?? 0,
-                  accesoLibre: t?.acceso_libre ?? false,
-                  sesiones: c.lecciones.length,
-                  horas: c.horas,
-                  primeraLeccion: c.lecciones[0].slug,
-                  formato: c.formato,
-                  icono: c.icono,
-                }}
-              />
-            );
-          })}
-        </div>
+        <CatalogoGestion cursos={cursosGestion} />
       </section>
 
       {/* Lista detallada de estado del repositorio vs base */}
@@ -144,7 +142,9 @@ export default async function Page() {
                 <BookOpen size={15} className="shrink-0 text-texto-tenue" aria-hidden="true" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-texto">{c.titulo}</p>
-                  <p className="font-mono text-[11px] text-texto-tenue">{c.slug}</p>
+                  <p className="font-mono text-[11px] text-texto-tenue">
+                    {tarifas.get(c.slug)?.codigo ?? "Sin código"} · {c.slug}
+                  </p>
                 </div>
                 {c.formato === "microcurso" && (
                   <span className="shrink-0 rounded-md bg-rojo-tenue px-2 py-0.5 text-[10px] font-semibold text-rojo-acento">

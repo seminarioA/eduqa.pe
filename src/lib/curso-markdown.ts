@@ -46,6 +46,16 @@ function separarFrontmatter(texto: string): [Frontmatter, string] {
   return [(parseYaml(cabecera) ?? {}) as Frontmatter, cuerpo.replace(/^\n/, "")];
 }
 
+/** El prefijo editorial vive en curso.md; la revisión la lleva la base. */
+export function codigoBaseDeFicha(texto: string): string | null {
+  const [ficha] = separarFrontmatter(texto);
+  if (ficha.codigo === undefined || ficha.codigo === null) return null;
+  if (typeof ficha.codigo !== "string" || !/^[A-Z]{4}$/.test(ficha.codigo)) {
+    throw new Error("codigo debe contener exactamente cuatro letras mayúsculas (por ejemplo, INPY).");
+  }
+  return ficha.codigo;
+}
+
 /*
  * El cuerpo se recorre línea a línea y no con una expresión regular sobre el
  * texto entero: las vallas de código pueden contener cualquier cosa, incluidos
@@ -336,6 +346,7 @@ export function construirCurso(
     throw new Error(`El curso ${nombre} no tiene curso.md.`);
   }
   const [ficha, cuerpo] = separarFrontmatter(fichaTexto);
+  const codigoBase = codigoBaseDeFicha(fichaTexto);
 
   // El preludio del curso va como una valla dentro de curso.md: es código y
   // en el frontmatter habría que escaparlo.
@@ -366,6 +377,7 @@ export function construirCurso(
 
   return {
     slug: String(ficha.slug ?? nombre),
+    ...(codigoBase ? { codigoBase } : {}),
     titulo: String(ficha.titulo ?? ""),
     resumen: String(ficha.resumen ?? ""),
     area: ficha.area as Curso["area"],

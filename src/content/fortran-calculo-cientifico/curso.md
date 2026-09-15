@@ -1,5 +1,6 @@
 ---
 slug: fortran-calculo-cientifico
+codigo: FOIN
 titulo: "Fortran intermedio"
 resumen: "Arreglos, memoria dinámica, precisión portable, procedimientos, módulos, tipos derivados y archivos aplicados a programas numéricos verificables."
 area: "Lenguajes"

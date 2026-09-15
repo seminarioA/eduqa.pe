@@ -157,6 +157,7 @@ function Contenido({
   seccionActiva,
   onNavegar,
   sandbox,
+  codigo,
 }: {
   curso: Curso;
   actual: Leccion;
@@ -164,6 +165,7 @@ function Contenido({
   seccionActiva: string | null;
   onNavegar?: () => void;
   sandbox?: string;
+  codigo?: string | null;
 }) {
   return (
     <nav className="flex h-full flex-col">
@@ -178,6 +180,11 @@ function Contenido({
       <div className="border-b border-borde px-4 py-3">
         <p className="text-xs uppercase tracking-wide text-texto-tenue">Curso</p>
         <p className="mt-1 text-sm font-semibold leading-snug">{curso.titulo}</p>
+        {codigo && (
+          <p className="mt-1.5 font-mono text-[10px] tracking-wider text-texto-tenue">
+            {codigo}
+          </p>
+        )}
         {sandbox && <Link href={sandbox} onClick={onNavegar} className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-rojo-acento hover:underline"><FlaskConical size={15} aria-hidden="true" />Sandbox de Fortran</Link>}
       </div>
 
@@ -203,11 +210,13 @@ export function BarraLateral({
   actual,
   inicio = "/cursos",
   sandbox,
+  codigo,
 }: {
   curso: Curso;
   actual: Leccion;
   inicio?: string;
   sandbox?: string;
+  codigo?: string | null;
 }) {
   const [movilAbierta, setMovilAbierta] = useState(false);
   const [plegada, setPlegada] = useState(false);
@@ -260,6 +269,7 @@ export function BarraLateral({
               actual={actual}
               inicio={inicio}
               sandbox={sandbox}
+              codigo={codigo}
               seccionActiva={seccionActiva}
               onNavegar={() => setMovilAbierta(false)}
             />
@@ -305,6 +315,7 @@ export function BarraLateral({
               actual={actual}
               inicio={inicio}
               sandbox={sandbox}
+              codigo={codigo}
               seccionActiva={seccionActiva}
             />
           </div>

@@ -149,6 +149,8 @@ export type Area = (typeof AREAS)[number];
 
 export type Curso = {
   slug: string;
+  /** Prefijo editorial declarado en curso.md; la revisión completa vive en Supabase. */
+  codigoBase?: string;
   titulo: string;
   resumen: string;
   area: Area;

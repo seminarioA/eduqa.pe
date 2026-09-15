@@ -1,5 +1,6 @@
 ---
 slug: fortran-ingenieria-software
+codigo: FISO
 titulo: "Fortran aplicado a la ingeniería de software"
 resumen: "Diseña bibliotecas, automatiza pruebas, valida archivos y conecta Fortran con C en un proyecto reproducible."
 area: "Lenguajes"

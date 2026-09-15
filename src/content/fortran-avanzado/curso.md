@@ -1,5 +1,6 @@
 ---
 slug: fortran-avanzado
+codigo: FOAV
 titulo: "Fortran avanzado"
 resumen: "Gestión de memoria, procedimientos genéricos, orientación a objetos y cálculo numérico robusto con Fortran moderno."
 area: "Lenguajes"

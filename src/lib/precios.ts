@@ -2,12 +2,15 @@ import { clienteServidor } from "@/lib/supabase/servidor";
 
 export type PrecioCurso = {
   slug: string;
+  /** Código editorial completo, incluida la revisión: INPY-0001. */
+  codigo: string;
   titulo: string;
   resumen: string | null;
   precio: number;
   estado: "borrador" | "privado" | "publico";
   /** El material se lee sin cuenta y sin matrícula. */
   acceso_libre: boolean;
+  actualizado_en: string;
 };
 
 /**
@@ -19,7 +22,7 @@ export async function precios(): Promise<Map<string, PrecioCurso>> {
   const supabase = await clienteServidor();
   const { data } = await supabase
     .from("cursos")
-    .select("slug, titulo, resumen, precio, estado, acceso_libre")
+    .select("slug, codigo, titulo, resumen, precio, estado, acceso_libre, actualizado_en")
     .order("orden");
 
   const mapa = new Map<string, PrecioCurso>();
@@ -27,6 +30,18 @@ export async function precios(): Promise<Map<string, PrecioCurso>> {
     mapa.set(c.slug, { ...c, precio: Number(c.precio) });
   }
   return mapa;
+}
+
+/** Código editorial visible de un curso, leído de la misma fuente que su ficha. */
+export async function codigoDeCurso(slug: string): Promise<string | null> {
+  const supabase = await clienteServidor();
+  const { data } = await supabase
+    .from("cursos")
+    .select("codigo")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  return data?.codigo ?? null;
 }
 
 /**

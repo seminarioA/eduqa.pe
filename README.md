@@ -104,6 +104,16 @@ Tipos permitidos: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `b
 [fix]: corregir validación de reportes
 ```
 
+Cada commit debe vincular uno o más tickets reales de este repositorio en el
+cuerpo. El hook local y CI validan la referencia; una entrega sin ticket no se
+promueve.
+
+```
+[fix] (catálogo): mostrar una sola acción para limpiar la búsqueda
+
+Refs: #6
+```
+
 ## CI
 
 El workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) corre en cada push y PR hacia `main`:

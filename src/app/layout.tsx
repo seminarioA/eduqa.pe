@@ -6,7 +6,6 @@ import { GUION_ARRANQUE } from "@/lib/cromatismo";
 import { BotonReporte } from "@/components/reportes/BotonReporte";
 import { BotonModoAdmin } from "@/components/BotonModoAdmin";
 import { Isla } from "@/components/Isla";
-import { cerrarSesion } from "@/app/acceder/acciones";
 import { perfilActual } from "@/lib/matriculas";
 import { esInterno } from "@/lib/roles";
 import { usuarioActual } from "@/lib/supabase/servidor";
@@ -62,7 +61,6 @@ export default async function RootLayout({
             esAdmin={perfil?.es_admin ?? false}
             esInterno={esInterno(perfil)}
             marcaSidebar={sidebar ?? null}
-            onSalir={cerrarSesion}
           />
           {children}
           {usuario && <BotonReporte esAdmin={perfil?.es_admin ?? false} />}

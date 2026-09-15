@@ -1,5 +1,6 @@
 ---
 slug: fortran-fundamentos
+codigo: INFO
 titulo: "Introducción a Fortran"
 resumen: "Fortran desde cero, un concepto por apartado. Programas breves, ejercicios en el navegador y referencias a la documentación de Fortran-lang y GNU Fortran."
 area: "Lenguajes"

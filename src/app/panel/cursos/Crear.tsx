@@ -50,6 +50,19 @@ export function CrearCurso() {
         </label>
 
         <label className="block text-xs font-medium text-texto-suave">
+          Código (4 letras)
+          <input
+            name="codigo"
+            required
+            minLength={4}
+            maxLength={4}
+            pattern="[A-Za-z]{4}"
+            placeholder="INPY"
+            className="mt-1 w-full rounded-lg border border-borde bg-fondo px-3 py-2 font-mono text-sm uppercase tracking-wider text-texto outline-none focus:border-rojo-acento"
+          />
+        </label>
+
+        <label className="block text-xs font-medium text-texto-suave">
           Área
           <select
             name="area"

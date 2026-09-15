@@ -11,7 +11,7 @@ import {
   type Seccion,
 } from "@/lib/cursos";
 import { estaMatriculado, perfilActual } from "@/lib/matriculas";
-import { esAccesoLibre } from "@/lib/precios";
+import { codigoDeCurso, esAccesoLibre } from "@/lib/precios";
 import { vistasDe } from "@/lib/progreso";
 import { AvanceLeccion } from "./AvanceLeccion";
 import { usuarioActual } from "@/lib/supabase/servidor";
@@ -155,8 +155,11 @@ export default async function Page({
   // Un curso de acceso libre se lee sin cuenta: ni sesión ni matrícula.
   // Esta es la única barrera de estas páginas, porque proxy.ts no filtra
   // las hijas de /cursos.
-  const libre = await esAccesoLibre(cursoSlug);
-  const usuario = await usuarioActual();
+  const [libre, codigo, usuario] = await Promise.all([
+    esAccesoLibre(cursoSlug),
+    codigoDeCurso(cursoSlug),
+    usuarioActual(),
+  ]);
 
   if (!libre) {
     if (!usuario) {
@@ -198,7 +201,7 @@ export default async function Page({
       {/* El intérprete se trae al abrir la sesión, no al pulsar Ejecutar. */}
       {ejecutable && <CargandoCurso paquetes={curso.paquetes} />}
 
-      <BarraLateral curso={curso} actual={leccion} inicio={usuario ? "/cursos" : "/"} sandbox={rutaFortran ? `/rutas/${rutaFortran.ruta}/sandbox` : undefined} />
+      <BarraLateral curso={curso} actual={leccion} codigo={codigo} inicio={usuario ? "/cursos" : "/"} sandbox={rutaFortran ? `/rutas/${rutaFortran.ruta}/sandbox` : undefined} />
 
       <main className="min-w-0 flex-1">
         <article className="mx-auto w-full max-w-3xl px-6 py-12 lg:px-10">

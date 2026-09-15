@@ -21,7 +21,11 @@ LLAMA = ImageReader(str(RAIZ / "scripts/assets/llama-eduqa.png"))
 LLAMA_BLANCA = ImageReader(str(RAIZ / "scripts/assets/llama-eduqa-blanca.png"))
 ICONO_SQLITE = ImageReader(str(RAIZ / "scripts/assets/sqlite-curso-gris.png"))
 ICONO_SQLITE_BLANCO = ImageReader(str(RAIZ / "scripts/assets/sqlite-curso-blanco.png"))
+# Canva presenta a 1920 x 1080. La composición se calcula en una cuadrícula
+# lógica de 960 x 540 y se escala al exportar: conserva tipografía, márgenes y
+# saltos mientras el PDF declara la resolución estándar completa.
 ANCHO, ALTO = 960, 540
+ESCALA_SALIDA = 2
 MARGEN = 72
 ANCHO_CONTENIDO = ANCHO - 2 * MARGEN
 BASE_CONTENIDO = 108
@@ -197,6 +201,7 @@ def paginar(pdf, pagina):
 
 
 def dibujar_portada(pdf, leccion):
+    pdf.scale(ESCALA_SALIDA, ESCALA_SALIDA)
     pdf.setFillColor(ROJO)
     pdf.rect(0, 0, ANCHO, ALTO, fill=1, stroke=0)
     pdf.drawImage(LLAMA_BLANCA, MARGEN, ALTO - 195, width=100, height=131, mask="auto")
@@ -226,6 +231,7 @@ def dibujar_portada(pdf, leccion):
 
 
 def dibujar_cierre(pdf, leccion):
+    pdf.scale(ESCALA_SALIDA, ESCALA_SALIDA)
     pdf.setFillColor(ROJO)
     pdf.rect(0, 0, ANCHO, ALTO, fill=1, stroke=0)
     pdf.drawImage(LLAMA_BLANCA, MARGEN, ALTO - 175, width=76, height=100, mask="auto")
@@ -244,6 +250,7 @@ def dibujar_cierre(pdf, leccion):
 
 
 def dibujar_pagina(pdf, leccion, fragmento, numero, total):
+    pdf.scale(ESCALA_SALIDA, ESCALA_SALIDA)
     pdf.setFillColor(colors.white)
     pdf.rect(0, 0, ANCHO, ALTO, fill=1, stroke=0)
     pdf.drawImage(LLAMA, MARGEN, ALTO - 87, width=23, height=30, mask="auto")
@@ -294,7 +301,11 @@ def main():
         if not leccion["paginas"]:
             raise ValueError(f"La sesión {leccion['slug']} no tiene diapositivas")
         archivo = DESTINO / f"{leccion['slug']}.pdf"
-        pdf = canvas.Canvas(str(archivo), pagesize=(ANCHO, ALTO), pageCompression=1)
+        pdf = canvas.Canvas(
+            str(archivo),
+            pagesize=(ANCHO * ESCALA_SALIDA, ALTO * ESCALA_SALIDA),
+            pageCompression=1,
+        )
         pdf.setTitle(f"{leccion['titulo']} - Introducción a SQLite con Python")
         pdf.setAuthor(leccion["autor"]["nombre"])
         fragmentos = [fragmento for pagina in leccion["paginas"] for fragmento in paginar(pdf, pagina)]

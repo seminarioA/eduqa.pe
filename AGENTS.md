@@ -38,6 +38,9 @@ todavía están en TypeScript. Al tocarlos, conviene pasarlos a Markdown.
 # Publicación
 
 - Trabajar en `dev`. Los pull requests se dirigen a `dev`, no a `main`.
+- Cada commit debe vincular uno o más tickets de GitHub en el cuerpo mediante
+  `Refs: #<número>`, `Closes: #<número>` o equivalente. El hook local y CI
+  rechazan entregas sin ticket o con una referencia que no sea un issue real.
 - El workflow valida mensajes, lint, tipos y pruebas rápidas en `dev`.
   Solo cuando pasa ejecuta en QA el build y las pruebas completas. Si todo pasa,
   promueve exactamente ese commit a `qa` y después de `qa` a `main`. GitHub

@@ -30,6 +30,7 @@ Las reglas de redacción están en `LINEAMIENTOS.md`, en la raíz.
 ```markdown
 ---
 slug: ia-generativa
+codigo: INIA
 titulo: "Introducción a la IA generativa con Python"
 resumen: "El SDK oficial de Google para Gemini: cliente, configuración…"
 area: "Inteligencia Artificial"
@@ -60,6 +61,7 @@ client = genai.Client(api_key="clave-de-practica")
 | Campo | Obligatorio | Qué es |
 |---|---|---|
 | `slug` | sí | La parte de la URL: `/cursos/<slug>/…` |
+| `codigo` | sí | Prefijo editorial único de cuatro letras mayúsculas, por ejemplo `INPY`. Supabase añade la revisión y muestra `INPY-0001` |
 | `titulo` | sí | Se muestra en el catálogo y en la barra lateral |
 | `resumen` | sí | Una o dos frases para la tarjeta |
 | `area` | sí | Una de las de `AREAS` en `src/lib/cursos.ts` |
@@ -79,6 +81,12 @@ de cursos que deben existir antes de publicar esta ficha. Cuando `curso.md`
 declara estos datos, el formulario de `/panel/cursos` actualiza la ficha, la
 ruta, la posición y los prerrequisitos junto con el contenido. No hace falta
 editar TypeScript, escribir SQL ni volver a desplegar.
+
+El prefijo `codigo` identifica al curso y no cambia al republicarlo. La base
+administra la revisión de cuatro dígitos: comienza en `0001` y aumenta cuando
+cambia el título, el resumen o cualquiera de los archivos Markdown. Cambiar
+precio, acceso o visibilidad conserva la revisión porque no altera el material
+académico.
 
 El bloque **`preludio`** es código que se ejecuta una vez antes que cualquier
 otro, para dejar preparado lo que las sesiones dan por hecho: una conexión, un

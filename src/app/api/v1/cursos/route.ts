@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { construirCurso } from "@/lib/curso-markdown";
+import { codigoBaseDeFicha, construirCurso } from "@/lib/curso-markdown";
 import { PREFIJO, resumir } from "@/lib/claves-api";
 
 /**
@@ -65,8 +65,10 @@ export async function POST(peticion: Request) {
   // Se construye antes de guardar: un temario mal escrito se rechaza aquí y no
   // cuando un alumno abra la página.
   let curso;
+  let codigoBase: string | null;
   try {
     curso = construirCurso(cuerpo.slug ?? "curso", mapa);
+    codigoBase = codigoBaseDeFicha(archivos["curso.md"]);
   } catch (e) {
     return error(422, "El curso no se pudo leer.", (e as Error).message);
   }
@@ -76,7 +78,7 @@ export async function POST(peticion: Request) {
     return error(400, "El slug solo admite minúsculas, números y guiones.");
   }
 
-  const { error: eGuardado } = await supabase.rpc("publicar_curso_por_api", {
+  const { data: codigo, error: eGuardado } = await supabase.rpc("publicar_curso_por_api", {
     p_resumen: resumir(clave),
     p_slug: slug,
     p_titulo: curso.titulo,
@@ -90,6 +92,7 @@ export async function POST(peticion: Request) {
       titulo: l.titulo,
       slug: l.slug,
     })),
+    p_codigo_base: codigoBase,
   });
 
   if (eGuardado) return error(500, "No se pudo guardar el curso.", eGuardado.message);
@@ -97,6 +100,7 @@ export async function POST(peticion: Request) {
   return NextResponse.json({
     ok: true,
     slug,
+    codigo,
     titulo: curso.titulo,
     sesiones: curso.lecciones.map((l) => ({ numero: l.numero, slug: l.slug, titulo: l.titulo })),
     bloques: curso.lecciones.reduce((n, l) => n + l.bloques.length, 0),

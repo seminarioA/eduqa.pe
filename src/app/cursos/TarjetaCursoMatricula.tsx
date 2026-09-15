@@ -15,6 +15,7 @@ import type { FormatoCurso } from "@/lib/curso-tipos";
 
 export type DatosCurso = {
   slug: string;
+  codigo: string;
   titulo: string;
   resumen: string;
   nivel: string;
@@ -87,7 +88,11 @@ export function TarjetaCursoMatricula({
         </div>
       </div>
 
-      <h2 className="mt-4 text-base font-semibold leading-snug group-hover:text-rojo-acento">
+      <p className="mt-3 font-mono text-[10px] tracking-wider text-texto-tenue">
+        {curso.codigo}
+      </p>
+
+      <h2 className="mt-2 text-base font-semibold leading-snug group-hover:text-rojo-acento">
         {curso.titulo}
       </h2>
       <p className="mt-2 line-clamp-4 flex-1 text-sm leading-relaxed text-texto-suave">

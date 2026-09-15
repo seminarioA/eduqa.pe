@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  issues: read
 
 concurrency:
   group: promocion-${{ github.ref }}
@@ -35,6 +36,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           BEFORE_SHA: ${{ github.event.before }}
           BASE_REF: ${{ github.base_ref }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           if [ "$EVENT_NAME" = "pull_request" ]; then
             git fetch origin "$BASE_REF"
@@ -48,8 +50,10 @@ jobs:
           # Valida los commits de dev; un merge de main puede contener commits
           # ya publicados con otro formato que no pertenecen a esta entrega.
           git log --first-parent --format=%s "$BASE_SHA..HEAD" | npx --no -- commitlint
+          git log --first-parent --format='%B%x00' "$BASE_SHA..HEAD" | node scripts/validar-tickets-commit.mjs --github
           git diff --name-only "$BASE_SHA" HEAD | node scripts/alcance-ci.mjs "$BASE_SHA" >> "$GITHUB_OUTPUT"
       - run: node --test scripts/alcance-ci.test.mjs
+      - run: npm run test:tickets
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test:marca

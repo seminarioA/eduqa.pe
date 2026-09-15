@@ -57,7 +57,17 @@ export async function guardarCurso(
   // RLS no lanza error cuando deniega: simplemente no afecta ninguna fila.
   if (count === 0) return { ok: false, error: "No tienes permiso para editar cursos." };
 
+  // Solo cambia la revisión cuando el título, el resumen o el material son
+  // distintos. Precio, acceso y estado comercial no alteran el contenido.
+  const { error: errorRevision } = await supabase
+    .rpc("registrar_revision_curso", { p_slug: slug });
+  if (errorRevision) {
+    console.error("[guardarCurso:revision]", errorRevision);
+    return { ok: false, error: "El curso se guardó, pero no se pudo registrar su revisión." };
+  }
+
   revalidatePath("/cursos");
+  revalidatePath("/panel/cursos");
   revalidatePath("/panel");
   return { ok: true };
 }

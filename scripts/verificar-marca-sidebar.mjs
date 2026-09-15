@@ -76,4 +76,14 @@ assert.match(leer("src/app/layout.tsx"), /const inter = Inter\(\{ variable: "--f
 assert.match(leer("src/app/layout.tsx"), /<body className="[^"]*\bfont-sans\b/);
 assert.match(leer("src/app/globals.css"), /--font-sans:\s*var\(--font-inter\)/);
 
+const barraGeneral = leer("src/components/Isla.tsx");
+assert.doesNotMatch(barraGeneral, /Cerrar sesión|LogOut|onSalir/);
+assert.match(
+  barraGeneral,
+  /bg-rojo-tenue font-medium text-rojo-acento/,
+  "La barra general debe conservar el mismo estado activo que el índice del curso",
+);
+assert.match(barraGeneral, /hover:bg-superficie/);
+assert.match(barraGeneral, /focus-visible:outline-rojo-acento/);
+
 console.log("Marca lateral: Inter, 14 px, peso 700 y espaciado idénticos en ambas barras.");

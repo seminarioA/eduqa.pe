@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+set -e
+
+mensajes="$(mktemp)"
+trap 'rm -f "$mensajes"' EXIT
+cero="0000000000000000000000000000000000000000"
+
+while read -r referencia_local sha_local referencia_remota sha_remoto; do
+  case "$referencia_remota" in
+    refs/heads/main|refs/heads/qa)
+      echo "Los pushes manuales a main y qa están prohibidos; publica en dev."
+      exit 1
+      ;;
+  esac
+
+  case "$referencia_local" in
+    refs/heads/*)
+      if [ "$sha_local" = "$cero" ]; then
+        continue
+      elif [ "$sha_remoto" = "$cero" ]; then
+        git log --format='%B%x00' "$sha_local" --not --remotes=origin >> "$mensajes"
+      else
+        git log --format='%B%x00' "$sha_remoto..$sha_local" >> "$mensajes"
+      fi
+      ;;
+  esac
+done
+
+if [ -s "$mensajes" ]; then
+  node scripts/validar-tickets-commit.mjs "$mensajes"
+fi

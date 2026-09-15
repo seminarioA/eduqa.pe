@@ -10,7 +10,6 @@ import {
   GraduationCap,
   LayoutDashboard,
   LogIn,
-  LogOut,
   Megaphone,
   Newspaper,
   PanelLeftClose,
@@ -69,7 +68,6 @@ export function Isla({
   esAdmin,
   esInterno = false,
   marcaSidebar = null,
-  onSalir,
 }: {
   autenticado: boolean;
   esAdmin: boolean;
@@ -77,7 +75,6 @@ export function Isla({
   esInterno?: boolean;
   /** SVG personalizado de la marca para la barra lateral; null usa la llama original. */
   marcaSidebar?: string | null;
-  onSalir: () => void;
 }) {
   const ruta = usePathname();
   const colapsada = useSyncExternalStore(
@@ -170,9 +167,9 @@ export function Isla({
               href={href}
               title={etiqueta}
               aria-label={etiqueta}
-              className={`sidebar-enlace flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+              className={`sidebar-enlace flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento ${
                 activo
-                  ? "bg-superficie font-medium text-texto shadow-sm ring-1 ring-borde"
+                  ? "bg-rojo-tenue font-medium text-rojo-acento"
                   : "text-texto-suave hover:bg-superficie"
               }`}
             >
@@ -190,7 +187,7 @@ export function Isla({
             title="Ajustes"
             aria-label="Ajustes"
             aria-current={ruta.startsWith("/ajustes") ? "page" : undefined}
-            className={`sidebar-enlace flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${ruta.startsWith("/ajustes") ? "bg-superficie font-medium text-texto shadow-sm ring-1 ring-borde" : "text-texto-suave hover:bg-superficie"}`}
+            className={`sidebar-enlace flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento ${ruta.startsWith("/ajustes") ? "bg-rojo-tenue font-medium text-rojo-acento" : "text-texto-suave hover:bg-superficie"}`}
           >
             <Settings size={18} className={`shrink-0 ${ruta.startsWith("/ajustes") ? "text-rojo-acento" : ""}`} />
             <span className="sidebar-etiqueta truncate">Ajustes</span>
@@ -212,18 +209,6 @@ export function Isla({
           <PanelLeftClose size={18} className="sidebar-icono-expandido" aria-hidden="true" />
           <PanelLeftOpen size={18} className="sidebar-icono-colapsado" aria-hidden="true" />
         </button>
-        {autenticado && (
-          <button
-            type="button"
-            onClick={onSalir}
-            title="Cerrar sesión"
-            aria-label="Cerrar sesión"
-            className="sidebar-enlace flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-texto-suave transition-colors hover:bg-superficie"
-          >
-            <LogOut size={16} className="shrink-0" />
-            <span className="sidebar-etiqueta truncate">Cerrar sesión</span>
-          </button>
-        )}
       </div>
     </nav>
   );

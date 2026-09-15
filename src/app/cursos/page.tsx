@@ -76,6 +76,7 @@ export default async function Page() {
       <Listado
         populares={ordenarPorPopularidad(disponibles, cuentas).map((c) => ({
           slug: c.slug,
+          codigo: tarifas.get(c.slug)!.codigo,
           titulo: tarifas.get(c.slug)?.titulo ?? c.titulo,
           resumen: tarifas.get(c.slug)?.resumen ?? c.resumen,
           primeraLeccion: c.lecciones[0].slug,
@@ -151,6 +152,7 @@ export default async function Page() {
           const t = tarifas.get(c.slug);
           return {
             slug: c.slug,
+            codigo: t!.codigo,
             titulo: t?.titulo ?? c.titulo,
             resumen: t?.resumen ?? c.resumen,
             area: c.area,

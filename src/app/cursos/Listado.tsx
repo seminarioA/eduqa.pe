@@ -135,10 +135,10 @@ export function Listado({
 
   return (
     <>
-      {/* Una sola fila: marca, búsqueda, filtros y cuenta. */}
+      {/* El buscador abre la fila; los avisos quedan inmediatamente a su
+          derecha y la cuenta al extremo. Los filtros pertenecen al listado
+          total, no a la cabecera de toda la página. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
-        {cabecera}
-
         <div className="relative min-w-40 flex-1">
           <Search
             size={16}
@@ -151,7 +151,7 @@ export function Listado({
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder="Buscar un curso"
             aria-label="Buscar un curso"
-            className="w-full rounded-lg border border-borde-fuerte bg-fondo py-2.5 pl-10 pr-10 text-sm text-texto placeholder:text-texto-tenue focus:border-rojo-acento focus:outline-none focus:ring-1 focus:ring-rojo-acento"
+            className="buscador-cursos w-full rounded-lg border border-borde-fuerte bg-fondo py-2.5 pl-10 pr-10 text-sm text-texto placeholder:text-texto-tenue focus:border-rojo-acento focus:outline-none focus:ring-1 focus:ring-rojo-acento"
           />
           {busqueda && (
             <button
@@ -165,39 +165,13 @@ export function Listado({
           )}
         </div>
 
-        <Selector
-          etiqueta="Filtrar por área"
-          valor={area}
-          onCambio={setArea}
-          opciones={[
-            { valor: TODAS, etiqueta: `Todas (${cursos.length})` },
-            ...areas.map((a) => ({
-              valor: a.nombre,
-              etiqueta: `${a.nombre} (${a.total})`,
-            })),
-          ]}
-        />
-
-        <Selector
-          etiqueta="Ordenar por"
-          valor={orden}
-          onCambio={(v) => setOrden(v as Orden)}
-          opciones={ORDENES.map((o) => ({ valor: o.valor, etiqueta: o.etiqueta }))}
-        />
-
+        {cabecera}
         {acciones}
       </div>
 
       {entreBarraYRejilla}
 
-      {visibles.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-borde bg-superficie px-5 py-8 text-center text-sm text-texto-suave">
-          {busqueda
-            ? `Ningún curso coincide con "${busqueda}".`
-            : "Todavía no hay cursos en esta área."}
-        </p>
-      ) : (
-        <div className="mt-8 space-y-8">
+      <div className="mt-8 space-y-8">
           {sinFiltrar && populares.length > 0 && (
             <section aria-labelledby="catalogo-populares">
               <h2
@@ -250,7 +224,7 @@ export function Listado({
               ? "border-t border-borde pt-8"
               : undefined}
           >
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <div className="mb-4 flex flex-wrap items-center gap-2">
               <h2
                 id="catalogo-todos"
                 className="flex items-center gap-2 text-xl font-semibold tracking-tight"
@@ -262,23 +236,48 @@ export function Listado({
                   esAdmin={esAdmin && sinFiltrar}
                 />
               </h2>
-              <p className="text-sm text-texto-suave">
+              <p className="mr-auto text-sm text-texto-suave">
                 {visibles.length} {visibles.length === 1 ? "curso" : "cursos"}
               </p>
+              <Selector
+                etiqueta="Filtrar por área"
+                valor={area}
+                onCambio={setArea}
+                opciones={[
+                  { valor: TODAS, etiqueta: `Todas (${cursos.length})` },
+                  ...areas.map((a) => ({
+                    valor: a.nombre,
+                    etiqueta: `${a.nombre} (${a.total})`,
+                  })),
+                ]}
+              />
+              <Selector
+                etiqueta="Ordenar por"
+                valor={orden}
+                onCambio={(v) => setOrden(v as Orden)}
+                opciones={ORDENES.map((o) => ({ valor: o.valor, etiqueta: o.etiqueta }))}
+              />
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {visibles.map((c) => (
-                <TarjetaCursoMatricula
-                  key={c.slug}
-                  curso={c}
-                  alTope={alTope}
-                  esAdmin={esAdmin}
-                />
-              ))}
-            </div>
+            {visibles.length === 0 ? (
+              <p className="rounded-xl border border-borde bg-superficie px-5 py-8 text-center text-sm text-texto-suave">
+                {busqueda
+                  ? `Ningún curso coincide con "${busqueda}".`
+                  : "Todavía no hay cursos en esta área."}
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {visibles.map((c) => (
+                  <TarjetaCursoMatricula
+                    key={c.slug}
+                    curso={c}
+                    alTope={alTope}
+                    esAdmin={esAdmin}
+                  />
+                ))}
+              </div>
+            )}
           </section>
         </div>
-      )}
     </>
   );
 }
