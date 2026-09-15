@@ -17,7 +17,10 @@ import { AvanceLeccion } from "./AvanceLeccion";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { marcaActual } from "@/lib/marca";
 import { Boton } from "@/components/ui";
-import { BarraLateral } from "@/components/curso/BarraLateral";
+import {
+  BarraLateral,
+  type HerramientaCurso,
+} from "@/components/curso/BarraLateral";
 import { BloqueCodigo } from "@/components/curso/BloqueCodigo";
 import { SeccionPlegable } from "@/components/curso/SeccionPlegable";
 import { Migas } from "@/components/Migas";
@@ -183,6 +186,28 @@ export default async function Page({
   const ejecutable = CON_CONSOLA.has(`${cursoSlug}/${leccionSlug}`);
   const esFortran = curso.icono === "fortran" || leccion.bloques.some(b => b.tipo === "codigo" && b.lenguaje === "fortran");
   const rutaFortran = esFortran ? (await rutaDeCadaCurso()).get(cursoSlug) : undefined;
+  const herramientas: HerramientaCurso[] = rutaFortran
+    ? [
+        {
+          href: `/rutas/${rutaFortran.ruta}/sandbox`,
+          etiqueta: "Sandbox de Fortran",
+          tipo: "sandbox",
+        },
+      ]
+    : cursoSlug === "python"
+      ? [
+          {
+            href: "/cursos/python/sandbox",
+            etiqueta: "Sandbox de Python",
+            tipo: "sandbox",
+          },
+          {
+            href: "/cursos/python/quiz",
+            etiqueta: "Quiz de Python",
+            tipo: "quiz",
+          },
+        ]
+      : [];
 
   // Sin sesión no hay progreso que guardar: el botón no se pinta.
   const vistas = usuario ? await vistasDe(cursoSlug) : new Set<string>();
@@ -201,7 +226,13 @@ export default async function Page({
       {/* El intérprete se trae al abrir la sesión, no al pulsar Ejecutar. */}
       {ejecutable && <CargandoCurso paquetes={curso.paquetes} />}
 
-      <BarraLateral curso={curso} actual={leccion} codigo={codigo} inicio={usuario ? "/cursos" : "/"} sandbox={rutaFortran ? `/rutas/${rutaFortran.ruta}/sandbox` : undefined} />
+      <BarraLateral
+        curso={curso}
+        actual={leccion}
+        codigo={codigo}
+        inicio={usuario ? "/cursos" : "/"}
+        herramientas={herramientas}
+      />
 
       <main className="min-w-0 flex-1">
         <article className="mx-auto w-full max-w-3xl px-6 py-12 lg:px-10">

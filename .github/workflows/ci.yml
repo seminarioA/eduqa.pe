@@ -59,6 +59,7 @@ jobs:
       - run: npm run test:marca
       - run: npm run test:catalogo
       - run: npm run test:panel
+      - run: npm run test:python:tools
 
   qa:
     name: Compilar y probar para qa

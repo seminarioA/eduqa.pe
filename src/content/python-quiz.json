@@ -1,0 +1,181 @@
+[
+  {
+    "id": "s1-asignacion",
+    "sesion": 1,
+    "tema": "Variables",
+    "pregunta": "¿Qué describe mejor la sentencia precio = 2500?",
+    "opciones": [
+      "Vincula el nombre precio con el objeto entero 2500",
+      "Declara precio como entero de 32 bits",
+      "Convierte el texto precio al número 2500",
+      "Imprime el número 2500"
+    ],
+    "correcta": 0,
+    "explicacion": "La asignación vincula un nombre con un objeto. En Python el tipo pertenece al objeto y no hace falta declararlo antes."
+  },
+  {
+    "id": "s1-flotantes",
+    "sesion": 1,
+    "tema": "Números",
+    "pregunta": "¿Por qué 0.1 + 0.2 puede producir 0.30000000000000004?",
+    "opciones": [
+      "Porque print agrega cifras al resultado",
+      "Porque esas fracciones no tienen representación binaria exacta",
+      "Porque Python usa enteros para guardar decimales",
+      "Porque el operador + concatena números"
+    ],
+    "correcta": 1,
+    "explicacion": "float usa la representación binaria IEEE 754. Algunas fracciones decimales se almacenan como aproximaciones."
+  },
+  {
+    "id": "s1-input",
+    "sesion": 1,
+    "tema": "Entrada",
+    "pregunta": "¿Qué tipo devuelve input() antes de hacer una conversión?",
+    "opciones": ["int", "float", "str", "bool"],
+    "correcta": 2,
+    "explicacion": "input() devuelve siempre str. Para sumar la edad como número, por ejemplo, hay que aplicar int()."
+  },
+  {
+    "id": "s1-division-entera",
+    "sesion": 1,
+    "tema": "Operadores",
+    "pregunta": "¿Qué imprime print(20 // 3)?",
+    "opciones": ["6", "6.0", "6.666666666666667", "2"],
+    "correcta": 0,
+    "explicacion": "// es división entera y devuelve el cociente redondeado hacia menos infinito. El resto de 20 entre 3 sería 2 con %."
+  },
+  {
+    "id": "s2-indice-negativo",
+    "sesion": 2,
+    "tema": "Listas",
+    "pregunta": "En ventas = [1200, 850, 1400, 990], ¿qué devuelve ventas[-1]?",
+    "opciones": ["1200", "850", "1400", "990"],
+    "correcta": 3,
+    "explicacion": "Los índices negativos cuentan desde el final. -1 corresponde al último elemento."
+  },
+  {
+    "id": "s2-sorted",
+    "sesion": 2,
+    "tema": "Listas",
+    "pregunta": "¿Qué ocurre al ejecutar ordenadas = sorted(ventas)?",
+    "opciones": [
+      "ventas se ordena y sorted devuelve None",
+      "Se crea una lista ordenada y ventas permanece intacta",
+      "Se crea una tupla ordenada",
+      "Solo se ordenan los valores repetidos"
+    ],
+    "correcta": 1,
+    "explicacion": "sorted() devuelve una lista nueva. El método list.sort(), en cambio, modifica la lista en sitio y devuelve None."
+  },
+  {
+    "id": "s2-dict-get",
+    "sesion": 2,
+    "tema": "Diccionarios",
+    "pregunta": "Si la clave meta no existe, ¿qué devuelve vendedor.get(\"meta\")?",
+    "opciones": ["KeyError", "False", "Una cadena vacía", "None"],
+    "correcta": 3,
+    "explicacion": "get() devuelve None cuando falta la clave. También admite un segundo argumento para indicar otro valor por defecto."
+  },
+  {
+    "id": "s2-conjuntos",
+    "sesion": 2,
+    "tema": "Conjuntos",
+    "pregunta": "¿Qué propiedad distingue a un set de una lista?",
+    "opciones": [
+      "Mantiene cada valor repetido",
+      "Solo admite números",
+      "No admite elementos repetidos",
+      "Permite acceder por índice"
+    ],
+    "correcta": 2,
+    "explicacion": "Un conjunto elimina duplicados y no garantiza un orden para acceder por posición."
+  },
+  {
+    "id": "s3-if-indentacion",
+    "sesion": 3,
+    "tema": "Condicionales",
+    "pregunta": "¿Por qué las líneas dentro de un if deben llevar sangría?",
+    "opciones": [
+      "Porque la sangría delimita el bloque en la sintaxis de Python",
+      "Porque print solo funciona con cuatro espacios",
+      "Porque mejora el rendimiento del intérprete",
+      "Porque convierte la condición a bool"
+    ],
+    "correcta": 0,
+    "explicacion": "La indentación forma parte de la sintaxis y delimita el bloque que depende de la condición."
+  },
+  {
+    "id": "s3-range",
+    "sesion": 3,
+    "tema": "Bucles",
+    "pregunta": "¿Qué valores produce range(1, 4)?",
+    "opciones": ["0, 1, 2, 3", "1, 2, 3", "1, 2, 3, 4", "0, 1, 2, 3, 4"],
+    "correcta": 1,
+    "explicacion": "El inicio se incluye y el fin se excluye, por lo que se obtienen 1, 2 y 3."
+  },
+  {
+    "id": "s3-zip",
+    "sesion": 3,
+    "tema": "Iteración",
+    "pregunta": "Sin strict=True, ¿qué hace zip() cuando las secuencias tienen distinta longitud?",
+    "opciones": [
+      "Completa con None",
+      "Repite el último valor",
+      "Lanza siempre ValueError",
+      "Se detiene al terminar la secuencia más corta"
+    ],
+    "correcta": 3,
+    "explicacion": "zip() se detiene en la secuencia más corta. Desde Python 3.10, strict=True permite detectar longitudes distintas."
+  },
+  {
+    "id": "s3-break",
+    "sesion": 3,
+    "tema": "Control de bucles",
+    "pregunta": "¿Qué palabra termina por completo el bucle actual?",
+    "opciones": ["continue", "return", "break", "pass"],
+    "correcta": 2,
+    "explicacion": "break termina el bucle. continue solo salta el resto de la iteración actual y pasa a la siguiente."
+  },
+  {
+    "id": "s4-sin-return",
+    "sesion": 4,
+    "tema": "Funciones",
+    "pregunta": "¿Qué devuelve una función que termina sin ejecutar return?",
+    "opciones": ["0", "False", "Una cadena vacía", "None"],
+    "correcta": 3,
+    "explicacion": "Una función sin return devuelve None. Imprimir un valor y devolverlo son operaciones distintas."
+  },
+  {
+    "id": "s4-default-mutable",
+    "sesion": 4,
+    "tema": "Funciones",
+    "pregunta": "¿Por qué se evita usar una lista como valor por defecto de un parámetro?",
+    "opciones": [
+      "Porque las listas no se pueden pasar a funciones",
+      "Porque el mismo objeto se comparte entre llamadas",
+      "Porque Python convierte la lista en tupla",
+      "Porque return no admite listas"
+    ],
+    "correcta": 1,
+    "explicacion": "El valor por defecto se evalúa una sola vez al definir la función. Usar None permite crear una lista nueva en cada llamada."
+  },
+  {
+    "id": "s4-modulos",
+    "sesion": 4,
+    "tema": "Módulos",
+    "pregunta": "Después de ejecutar import math, ¿cómo se calcula la raíz de 16?",
+    "opciones": ["sqrt.math(16)", "math.sqrt(16)", "import.sqrt(16)", "math->sqrt(16)"],
+    "correcta": 1,
+    "explicacion": "Al importar el módulo completo, sus nombres se consultan con la notación de punto: math.sqrt(16)."
+  },
+  {
+    "id": "s4-value-error",
+    "sesion": 4,
+    "tema": "Excepciones",
+    "pregunta": "¿Qué excepción concreta conviene capturar al ejecutar int(\"treinta\")?",
+    "opciones": ["IndexError", "KeyError", "ValueError", "NameError"],
+    "correcta": 2,
+    "explicacion": "int() lanza ValueError cuando la cadena no representa un entero. Capturar la excepción concreta evita ocultar otros fallos."
+  }
+]

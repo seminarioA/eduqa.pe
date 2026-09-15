@@ -3,10 +3,25 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { ChevronRight, FlaskConical, Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
+import {
+  ChevronRight,
+  FlaskConical,
+  ListChecks,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+  X,
+} from "lucide-react";
 import type { Curso, Leccion } from "@/lib/cursos";
 import { Llama } from "@/components/Llama";
 import { MarcaTextoLateral } from "@/components/MarcaTextoLateral";
+
+export type HerramientaCurso = {
+  href: string;
+  etiqueta: string;
+  tipo: "sandbox" | "quiz";
+  activa?: boolean;
+};
 
 /**
  * Devuelve el id de la sección que se está leyendo.
@@ -67,14 +82,14 @@ function Indice({
   onNavegar,
 }: {
   curso: Curso;
-  actual: Leccion;
+  actual?: Leccion;
   seccionActiva: string | null;
   onNavegar?: () => void;
 }) {
   return (
     <ol className="space-y-1">
       {curso.lecciones.map((l) => {
-        const activa = l.slug === actual.slug;
+        const activa = l.slug === actual?.slug;
         return (
           <li key={l.slug}>
             <Collapsible.Root defaultOpen={activa}>
@@ -156,15 +171,15 @@ function Contenido({
   inicio,
   seccionActiva,
   onNavegar,
-  sandbox,
+  herramientas,
   codigo,
 }: {
   curso: Curso;
-  actual: Leccion;
+  actual?: Leccion;
   inicio: string;
   seccionActiva: string | null;
   onNavegar?: () => void;
-  sandbox?: string;
+  herramientas?: HerramientaCurso[];
   codigo?: string | null;
 }) {
   return (
@@ -185,7 +200,29 @@ function Contenido({
             {codigo}
           </p>
         )}
-        {sandbox && <Link href={sandbox} onClick={onNavegar} className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-rojo-acento hover:underline"><FlaskConical size={15} aria-hidden="true" />Sandbox de Fortran</Link>}
+        {herramientas && herramientas.length > 0 && (
+          <div className="mt-3 space-y-1">
+            {herramientas.map((herramienta) => {
+              const Icono = herramienta.tipo === "sandbox" ? FlaskConical : ListChecks;
+              return (
+                <Link
+                  key={herramienta.href}
+                  href={herramienta.href}
+                  onClick={onNavegar}
+                  aria-current={herramienta.activa ? "page" : undefined}
+                  className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rojo-acento ${
+                    herramienta.activa
+                      ? "bg-rojo-tenue font-medium text-rojo-acento"
+                      : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
+                  }`}
+                >
+                  <Icono size={15} aria-hidden="true" />
+                  {herramienta.etiqueta}
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-4">
@@ -209,20 +246,23 @@ export function BarraLateral({
   curso,
   actual,
   inicio = "/cursos",
-  sandbox,
+  herramientas,
   codigo,
 }: {
   curso: Curso;
-  actual: Leccion;
+  actual?: Leccion;
   inicio?: string;
-  sandbox?: string;
+  herramientas?: HerramientaCurso[];
   codigo?: string | null;
 }) {
   const [movilAbierta, setMovilAbierta] = useState(false);
   const [plegada, setPlegada] = useState(false);
   // Memorizado: `map` devolvería un array nuevo en cada render y el efecto
   // del observador volvería a montarse sin parar.
-  const ids = useMemo(() => actual.secciones.map((s) => s.id), [actual.secciones]);
+  const ids = useMemo(
+    () => actual?.secciones.map((s) => s.id) ?? [],
+    [actual?.secciones],
+  );
   const seccionActiva = useSeccionVisible(ids);
 
   // La barra de direcciones acompaña a la lectura, así que copiar la URL da un
@@ -268,7 +308,7 @@ export function BarraLateral({
               curso={curso}
               actual={actual}
               inicio={inicio}
-              sandbox={sandbox}
+              herramientas={herramientas}
               codigo={codigo}
               seccionActiva={seccionActiva}
               onNavegar={() => setMovilAbierta(false)}
@@ -297,7 +337,22 @@ export function BarraLateral({
             <Link href={inicio} aria-label="Volver">
               <Llama className="h-8 w-auto text-rojo-acento" />
             </Link>
-            {sandbox && <Link href={sandbox} aria-label="Sandbox de Fortran" className="rounded-lg p-2 text-rojo-acento hover:bg-superficie"><FlaskConical size={18} aria-hidden="true" /></Link>}
+            {herramientas?.map((herramienta) => {
+              const Icono = herramienta.tipo === "sandbox" ? FlaskConical : ListChecks;
+              return (
+                <Link
+                  key={herramienta.href}
+                  href={herramienta.href}
+                  aria-label={herramienta.etiqueta}
+                  aria-current={herramienta.activa ? "page" : undefined}
+                  className={`rounded-lg p-2 transition-colors hover:bg-superficie ${
+                    herramienta.activa ? "bg-rojo-tenue text-rojo-acento" : "text-texto-suave hover:text-rojo-acento"
+                  }`}
+                >
+                  <Icono size={18} aria-hidden="true" />
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <div className="relative h-full">
@@ -314,7 +369,7 @@ export function BarraLateral({
               curso={curso}
               actual={actual}
               inicio={inicio}
-              sandbox={sandbox}
+              herramientas={herramientas}
               codigo={codigo}
               seccionActiva={seccionActiva}
             />

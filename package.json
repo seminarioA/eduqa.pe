@@ -12,6 +12,7 @@
     "test:catalogo": "node scripts/validar-catalogo-local.mjs",
     "test:panel": "node scripts/validar-acciones-panel.mjs",
     "test:tickets": "node --test scripts/validar-tickets-commit.test.mjs",
+    "test:python:tools": "node scripts/validar-herramientas-python.mjs",
     "test:marca": "node scripts/verificar-marca-sidebar.mjs",
     "test:fortran": "node scripts/verificar-fortran.mjs",
     "test:fortran:web": "node scripts/verificar-fortran-web.mjs",
