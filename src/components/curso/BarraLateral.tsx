@@ -23,6 +23,31 @@ export type HerramientaCurso = {
   activa?: boolean;
 };
 
+function EnlaceHerramienta({
+  herramienta,
+  onNavegar,
+}: {
+  herramienta: HerramientaCurso;
+  onNavegar?: () => void;
+}) {
+  const Icono = herramienta.tipo === "sandbox" ? FlaskConical : ListChecks;
+  return (
+    <Link
+      href={herramienta.href}
+      onClick={onNavegar}
+      aria-current={herramienta.activa ? "page" : undefined}
+      className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rojo-acento ${
+        herramienta.activa
+          ? "bg-rojo-tenue font-medium text-rojo-acento"
+          : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
+      }`}
+    >
+      <Icono size={15} aria-hidden="true" />
+      {herramienta.etiqueta}
+    </Link>
+  );
+}
+
 /**
  * Devuelve el id de la sección que se está leyendo.
  *
@@ -200,27 +225,17 @@ function Contenido({
             {codigo}
           </p>
         )}
-        {herramientas && herramientas.length > 0 && (
+        {herramientas?.some((herramienta) => herramienta.tipo === "sandbox") && (
           <div className="mt-3 space-y-1">
-            {herramientas.map((herramienta) => {
-              const Icono = herramienta.tipo === "sandbox" ? FlaskConical : ListChecks;
-              return (
-                <Link
+            {herramientas
+              .filter((herramienta) => herramienta.tipo === "sandbox")
+              .map((herramienta) => (
+                <EnlaceHerramienta
                   key={herramienta.href}
-                  href={herramienta.href}
-                  onClick={onNavegar}
-                  aria-current={herramienta.activa ? "page" : undefined}
-                  className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rojo-acento ${
-                    herramienta.activa
-                      ? "bg-rojo-tenue font-medium text-rojo-acento"
-                      : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
-                  }`}
-                >
-                  <Icono size={15} aria-hidden="true" />
-                  {herramienta.etiqueta}
-                </Link>
-              );
-            })}
+                  herramienta={herramienta}
+                  onNavegar={onNavegar}
+                />
+              ))}
           </div>
         )}
       </div>
@@ -232,6 +247,19 @@ function Contenido({
           seccionActiva={seccionActiva}
           onNavegar={onNavegar}
         />
+        {herramientas?.some((herramienta) => herramienta.tipo === "quiz") && (
+          <div className="mt-4 border-t border-borde pt-4">
+            {herramientas
+              .filter((herramienta) => herramienta.tipo === "quiz")
+              .map((herramienta) => (
+                <EnlaceHerramienta
+                  key={herramienta.href}
+                  herramienta={herramienta}
+                  onNavegar={onNavegar}
+                />
+              ))}
+          </div>
+        )}
       </div>
     </nav>
   );
@@ -346,6 +374,8 @@ export function BarraLateral({
                   aria-label={herramienta.etiqueta}
                   aria-current={herramienta.activa ? "page" : undefined}
                   className={`rounded-lg p-2 transition-colors hover:bg-superficie ${
+                    herramienta.tipo === "quiz" ? "mt-auto mb-10" : ""
+                  } ${
                     herramienta.activa ? "bg-rojo-tenue text-rojo-acento" : "text-texto-suave hover:text-rojo-acento"
                   }`}
                 >

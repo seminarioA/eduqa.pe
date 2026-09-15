@@ -57,7 +57,18 @@ for (const [indice, conceptos] of conceptosPorSesion.entries()) {
   }
 }
 
-assert.match(barra, /herramientas\.map/);
+const contenidoLateral = barra.slice(barra.indexOf("function Contenido"));
+const posicionSandbox = contenidoLateral.indexOf(
+  'herramienta.tipo === "sandbox"',
+);
+const posicionIndice = contenidoLateral.indexOf("<Indice");
+const posicionQuiz = contenidoLateral.indexOf(
+  'herramienta.tipo === "quiz"',
+  posicionIndice,
+);
+assert.ok(posicionSandbox >= 0, "El sandbox debe aparecer en la barra lateral");
+assert.ok(posicionIndice > posicionSandbox, "El sandbox debe ir antes de las sesiones");
+assert.ok(posicionQuiz > posicionIndice, "El quiz debe ir después de las sesiones");
 assert.match(leccion, /Sandbox de Python/);
 assert.match(leccion, /Quiz de Python/);
 assert.match(sandbox, /ejecutarPython\(borrador\.codigo, \{ aislado: true \}\)/);
@@ -65,6 +76,7 @@ assert.match(sandbox, /Descargar \.py/);
 assert.doesNotMatch(quiz, /#[0-9a-f]{3,8}/i, "El quiz solo usa tokens de color");
 assert.match(quiz, /evento\.key !== "Enter"/);
 assert.match(quiz, /aria-keyshortcuts="Enter"/);
+assert.doesNotMatch(quiz, /También puedes continuar/);
 
 const codigoInicial = borrador.match(
   /PROGRAMA_INICIAL_PYTHON = `([\s\S]*?)`;/,

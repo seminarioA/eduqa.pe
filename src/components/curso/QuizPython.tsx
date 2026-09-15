@@ -232,9 +232,6 @@ export function QuizPython() {
               ? "Ver resultado"
               : "Siguiente pregunta"}
           </button>
-          <p className="mt-2 text-xs text-texto-tenue">
-            También puedes continuar con Enter.
-          </p>
         </div>
       )}
     </section>
