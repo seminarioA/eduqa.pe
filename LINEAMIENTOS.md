@@ -247,3 +247,10 @@ párrafo mientras se escribe— buscando:
 - **Cosas dichas dos veces** en distinto apartado.
 - **Enumeraciones incompletas**: seis elementos nombrados, cuatro con ejemplo.
 - **Cifras que no se ejecutaron.**
+
+
+## Regla del índice de los cursos de Python
+
+Cada ítem del índice desarrolla una sola función, método u operación. Se prohíbe agrupar operaciones nuevas, aunque pertenezcan al mismo módulo o tema. Cada una tiene título, explicación, ejemplo autónomo y práctica propios. Las funciones del proyecto también se enseñan por separado; la integración reutiliza contenidos ya desarrollados.
+
+La revisión editorial debe rechazar un apartado que incumpla esta regla. El parser comprueba la estructura del Markdown; no puede demostrar por sí solo que una explicación tenga un único objetivo pedagógico.
