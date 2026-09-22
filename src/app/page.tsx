@@ -414,10 +414,22 @@ export default async function Page() {
             <Llama className="h-5 w-auto text-rojo-acento" />
             {marca.nombre}
           </span>
-          <span className="flex items-center gap-4">
+          <nav
+            aria-label="Enlaces del pie de página"
+            className="flex flex-wrap items-center gap-4"
+          >
             <Link href="/acceder" className="transition-colors hover:text-rojo-acento">
               Acceder
             </Link>
+            <a
+              href="https://www.linkedin.com/company/eduqa-pe"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 transition-colors hover:text-rojo-acento"
+            >
+              <IconoRed nombre="linkedin" className="size-4" />
+              LinkedIn
+            </a>
             {/* Distintivo oficial. Va sobre blanco a propósito: su único
                 color es un azul oscuro que en el tema oscuro desaparecería. */}
             <Link
@@ -437,7 +449,7 @@ export default async function Page() {
               <Radio size={14} aria-hidden="true" />
               {marca.ciudad}
             </span>
-          </span>
+          </nav>
         </div>
       </footer>
     </>
