@@ -41,7 +41,12 @@ jobs:
           if [ "$EVENT_NAME" = "pull_request" ]; then
             git fetch origin "$BASE_REF"
             BASE_SHA="$(git merge-base "origin/$BASE_REF" HEAD)"
-          elif [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+          elif [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || \
+               ! git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null || \
+               ! git merge-base --is-ancestor "$BEFORE_SHA" HEAD; then
+            # Un push forzado puede dejar github.event.before fuera del historial
+            # descargable. En ese caso se valida desde el último ancestro común
+            # con main, que es la base publicada real de esta entrega.
             git fetch origin main
             BASE_SHA="$(git merge-base origin/main HEAD)"
           else
