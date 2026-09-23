@@ -35,6 +35,8 @@ import { EjercicioPunto } from "@/components/curso/EjercicioPunto";
 import { ejerciciosPython1 } from "@/content/python-ejercicios";
 import { VistaDiapositivas } from "@/components/sqlite/VistaDiapositivas";
 
+export const dynamic = "force-dynamic";
+
 /** Pinta el árbol de secciones. Las hijas van dentro de la madre, de modo
  *  que plegar un encabezado pliega también todo lo que cuelga de él. */
 /**
