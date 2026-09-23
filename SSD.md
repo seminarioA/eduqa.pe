@@ -473,6 +473,7 @@ Los totales finales de pruebas de la API se registran en el informe de entrega p
 | D-06 | Proteger DELETE y conservar cursos con actividad | La alternativa operativa es archivar. |
 | D-07 | Mantener autorización por rol vigente | La autoría y el identificador de clave no otorgan permisos adicionales. |
 | D-08 | Exigir una operación por ítem de Python | La regla editorial es obligatoria; su validación semántica sigue siendo humana. |
+| D-09 | Separar identidad interna y URL de curso | El modelo objetivo usa `cursos.id UUID` como PK y `slug UNIQUE` como identificador público; la migración física queda pendiente de aplicarse sobre el proyecto Supabase EDUQA correcto. |
 | P-01 | Acceso a GitHub recuperado el 21 de septiembre de 2026 | Tickets #11 (CRUD), #12 (cursos), #13 (SSD) y #14 (acceso por código); cada commit debe referenciarlos. |
 | P-02 | Proyecto Supabase productivo no disponible para esta migración | La API queda implementada y probada localmente, pendiente de aplicar y verificar. |
 | P-03 | Historial de migraciones incompleto como reproducción del entorno | Verificar esquema y políticas reales antes de prometer una instalación desde cero. |
