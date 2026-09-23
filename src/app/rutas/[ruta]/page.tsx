@@ -12,6 +12,8 @@ import { CabeceraApp } from "@/components/CabeceraApp";
 import { Migas } from "@/components/Migas";
 import { Icono } from "@/components/Iconos";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
