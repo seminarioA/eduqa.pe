@@ -9,7 +9,7 @@ const catalogo = leer("src/lib/catalogo-cursos.ts");
 assert.match(catalogo, /from\("cursos"\)\.select\("slug"\)/, "El catálogo debe leer los cursos registrados en Supabase.");
 assert.match(catalogo, /from\("curso_contenido"\)/, "El contenido debe leerse desde Supabase en runtime.");
 assert.match(catalogo, /from\("curso_sesiones"\)/, "El índice de sesiones debe leerse desde Supabase en runtime.");
-assert.doesNotMatch(catalogo, /cursosDelRepositorio|cargarCursosLocales|respaldo local|fallback/i, "El catálogo no debe tener respaldo ni fallback local.");
+assert.doesNotMatch(catalogo, /cursosDelRepositorio|cargarCursosLocales|curso-markdown-local|return\s+cursosDelRepositorio/, "El catálogo no debe tener una fuente local alternativa.");
 assert.doesNotMatch(catalogo, /@\/lib\/cursos/, "El catálogo de runtime no debe importar el catálogo legacy.");
 
 const compatibilidad = leer("src/lib/cursos.ts");
