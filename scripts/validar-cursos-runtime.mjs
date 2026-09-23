@@ -17,6 +17,10 @@ assert.doesNotMatch(compatibilidad, /@\/content\//, "El módulo de compatibilida
 assert.doesNotMatch(compatibilidad, /export const cursos/, "No debe existir un catálogo de cursos en memoria.");
 assert.match(compatibilidad, /export \* from "@\/lib\/curso-tipos";/, "cursos.ts solo debe reexportar tipos y utilidades puras.");
 
+const parser = leer("src/lib/curso-markdown.ts");
+assert.doesNotMatch(parser, /node:fs|node:path|cargarCursosLocales|cargarCurso\(/, "El parser usado en runtime no debe leer el sistema de archivos.");
+assert.doesNotMatch(catalogo, /curso-markdown-local/, "El catálogo de runtime no debe importar el loader editorial local.");
+
 const nextConfig = leer("next.config.ts");
 assert.doesNotMatch(nextConfig, /src\/content\/\*\*\/\*\.md/, "Vercel no debe empaquetar Markdown local como fuente de cursos.");
 
