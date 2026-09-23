@@ -131,28 +131,16 @@ export async function miEstadoDeVoto(): Promise<{
 
 export async function propuestasInternas(): Promise<PropuestaInterna[]> {
   const supabase = await clienteServidor();
-
-  const [{ data: propuestas, error }, { data: votos }] = await Promise.all([
-    supabase
-      .from("propuestas_curso")
-      .select(
-        "id, titulo, subtitulo, precio, icono, nivel, area, estado, prioridad_interna, creado_por, curso_slug, creada_en, actualizada_en",
-      )
-      .order("actualizada_en", { ascending: false }),
-    supabase.from("votos_propuesta_curso").select("propuesta_id"),
-  ]);
+  const { data, error } = await supabase
+    .from("v_propuestas_curso_internas")
+    .select(
+      "id, titulo, subtitulo, precio, icono, nivel, area, estado, prioridad_interna, creado_por, curso_slug, creada_en, actualizada_en, votos",
+    )
+    .order("actualizada_en", { ascending: false });
 
   if (error) return [];
 
-  const votosPorPropuesta = new Map<string, number>();
-  for (const voto of votos ?? []) {
-    votosPorPropuesta.set(
-      voto.propuesta_id,
-      (votosPorPropuesta.get(voto.propuesta_id) ?? 0) + 1,
-    );
-  }
-
-  return (propuestas ?? []).map((fila) => ({
+  return (data ?? []).map((fila) => ({
     id: fila.id,
     titulo: fila.titulo,
     subtitulo: fila.subtitulo,
@@ -163,7 +151,7 @@ export async function propuestasInternas(): Promise<PropuestaInterna[]> {
     estado: fila.estado as EstadoPropuesta,
     cursoSlug: fila.curso_slug,
     creadaEn: fila.creada_en,
-    votos: votosPorPropuesta.get(fila.id) ?? 0,
+    votos: Number(fila.votos ?? 0),
     prioridadInterna: fila.prioridad_interna,
     creadoPor: fila.creado_por,
     actualizadaEn: fila.actualizada_en,
