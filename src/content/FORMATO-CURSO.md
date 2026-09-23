@@ -1,25 +1,25 @@
 # Formato de un curso en Markdown
 
-Un curso es una carpeta dentro de `src/content/`. Dentro van un `curso.md` con
-la ficha y un archivo por sesión.
+Markdown es el **formato editorial de importación** de un curso. Un paquete de
+publicación contiene un `curso.md` con la ficha y un archivo por sesión.
 
 ```
-src/content/ia-generativa/
-├── curso.md
-├── sesion-1.md
-├── sesion-2.md
-├── sesion-3.md
-└── sesion-4.md
+curso.md
+sesion-1.md
+sesion-2.md
+sesion-3.md
+sesion-4.md
 ```
 
-Para publicarlo, sube `curso.md` y sus sesiones desde `/panel/cursos` y elige
-el estado público. El contenido se guarda en Supabase y aparece sin modificar
-TypeScript ni volver a desplegar la aplicación. El icono es obligatorio.
+Para publicarlo, sube la ficha y las sesiones desde `/panel/cursos` y elige
+el estado correspondiente. El contenido se guarda en Supabase y aparece sin
+modificar TypeScript ni volver a desplegar la aplicación. El icono es obligatorio.
 
-Las carpetas del repositorio que contienen `curso.md` se descubren
-automáticamente. Sirven como respaldo local: tampoco necesitan una entrada
-en `src/lib/cursos.ts`, aunque sus cambios sí requieren un despliegue.
-Si un curso existe en ambos sitios, se utiliza la versión de Supabase.
+**Supabase es la única fuente de verdad en runtime.** La aplicación no descubre
+cursos en `src/content`, no utiliza un catálogo local y no hace fallback a
+archivos empaquetados si la base no responde. Los Markdown pueden existir
+durante la autoría o revisión, pero publicar significa persistirlos en
+`cursos`, `curso_contenido` y `curso_sesiones`.
 
 Las reglas de redacción están en `LINEAMIENTOS.md`, en la raíz.
 
