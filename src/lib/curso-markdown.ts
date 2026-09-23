@@ -93,37 +93,167 @@ const RE_NOTA = /^>\s*Nota:\s*(.*)$/;
  * el enunciado y la pista son prosa y la plantilla es código: meterlos en
  * claves de YAML obligaría a escapar comillas y saltos de línea.
  */
-function leerEjercicio(texto: string, donde: string): Ejercicio {
+function claveParte(titulo: string) {
+  return titulo
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+function leerPartesEjercicio(texto: string) {
   const partes: Record<string, string[]> = {};
   let actual: string | null = null;
-
   for (const linea of texto.split("\n")) {
-    const encabezado = linea.match(/^#\s+(Enunciado|Plantilla|Esperado|Pista)\s*$/i);
+    const encabezado = linea.match(/^#\s+(.+?)\s*$/);
     if (encabezado) {
-      actual = encabezado[1].toLowerCase();
+      actual = claveParte(encabezado[1]);
       partes[actual] = [];
       continue;
     }
     if (actual) partes[actual].push(linea);
   }
+  return Object.fromEntries(
+    Object.entries(partes).map(([clave, lineas]) => [clave, lineas.join("\n").trim()]),
+  );
+}
 
-  const sacar = (clave: string) => (partes[clave] ?? []).join("\n").trim();
+function exigirParte(
+  partes: Record<string, string>,
+  clave: string,
+  donde: string,
+  etiqueta = clave,
+) {
+  const valor = partes[clave]?.trim() ?? "";
+  if (!valor) throw new Error(`Ejercicio sin ${etiqueta} en ${donde}.`);
+  return valor;
+}
 
-  const enunciado = sacar("enunciado");
-  const plantilla = sacar("plantilla");
-  const esperado = sacar("esperado");
-  const pista = sacar("pista");
+function leerLista(texto: string, donde: string, etiqueta: string) {
+  const elementos = texto
+    .split("\n")
+    .map((linea) => linea.match(/^\s*-\s+(.+?)\s*$/)?.[1]?.trim())
+    .filter((valor): valor is string => Boolean(valor));
+  if (elementos.length < 2) {
+    throw new Error(`${etiqueta} necesita al menos dos elementos en ${donde}.`);
+  }
+  return elementos;
+}
 
-  for (const [clave, valor] of Object.entries({ enunciado, plantilla, pista })) {
-    if (!valor) {
-      throw new Error(`Ejercicio sin ${clave} en ${donde}.`);
+function baseConceptual(texto: string, donde: string) {
+  const partes = leerPartesEjercicio(texto);
+  return {
+    partes,
+    enunciado: exigirParte(partes, "enunciado", donde),
+    explicacion: exigirParte(partes, "explicacion", donde, "explicación"),
+    pista: exigirParte(partes, "pista", donde),
+  };
+}
+
+function leerEjercicio(texto: string, donde: string) {
+  const partes = leerPartesEjercicio(texto);
+  const enunciado = exigirParte(partes, "enunciado", donde);
+  const plantilla = exigirParte(partes, "plantilla", donde);
+  const esperado = partes.esperado?.trim() ?? "";
+  const pista = exigirParte(partes, "pista", donde);
+  const huecos = plantilla.match(/___/g)?.length ?? 0;
+  if (huecos !== 1) {
+    throw new Error(
+      `El ejercicio de ${donde} debe tener exactamente un hueco (___); tiene ${huecos}.`,
+    );
+  }
+  return { tipo: "codigo" as const, enunciado, plantilla, esperado, pista };
+}
+
+function leerVerdaderoFalso(texto: string, donde: string) {
+  const { partes, enunciado, explicacion, pista } = baseConceptual(texto, donde);
+  const literal = exigirParte(partes, "respuesta", donde).toLowerCase();
+  if (!["verdadero", "falso", "true", "false"].includes(literal)) {
+    throw new Error(
+      `La respuesta de verdadero-falso en ${donde} debe ser verdadero o falso.`,
+    );
+  }
+  return {
+    tipo: "verdadero-falso" as const,
+    enunciado,
+    respuesta: literal === "verdadero" || literal === "true",
+    explicacion,
+    pista,
+  };
+}
+
+function leerOpcionMultiple(texto: string, donde: string) {
+  const { partes, enunciado, explicacion, pista } = baseConceptual(texto, donde);
+  const opciones = leerLista(exigirParte(partes, "opciones", donde), donde, "Opción múltiple");
+  const correctaHumana = Number(exigirParte(partes, "correcta", donde));
+  if (!Number.isInteger(correctaHumana) || correctaHumana < 1 || correctaHumana > opciones.length) {
+    throw new Error(
+      `La opción correcta de ${donde} debe estar entre 1 y ${opciones.length}.`,
+    );
+  }
+  return {
+    tipo: "opcion-multiple" as const,
+    enunciado,
+    opciones,
+    correcta: correctaHumana - 1,
+    explicacion,
+    pista,
+  };
+}
+
+function leerOrdenar(texto: string, donde: string) {
+  const { partes, enunciado, explicacion, pista } = baseConceptual(texto, donde);
+  const elementos = leerLista(exigirParte(partes, "elementos", donde), donde, "Ordenar");
+  const numeros = exigirParte(partes, "orden", donde).match(/\d+/g)?.map(Number) ?? [];
+  const esperados = Array.from({ length: elementos.length }, (_, i) => i + 1);
+  const normalizados = [...numeros].sort((a, b) => a - b);
+  if (
+    numeros.length !== elementos.length ||
+    normalizados.some((numero, i) => numero !== esperados[i])
+  ) {
+    throw new Error(
+      `El orden de ${donde} debe ser una permutación de 1 a ${elementos.length}, sin repetir ni omitir posiciones.`,
+    );
+  }
+  return {
+    tipo: "ordenar" as const,
+    enunciado,
+    elementos,
+    correcta: numeros.map((numero) => numero - 1),
+    explicacion,
+    pista,
+  };
+}
+
+function leerRelacionar(texto: string, donde: string) {
+  const { partes, enunciado, explicacion, pista } = baseConceptual(texto, donde);
+  const filas = leerLista(exigirParte(partes, "pares", donde), donde, "Relacionar");
+  const pares = filas.map((fila) => {
+    const separador = fila.indexOf("=>");
+    if (separador < 1 || separador >= fila.length - 2) {
+      throw new Error(
+        `Cada par de ${donde} debe escribirse como «izquierda => derecha».`,
+      );
     }
+    return {
+      izquierda: fila.slice(0, separador).trim(),
+      derecha: fila.slice(separador + 2).trim(),
+    };
+  });
+  const izquierdas = pares.map((par) => par.izquierda);
+  const derechas = pares.map((par) => par.derecha);
+  if (new Set(izquierdas).size !== pares.length || new Set(derechas).size !== pares.length) {
+    throw new Error(
+      `Relacionar exige lados únicos en ${donde}; un valor repetido haría ambigua la corrección.`,
+    );
   }
-  if (!plantilla.includes("___")) {
-    throw new Error(`El ejercicio de ${donde} no tiene hueco (___) en su plantilla.`);
-  }
-
-  return { enunciado, plantilla, esperado, pista };
+  return {
+    tipo: "relacionar" as const,
+    enunciado,
+    pares,
+    explicacion,
+    pista,
+  };
 }
 
 /**
@@ -219,7 +349,11 @@ function leerSesion(texto: string, donde: string): ResultadoSesion {
         continue;
       }
 
-      if (valla.lenguaje === "ejercicio") {
+      if (
+        ["ejercicio", "verdadero-falso", "opcion-multiple", "ordenar", "relacionar"].includes(
+          valla.lenguaje,
+        )
+      ) {
         if (!seccionActual) {
           throw new Error(`Un ejercicio fuera de toda sección, en ${donde}.`);
         }
@@ -228,10 +362,22 @@ function leerSesion(texto: string, donde: string): ResultadoSesion {
             `Dos ejercicios para la misma sección (${seccionActual}) en ${donde}.`,
           );
         }
-        ejercicios[seccionActual] = {
-          ...leerEjercicio(valla.contenido, donde),
-          ...(valla.modificadores.includes("fortran") ? { lenguaje: "fortran" as const } : {}),
-        };
+        if (valla.lenguaje === "verdadero-falso") {
+          ejercicios[seccionActual] = leerVerdaderoFalso(valla.contenido, donde);
+        } else if (valla.lenguaje === "opcion-multiple") {
+          ejercicios[seccionActual] = leerOpcionMultiple(valla.contenido, donde);
+        } else if (valla.lenguaje === "ordenar") {
+          ejercicios[seccionActual] = leerOrdenar(valla.contenido, donde);
+        } else if (valla.lenguaje === "relacionar") {
+          ejercicios[seccionActual] = leerRelacionar(valla.contenido, donde);
+        } else {
+          ejercicios[seccionActual] = {
+            ...leerEjercicio(valla.contenido, donde),
+            ...(valla.modificadores.includes("fortran")
+              ? { lenguaje: "fortran" as const }
+              : {}),
+          };
+        }
         continue;
       }
 

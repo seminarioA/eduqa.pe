@@ -204,11 +204,17 @@ Enlazan al apartado concreto, no a la portada de la documentación.
 
 ### Ejercicios
 
-Uno por sección como mucho. Va al final de la sección a la que pertenece: el
-lector lo encuentra plegado, después de lo que acaba de leer.
+Cada sección admite **como máximo un ejercicio**. El motor se elige según lo que
+se quiere comprobar: no se usa Python para evaluar una distinción conceptual ni
+una pregunta de arquitectura. Todos los ejercicios aparecen plegados al final
+del punto al que pertenecen.
 
-````markdown
-```ejercicio
+#### Completar código
+
+La valla `ejercicio` conserva el motor ejecutable existente:
+
+\`\`\`\`markdown
+\`\`\`ejercicio
 # Enunciado
 Completa la clase que construye el cliente del SDK.
 
@@ -221,19 +227,116 @@ Client
 
 # Pista
 Seis letras, en inglés y con mayúscula inicial.
-```
-````
+\`\`\`
+\`\`\`\`
 
-- **La plantilla lleva un único hueco**, marcado con `___`. Dos huecos
-  convierten la corrección en adivinanza.
-- **`Esperado` es la salida** que produce la solución correcta. Se compara con
-  lo que imprime el intérprete, no con el texto que escribió el alumno, así que
-  vale cualquier expresión que dé ese resultado.
-- El ejercicio se ejecuta **aislado**: lo que definió uno no le resuelve el
-  siguiente. El preludio del curso o de la sesión sí se aplica.
+La plantilla lleva **exactamente un hueco** `___`. `Esperado` es la salida
+del programa correcto. El ejercicio se ejecuta aislado; solo comparte el
+`preludio` del curso o de la sesión.
 
-El ejercicio se asocia a la sección donde está escrito. No hay ningún índice
-aparte que mantener sincronizado.
+#### Verdadero o falso
+
+\`\`\`\`markdown
+\`\`\`verdadero-falso
+# Enunciado
+Una arquitectura SOA exige implementar los servicios con SOAP.
+
+# Respuesta
+falso
+
+# Explicación
+SOA es un paradigma arquitectónico independiente de una tecnología concreta.
+
+# Pista
+Distingue el paradigma de una de sus posibles implementaciones.
+\`\`\`
+\`\`\`\`
+
+`Respuesta` acepta `verdadero` o `falso` (también `true` y `false`).
+La explicación aparece después de responder.
+
+#### Opción múltiple
+
+\`\`\`\`markdown
+\`\`\`opcion-multiple
+# Enunciado
+¿Qué describe mejor un servicio?
+
+# Opciones
+- La implementación interna de una capacidad
+- El mecanismo para acceder a una capacidad
+- Una base de datos compartida
+- Un protocolo de transporte
+
+# Correcta
+2
+
+# Explicación
+El servicio proporciona acceso a una capacidad mediante una interfaz prescrita.
+
+# Pista
+No confundas el servicio con su implementación.
+\`\`\`
+\`\`\`\`
+
+Debe haber al menos dos alternativas. `Correcta` usa numeración humana:
+`1` es la primera opción.
+
+#### Ordenar
+
+\`\`\`\`markdown
+\`\`\`ordenar
+# Enunciado
+Ordena las etapas de una interacción.
+
+# Elementos
+- Invocar el servicio
+- Descubrir el servicio
+- Observar el efecto
+
+# Orden
+2, 1, 3
+
+# Explicación
+Primero se obtiene visibilidad del servicio, después se interactúa y finalmente
+se observa el efecto producido.
+
+# Pista
+La interacción no puede ocurrir antes de que el consumidor conozca el servicio.
+\`\`\`
+\`\`\`\`
+
+`Elementos` es el orden inicial que ve el alumno. `Orden` indica el orden
+correcto mediante posiciones **1-based** y debe ser una permutación completa:
+no puede repetir ni omitir números. El alumno mueve cada elemento hacia arriba
+o abajo y después comprueba la secuencia.
+
+#### Relacionar
+
+\`\`\`\`markdown
+\`\`\`relacionar
+# Enunciado
+Relaciona cada participante con su papel.
+
+# Pares
+- Service provider => ofrece la capacidad mediante un servicio
+- Service consumer => utiliza el servicio para satisfacer una necesidad
+
+# Explicación
+Proveedor y consumidor participan en la misma interacción desde papeles
+distintos.
+
+# Pista
+Piensa quién ofrece la capacidad y quién necesita utilizarla.
+\`\`\`
+\`\`\`\`
+
+Cada línea de `Pares` usa `izquierda => derecha`. Debe haber al menos dos
+pares y ambos lados tienen que ser únicos; repetir una respuesta haría ambigua
+la corrección.
+
+Los cinco motores se asocian directamente a la sección donde están escritos.
+No existe un índice de ejercicios separado que pueda quedar desincronizado.
 
 ---
 
@@ -247,8 +350,13 @@ Al cargar el curso falla, con el archivo y el motivo, si:
 - una nota o una cita aparecen sin bloque delante;
 - un ejercicio está fuera de toda sección;
 - hay dos ejercicios para la misma sección;
-- un ejercicio no tiene enunciado, plantilla o pista;
-- la plantilla de un ejercicio no tiene hueco.
+- un ejercicio ejecutable no tiene enunciado, plantilla o pista;
+- la plantilla ejecutable no tiene exactamente un hueco;
+- verdadero/falso no declara una respuesta válida;
+- opción múltiple tiene menos de dos alternativas o una respuesta fuera de rango;
+- ordenar no declara una permutación completa de sus elementos;
+- relacionar tiene menos de dos pares, un par mal formado o lados repetidos;
+- un ejercicio conceptual no tiene explicación o pista.
 
 Son errores de compilación, no páginas rotas en producción.
 

@@ -89,26 +89,75 @@ export const REGIONES_VENN: RegionVenn[] = [
 ];
 
 /**
- * Ejercicio de completado.
+ * Ejercicios asociados a un punto de la sesión.
  *
- * `plantilla` lleva un único hueco marcado con ___. Dos huecos en un mismo
- * ejercicio convierten la corrección en adivinanza: no se sabe cuál de los
- * dos falló.
- *
- * `esperado` es la salida que produce la solución correcta. Se compara con lo
- * que imprime el intérprete, no con el texto que escribió el alumno, así que
- * vale cualquier expresión que dé ese resultado y no una única forma de
- * escribirla.
+ * El tipo de ejercicio depende de la competencia que se comprueba. Un concepto
+ * arquitectónico no debe obligar al alumno a escribir Python para demostrar que
+ * lo entendió; el completado de código se conserva donde ejecutar código sí es
+ * la práctica adecuada.
  */
-export type Ejercicio = {
+export type EjercicioCodigo = {
+  /** Ausente en cursos antiguos; equivale a `codigo`. */
+  tipo?: "codigo";
   /** Python por omisión; Fortran se compila a WebAssembly en el navegador. */
   lenguaje?: "python" | "fortran";
   enunciado: string;
+  /** Lleva exactamente un hueco marcado con `___`. */
   plantilla: string;
+  /** Salida que debe producir la solución correcta. */
   esperado: string;
   /** Se muestra a petición, nunca de entrada. */
   pista: string;
 };
+
+export type EjercicioVerdaderoFalso = {
+  tipo: "verdadero-falso";
+  enunciado: string;
+  respuesta: boolean;
+  explicacion: string;
+  pista: string;
+};
+
+export type EjercicioOpcionMultiple = {
+  tipo: "opcion-multiple";
+  enunciado: string;
+  opciones: string[];
+  /** Índice cero-based de la alternativa correcta. */
+  correcta: number;
+  explicacion: string;
+  pista: string;
+};
+
+export type EjercicioOrdenar = {
+  tipo: "ordenar";
+  enunciado: string;
+  /** Elementos en el orden inicial que verá el alumno. */
+  elementos: string[];
+  /** Índices cero-based de `elementos` en el orden correcto. */
+  correcta: number[];
+  explicacion: string;
+  pista: string;
+};
+
+export type ParRelacion = {
+  izquierda: string;
+  derecha: string;
+};
+
+export type EjercicioRelacionar = {
+  tipo: "relacionar";
+  enunciado: string;
+  pares: ParRelacion[];
+  explicacion: string;
+  pista: string;
+};
+
+export type Ejercicio =
+  | EjercicioCodigo
+  | EjercicioVerdaderoFalso
+  | EjercicioOpcionMultiple
+  | EjercicioOrdenar
+  | EjercicioRelacionar;
 
 export type Leccion = {
   slug: string;

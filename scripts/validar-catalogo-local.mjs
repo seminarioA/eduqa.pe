@@ -4,7 +4,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { parse } from 'yaml';
 import { cargar } from './validar-iconos-cursos.mjs';
-const { cargarCursosLocales, codigoBaseDeFicha } = cargar(path.resolve('src/lib/curso-markdown.ts'));
+const { cargarCursosLocales, codigoBaseDeFicha, construirCurso } = cargar(path.resolve('src/lib/curso-markdown.ts'));
 const temporal = fs.mkdtempSync(path.join(os.tmpdir(), 'eduqa-descubrimiento-'));
 try {
   fs.mkdirSync(path.join(temporal, 'recursos'));
@@ -21,6 +21,184 @@ try {
 } finally {
   fs.rmSync(temporal, { recursive: true, force: true });
 }
+const fichaMotores = `---
+slug: motores
+codigo: MOTO
+titulo: Motores
+area: Backend
+icono: libro
+horas: 1
+---
+`;
+const sesionMotores = `---
+numero: 1
+titulo: Motores
+---
+
+# Código
+
+\`\`\`ejercicio
+# Enunciado
+Completa.
+# Plantilla
+print(___)
+# Esperado
+1
+# Pista
+El entero uno.
+\`\`\`
+
+# Verdadero falso
+
+\`\`\`verdadero-falso
+# Enunciado
+SOA es una tecnología concreta.
+# Respuesta
+falso
+# Explicación
+Es un paradigma arquitectónico.
+# Pista
+Distingue arquitectura de implementación.
+\`\`\`
+
+# Opción múltiple
+
+\`\`\`opcion-multiple
+# Enunciado
+Elige la segunda.
+# Opciones
+- primera
+- segunda
+- tercera
+# Correcta
+2
+# Explicación
+La segunda es la declarada como correcta.
+# Pista
+Cuenta desde uno.
+\`\`\`
+
+# Ordenar
+
+\`\`\`ordenar
+# Enunciado
+Ordena.
+# Elementos
+- segundo
+- primero
+- tercero
+# Orden
+2, 1, 3
+# Explicación
+Primero, segundo y tercero.
+# Pista
+El texto indica la posición.
+\`\`\`
+
+# Relacionar
+
+\`\`\`relacionar
+# Enunciado
+Relaciona.
+# Pares
+- provider => ofrece
+- consumer => utiliza
+# Explicación
+Cada participante tiene un papel distinto.
+# Pista
+Proveedor ofrece; consumidor utiliza.
+\`\`\`
+`;
+const cursoMotores = construirCurso('motores', new Map([
+  ['curso.md', fichaMotores],
+  ['sesion-1.md', sesionMotores],
+]));
+const motores = cursoMotores.lecciones[0].ejercicios;
+assert.equal(motores.codigo.tipo, 'codigo');
+assert.equal(motores['verdadero-falso'].tipo, 'verdadero-falso');
+assert.equal(motores['verdadero-falso'].respuesta, false);
+assert.equal(motores['opcion-multiple'].correcta, 1);
+assert.deepEqual(motores.ordenar.correcta, [1, 0, 2]);
+assert.deepEqual(motores.relacionar.pares, [
+  { izquierda: 'provider', derecha: 'ofrece' },
+  { izquierda: 'consumer', derecha: 'utiliza' },
+]);
+
+function construirMotor(cuerpo) {
+  return construirCurso('motor-invalido', new Map([
+    ['curso.md', fichaMotores],
+    ['sesion-1.md', `---
+numero: 1
+titulo: Inválido
+---
+
+# Punto
+
+${cuerpo}
+`],
+  ]));
+}
+assert.throws(
+  () => construirMotor(\`\`\`verdadero-falso
+# Enunciado
+Afirmación.
+# Respuesta
+quizas
+# Explicación
+Explica.
+# Pista
+Pista.
+\`\`\`),
+  /verdadero o falso/,
+);
+assert.throws(
+  () => construirMotor(\`\`\`opcion-multiple
+# Enunciado
+Elige.
+# Opciones
+- a
+- b
+# Correcta
+3
+# Explicación
+Explica.
+# Pista
+Pista.
+\`\`\`),
+  /entre 1 y 2/,
+);
+assert.throws(
+  () => construirMotor(\`\`\`ordenar
+# Enunciado
+Ordena.
+# Elementos
+- a
+- b
+- c
+# Orden
+1, 1, 3
+# Explicación
+Explica.
+# Pista
+Pista.
+\`\`\`),
+  /permutación/,
+);
+assert.throws(
+  () => construirMotor(\`\`\`relacionar
+# Enunciado
+Relaciona.
+# Pares
+- a => mismo
+- b => mismo
+# Explicación
+Explica.
+# Pista
+Pista.
+\`\`\`),
+  /lados únicos/,
+);
+
 const ruta = [
   ['fortran-fundamentos', 'Introducción a Fortran', null],
   ['fortran-calculo-cientifico', 'Fortran intermedio', 49],

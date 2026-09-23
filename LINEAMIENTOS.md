@@ -124,7 +124,11 @@ ejemplos para seis operadores es una omisión, no una síntesis.
 3. **Casi todo ejemplo cita la documentación oficial**, con enlace al apartado
    concreto y no a la portada.
 4. **La precisión que no cabe arriba va en `nota`**, plegada por defecto.
-5. **Un ejercicio por punto**, plegado y opcional.
+5. **Un ejercicio por punto**, plegado y opcional. El motor corresponde a la
+   competencia: código para practicar código; verdadero/falso u opción múltiple
+   para discriminar conceptos; ordenar para secuencias; relacionar para
+   correspondencias. No se introduce un lenguaje de programación solo para
+   poder corregir una pregunta conceptual.
 6. **Cada sección cierra el punto que abrió.** Si el título promete «Detectar
    los latidos», el apartado termina con los latidos detectados.
 7. **El cierre de cada sesión** dice qué quedó cubierto y qué viene después.
