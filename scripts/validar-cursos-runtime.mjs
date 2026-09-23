@@ -6,10 +6,19 @@ function leer(ruta) {
 }
 
 const catalogo = leer("src/lib/catalogo-cursos.ts");
-assert.match(catalogo, /from\("cursos"\)\.select\("slug"\)/, "El catálogo debe registrar los slugs administrados por Supabase.");
+assert.match(catalogo, /from\("cursos"\)\.select\("slug"\)/, "El catálogo debe leer los cursos registrados en Supabase.");
 assert.match(catalogo, /from\("curso_contenido"\)/, "El contenido debe leerse desde Supabase en runtime.");
 assert.match(catalogo, /from\("curso_sesiones"\)/, "El índice de sesiones debe leerse desde Supabase en runtime.");
-assert.match(catalogo, /if \(!desdeLaBase\.registrados\.has\(curso\.slug\)\)/, "Un slug registrado en Supabase no debe reaparecer desde el respaldo local.");
+assert.doesNotMatch(catalogo, /cursosDelRepositorio|cargarCursosLocales|respaldo local|fallback/i, "El catálogo no debe tener respaldo ni fallback local.");
+assert.doesNotMatch(catalogo, /@\/lib\/cursos/, "El catálogo de runtime no debe importar el catálogo legacy.");
+
+const compatibilidad = leer("src/lib/cursos.ts");
+assert.doesNotMatch(compatibilidad, /@\/content\//, "El módulo de compatibilidad no debe cargar cursos desde src/content.");
+assert.doesNotMatch(compatibilidad, /export const cursos/, "No debe existir un catálogo de cursos en memoria.");
+assert.match(compatibilidad, /export \* from "@\/lib\/curso-tipos";/, "cursos.ts solo debe reexportar tipos y utilidades puras.");
+
+const nextConfig = leer("next.config.ts");
+assert.doesNotMatch(nextConfig, /src\/content\/\*\*\/\*\.md/, "Vercel no debe empaquetar Markdown local como fuente de cursos.");
 
 const rutasDinamicas = [
   "src/app/cursos/page.tsx",
@@ -28,7 +37,7 @@ for (const ruta of rutasDinamicas) {
   );
   assert.doesNotMatch(
     fuente,
-    /export\\s+(?:async\\s+)?function\\s+generateStaticParams\\b/,
+    /export\s+(?:async\s+)?function\s+generateStaticParams\b/,
     `${ruta} no debe enumerar cursos o sesiones durante el build.`,
   );
 }
@@ -40,4 +49,4 @@ for (const tabla of ["cursos", "curso_contenido", "curso_sesiones"]) {
 assert.match(acciones, /revalidarCursoPublicado\(slug/, "La publicación debe invalidar las vistas después de escribir en Supabase.");
 assert.match(acciones, /Ya está en línea, sin desplegar\./, "El flujo debe confirmar que el curso queda disponible sin un nuevo deploy.");
 
-console.log("Publicación dinámica de cursos validada: Supabase manda y las rutas no dependen del build.");
+console.log("Catálogo validado: Supabase es la única fuente de cursos en runtime.");
