@@ -4,7 +4,8 @@ import path from 'node:path';
 import os from 'node:os';
 import { parse } from 'yaml';
 import { cargar } from './validar-iconos-cursos.mjs';
-const { cargarCursosLocales, codigoBaseDeFicha, construirCurso } = cargar(path.resolve('src/lib/curso-markdown.ts'));
+const { cargarCursosLocales } = cargar(path.resolve('src/lib/curso-markdown-local.ts'));
+const { codigoBaseDeFicha, construirCurso } = cargar(path.resolve('src/lib/curso-markdown.ts'));
 const temporal = fs.mkdtempSync(path.join(os.tmpdir(), 'eduqa-descubrimiento-'));
 try {
   fs.mkdirSync(path.join(temporal, 'recursos'));
