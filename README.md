@@ -48,7 +48,7 @@ src/
 supabase/migrations/      # Migraciones SQL numeradas
 ```
 
-Los cursos se publican como Markdown desde `/panel/cursos` en Supabase, sin modificar TypeScript ni desplegar de nuevo. Las carpetas `src/content/<curso>/` con `curso.md` se detectan automáticamente como respaldo local. El formato está documentado en [`src/content/FORMATO-CURSO.md`](src/content/FORMATO-CURSO.md) y las reglas de redacción en [`LINEAMIENTOS.md`](LINEAMIENTOS.md).
+Los cursos se publican como Markdown desde `/panel/cursos` y se almacenan en Supabase, sin modificar TypeScript ni desplegar de nuevo. Supabase es la única fuente de cursos en runtime; la aplicación no descubre ni recupera cursos desde `src/content`. El formato de importación está documentado en [`src/content/FORMATO-CURSO.md`](src/content/FORMATO-CURSO.md) y las reglas de redacción en [`LINEAMIENTOS.md`](LINEAMIENTOS.md).
 
 ## Requisitos
 
