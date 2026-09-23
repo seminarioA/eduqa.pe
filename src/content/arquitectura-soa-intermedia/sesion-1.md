@@ -96,13 +96,13 @@ Por ejemplo, autorizar un pago y consultar el estado de esa autorización pueden
 Relaciona cada capacidad con la agrupación más coherente.
 
 # Pares
-- Autorizar pago => Servicio de pagos
-- Consultar estado de autorización => Servicio de pagos
-- Consultar disponibilidad de producto => Servicio de inventario
-- Reservar unidades disponibles => Servicio de inventario
+- Autorizar pago => Pagos — autorización
+- Consultar estado de autorización => Pagos — consulta de autorización
+- Consultar disponibilidad de producto => Inventario — consulta de disponibilidad
+- Reservar unidades disponibles => Inventario — reserva de unidades
 
 # Explicación
-Las capacidades se agrupan por responsabilidad relacionada, no porque participen en el mismo proceso de negocio.
+Las cuatro correspondencias conservan dos fronteras coherentes —Pagos e Inventario— y distinguen la responsabilidad concreta de cada capacidad.
 
 # Pista
 Distingue responsabilidad de pagos de responsabilidad sobre disponibilidad física.
