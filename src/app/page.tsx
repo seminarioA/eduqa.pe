@@ -154,7 +154,7 @@ export default async function Page() {
                   </div>
 
                   <div className="mt-auto pt-6">
-                    <h3 className="whitespace-nowrap text-center text-sm font-semibold leading-none text-texto xl:text-base">
+                    <h3 className="whitespace-nowrap text-center text-[13px] font-semibold leading-none tracking-tight text-texto">
                       {pilar.titulo}
                     </h3>
                     <p className="mt-3 text-sm leading-relaxed text-texto-suave">
