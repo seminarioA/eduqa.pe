@@ -139,63 +139,71 @@ ${cuerpo}
   ]));
 }
 assert.throws(
-  () => construirMotor(\`\`\`verdadero-falso
-# Enunciado
-Afirmación.
-# Respuesta
-quizas
-# Explicación
-Explica.
-# Pista
-Pista.
-\`\`\`),
+  () => construirMotor([
+    '~~~verdadero-falso',
+    '# Enunciado',
+    'Afirmación.',
+    '# Respuesta',
+    'quizas',
+    '# Explicación',
+    'Explica.',
+    '# Pista',
+    'Pista.',
+    '~~~',
+  ].join('\n').replaceAll('~~~', '```')),
   /verdadero o falso/,
 );
 assert.throws(
-  () => construirMotor(\`\`\`opcion-multiple
-# Enunciado
-Elige.
-# Opciones
-- a
-- b
-# Correcta
-3
-# Explicación
-Explica.
-# Pista
-Pista.
-\`\`\`),
+  () => construirMotor([
+    '~~~opcion-multiple',
+    '# Enunciado',
+    'Elige.',
+    '# Opciones',
+    '- a',
+    '- b',
+    '# Correcta',
+    '3',
+    '# Explicación',
+    'Explica.',
+    '# Pista',
+    'Pista.',
+    '~~~',
+  ].join('\n').replaceAll('~~~', '```')),
   /entre 1 y 2/,
 );
 assert.throws(
-  () => construirMotor(\`\`\`ordenar
-# Enunciado
-Ordena.
-# Elementos
-- a
-- b
-- c
-# Orden
-1, 1, 3
-# Explicación
-Explica.
-# Pista
-Pista.
-\`\`\`),
+  () => construirMotor([
+    '~~~ordenar',
+    '# Enunciado',
+    'Ordena.',
+    '# Elementos',
+    '- a',
+    '- b',
+    '- c',
+    '# Orden',
+    '1, 1, 3',
+    '# Explicación',
+    'Explica.',
+    '# Pista',
+    'Pista.',
+    '~~~',
+  ].join('\n').replaceAll('~~~', '```')),
   /permutación/,
 );
 assert.throws(
-  () => construirMotor(\`\`\`relacionar
-# Enunciado
-Relaciona.
-# Pares
-- a => mismo
-- b => mismo
-# Explicación
-Explica.
-# Pista
-Pista.
-\`\`\`),
+  () => construirMotor([
+    '~~~relacionar',
+    '# Enunciado',
+    'Relaciona.',
+    '# Pares',
+    '- a => mismo',
+    '- b => mismo',
+    '# Explicación',
+    'Explica.',
+    '# Pista',
+    'Pista.',
+    '~~~',
+  ].join('\n').replaceAll('~~~', '```')),
   /lados únicos/,
 );
 
