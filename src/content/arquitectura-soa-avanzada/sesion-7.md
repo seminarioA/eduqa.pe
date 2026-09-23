@@ -16,10 +16,10 @@ Esta distinción reduce conocimiento del productor sobre quién reaccionará al 
 Relaciona cada mensaje con su intención.
 
 # Pares
-- PedidoConfirmado => evento: comunica un hecho
-- ReservarInventario => command: solicita una acción
-- PagoRechazado => evento: comunica un resultado ocurrido
-- CancelarEnvio => command: solicita una acción
+- PedidoConfirmado => evento que comunica la confirmación de un pedido
+- ReservarInventario => command que solicita reservar inventario
+- PagoRechazado => evento que comunica el rechazo de un pago
+- CancelarEnvio => command que solicita cancelar un envío
 
 # Explicación
 Los nombres muestran si el mensaje afirma un hecho o solicita comportamiento.
