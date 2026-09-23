@@ -200,13 +200,13 @@ Esto significa que conocer únicamente el formato de los mensajes tampoco basta.
 Relaciona cada aspecto de una interacción con el modelo al que pertenece principalmente.
 
 # Pares
-- Formato de la información => Information model
-- Significado de los términos => Information model
-- Acciones permitidas => Behavior model
-- Orden temporal de las acciones => Behavior model
+- Formato de la información => Information model — Structure
+- Significado de los términos => Information model — Semantics
+- Acciones permitidas => Behavior model — Action model
+- Orden temporal de las acciones => Behavior model — Process model
 
 # Explicación
-El information model caracteriza información y significado; el behavior model caracteriza acciones, respuestas y dependencias temporales.
+Cada aspecto pertenece a una rama distinta del modelo: estructura y semántica dentro del information model; acciones y relaciones temporales dentro del behavior model.
 
 # Pista
 Separa «qué información significa qué» de «qué puede hacerse y cuándo».
