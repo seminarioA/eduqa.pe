@@ -408,48 +408,151 @@ export default async function Page() {
         </Seccion>
       </main>
 
-      <footer className="border-t border-borde px-6 py-8">
-        <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-4 text-sm text-texto-tenue">
-          <span className="flex items-center gap-2">
-            <Llama className="h-5 w-auto text-rojo-acento" />
-            {marca.nombre}
-          </span>
-          <nav
-            aria-label="Enlaces del pie de página"
-            className="flex flex-wrap items-center gap-4"
-          >
-            <Link href="/acceder" className="transition-colors hover:text-rojo-acento">
-              Acceder
-            </Link>
-            <a
-              href="https://www.linkedin.com/company/eduqa-pe"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 transition-colors hover:text-rojo-acento"
-            >
-              <IconoRed nombre="linkedin" className="size-4" />
-              LinkedIn
-            </a>
-            {/* Distintivo oficial. Va sobre blanco a propósito: su único
-                color es un azul oscuro que en el tema oscuro desaparecería. */}
-            <Link
-              href="/reclamaciones"
-              aria-label="Libro de Reclamaciones"
-              className="rounded-md bg-white px-2 py-1.5 ring-1 ring-borde transition-opacity hover:opacity-80"
-            >
-              <img
-                src="/libro-de-reclamaciones.svg"
-                alt="Libro de Reclamaciones"
-                width={64}
-                height={44}
-                className="h-9 w-auto"
-              />
-            </Link>
-            <span className="flex items-center gap-1.5">
-              <Radio size={14} aria-hidden="true" />
-              {marca.ciudad}
+      <footer className="border-t border-borde bg-superficie">
+        <div className="mx-auto w-full max-w-5xl px-6 py-10 sm:py-12">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4">
+            <div className="col-span-2 md:col-span-1">
+              <Link href="/" className="inline-flex items-center gap-2.5">
+                <Llama className="h-7 w-auto text-rojo-acento" />
+                <span className="text-sm font-bold uppercase tracking-[0.18em] text-texto">
+                  {marca.nombre}
+                </span>
+              </Link>
+              <p className="mt-4 max-w-xs text-sm leading-relaxed text-texto-suave">
+                Formación técnica en vivo, en español y desde Perú.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-xs text-texto-tenue">
+                <Radio size={14} aria-hidden="true" />
+                {marca.ciudad}
+              </span>
+            </div>
+
+            <div>
+              <h2 className="mb-5 text-xs font-semibold uppercase tracking-[0.16em] text-texto">
+                Explora
+              </h2>
+              <ul className="space-y-3 text-sm text-texto-suave">
+                <li>
+                  <Link href="/cursos" className="transition-colors hover:text-rojo-acento">
+                    Cursos
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/rutas" className="transition-colors hover:text-rojo-acento">
+                    Rutas de aprendizaje
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/calendario" className="transition-colors hover:text-rojo-acento">
+                    Calendario
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog" className="transition-colors hover:text-rojo-acento">
+                    Blog
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="mb-5 text-xs font-semibold uppercase tracking-[0.16em] text-texto">
+                Cuenta
+              </h2>
+              <ul className="space-y-3 text-sm text-texto-suave">
+                <li>
+                  <Link href="/registro" className="transition-colors hover:text-rojo-acento">
+                    Crear cuenta
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/acceder" className="transition-colors hover:text-rojo-acento">
+                    Acceder
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/perfil" className="transition-colors hover:text-rojo-acento">
+                    Perfil
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/ajustes" className="transition-colors hover:text-rojo-acento">
+                    Ajustes
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="mb-5 text-xs font-semibold uppercase tracking-[0.16em] text-texto">
+                Información
+              </h2>
+              <ul className="space-y-3 text-sm text-texto-suave">
+                <li>
+                  <Link href="/recursos" className="transition-colors hover:text-rojo-acento">
+                    Recursos
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/certificaciones" className="transition-colors hover:text-rojo-acento">
+                    Certificaciones
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${plazaLibre.correo}?subject=Quiero dictar en EDUQA.PE`}
+                    className="transition-colors hover:text-rojo-acento"
+                  >
+                    Quiero dictar en EDUQA
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.linkedin.com/company/eduqa-pe"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-rojo-acento"
+                  >
+                    LinkedIn
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-borde bg-fondo/60">
+          <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-6 py-5 text-sm text-texto-tenue sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              © {new Date().getFullYear()} {marca.nombre}. Todos los derechos reservados.
             </span>
-          </nav>
+
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.linkedin.com/company/eduqa-pe"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="EDUQA.PE en LinkedIn"
+                className="inline-flex size-9 items-center justify-center rounded-lg border border-borde transition-colors hover:border-rojo-acento hover:text-rojo-acento"
+              >
+                <IconoRed nombre="linkedin" className="size-4" />
+              </a>
+
+              <Link
+                href="/reclamaciones"
+                aria-label="Libro de Reclamaciones"
+                className="rounded-md bg-white px-2 py-1.5 ring-1 ring-borde transition-opacity hover:opacity-80"
+              >
+                <img
+                  src="/libro-de-reclamaciones.svg"
+                  alt="Libro de Reclamaciones"
+                  width={64}
+                  height={44}
+                  className="h-9 w-auto"
+                />
+              </Link>
+            </div>
+          </div>
         </div>
       </footer>
     </>
