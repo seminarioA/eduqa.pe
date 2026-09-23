@@ -124,27 +124,21 @@ export default async function Page() {
                 key={pilar.titulo}
                 className="relative min-h-[280px]"
               >
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-fondo [clip-path:polygon(31%_0,100%_0,100%_100%,0_100%,0_24%,31%_24%)]"
-                />
-
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 100 100"
                   preserveAspectRatio="none"
-                  className="pointer-events-none absolute inset-0 size-full text-borde"
+                  className="pointer-events-none absolute inset-0 size-full"
                 >
                   <path
-                    d="M31 0 H100 V100 H0 V24 H31 Z"
-                    fill="none"
-                    stroke="currentColor"
+                    d="M25 0 H96 Q100 0 100 4 V96 Q100 100 96 100 H4 Q0 100 0 96 V19 Q0 15 4 15 H17 Q21 15 21 11 V4 Q21 0 25 0 Z"
+                    className="fill-fondo stroke-borde"
                     strokeWidth="1"
                     vectorEffect="non-scaling-stroke"
                   />
                 </svg>
 
-                <span className="absolute left-5 top-4 z-10 text-xs font-semibold tabular-nums text-rojo-acento">
+                <span className="absolute left-5 top-4 z-10 text-sm font-semibold tabular-nums text-rojo-acento">
                   0{indice + 1}
                 </span>
 
