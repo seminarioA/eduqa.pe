@@ -147,7 +147,23 @@ export default async function Page() {
                     aria-hidden="true"
                     className="flex h-[112px] shrink-0 items-center justify-center"
                   >
-                    <Llama className="h-20 w-auto text-rojo-acento/70" />
+                    {indice === 3 ? (
+                      <span
+                        className="block h-24 w-24 bg-rojo-acento/70"
+                        style={{
+                          WebkitMaskImage: "url('/llama-rigor-verificable.svg')",
+                          maskImage: "url('/llama-rigor-verificable.svg')",
+                          WebkitMaskRepeat: "no-repeat",
+                          maskRepeat: "no-repeat",
+                          WebkitMaskPosition: "center",
+                          maskPosition: "center",
+                          WebkitMaskSize: "contain",
+                          maskSize: "contain",
+                        }}
+                      />
+                    ) : (
+                      <Llama className="h-20 w-auto text-rojo-acento/70" />
+                    )}
                   </div>
 
                   <h3 className="mt-5 whitespace-nowrap text-center text-[13px] font-semibold leading-none tracking-tight text-texto">
