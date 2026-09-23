@@ -118,21 +118,29 @@ export default async function Page() {
             La propuesta educativa de EDUQA.PE se sostiene en cuatro principios claros.
           </p>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {pilares.map((pilar, indice) => (
               <article
                 key={pilar.titulo}
-                className="rounded-xl border border-borde bg-fondo p-5"
+                className="flex min-h-[230px] flex-col rounded-xl border border-borde bg-fondo p-5"
               >
-                <span className="text-xs font-semibold tabular-nums text-rojo-acento">
-                  0{indice + 1}
-                </span>
-                <h3 className="mt-3 text-base font-semibold text-texto">
-                  {pilar.titulo}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                  {pilar.texto}
-                </p>
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-xs font-semibold tabular-nums text-rojo-acento">
+                    0{indice + 1}
+                  </span>
+                  <div aria-hidden="true" className="shrink-0">
+                    <Llama className="h-16 w-auto text-rojo-acento/70" />
+                  </div>
+                </div>
+
+                <div className="mt-auto pt-6">
+                  <h3 className="text-base font-semibold leading-snug text-texto">
+                    {pilar.titulo}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-texto-suave">
+                    {pilar.texto}
+                  </p>
+                </div>
               </article>
             ))}
           </div>
