@@ -489,7 +489,7 @@ export default async function Page() {
 
             <div>
               <h2 className="mb-5 text-xs font-semibold uppercase tracking-[0.16em] text-texto">
-                Información
+                Comunidad
               </h2>
               <ul className="space-y-3 text-sm text-texto-suave">
                 <li>
