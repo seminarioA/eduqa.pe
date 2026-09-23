@@ -2,54 +2,21 @@ import "server-only";
 
 import { cache } from "react";
 import { construirCurso } from "@/lib/curso-markdown";
-import { cursos as cursosDelRepositorio } from "@/lib/cursos";
 import type { Curso } from "@/lib/curso-tipos";
 import { clienteServidor } from "@/lib/supabase/servidor";
-
-type CatalogoBase = {
-  cursos: Curso[];
-  /** Slugs que existen en `cursos`, aunque su contenido no sea visible para esta sesión. */
-  registrados: Set<string>;
-};
 
 /**
  * Catálogo de runtime.
  *
- * Supabase es la fuente de verdad para cualquier slug que exista en `cursos`.
- * El contenido empaquetado en el repositorio queda únicamente como respaldo de
- * cursos legacy que todavía no tengan una fila en la base. De esta manera:
+ * Supabase es la única fuente de verdad. La aplicación no descubre cursos en
+ * `src/content`, no conserva un catálogo alternativo y no hace fallback si la
+ * base falla. Publicar, editar, archivar o retirar un curso consiste únicamente
+ * en modificar sus filas en Supabase.
  *
- * - publicar un curso nuevo consiste en escribir `cursos`,
- *   `curso_contenido` y `curso_sesiones`;
- * - editar contenido en Supabase se refleja en la siguiente petición;
- * - un curso registrado en la base nunca reaparece desde una copia local vieja
- *   si RLS oculta su contenido, se archiva o se retira.
- *
- * Si la consulta a Supabase falla por completo se conserva el catálogo local
- * como degradación controlada para no inutilizar los cursos legacy.
+ * Los Markdown siguen siendo el formato editorial que se sube al panel/API,
+ * pero una vez publicados se leen desde `curso_contenido`.
  */
 export const obtenerCursos = cache(async (): Promise<Curso[]> => {
-  const desdeLaBase = await cursosDeLaBase();
-  if (!desdeLaBase) return cursosDelRepositorio;
-
-  const porSlug = new Map<string, Curso>();
-
-  // Solo entran respaldos que aún no están administrados por la base.
-  for (const curso of cursosDelRepositorio) {
-    if (!desdeLaBase.registrados.has(curso.slug)) {
-      porSlug.set(curso.slug, curso);
-    }
-  }
-
-  // Para todo slug administrado por Supabase manda su contenido de runtime.
-  for (const curso of desdeLaBase.cursos) {
-    porSlug.set(curso.slug, curso);
-  }
-
-  return [...porSlug.values()];
-});
-
-async function cursosDeLaBase(): Promise<CatalogoBase | null> {
   const supabase = await clienteServidor();
 
   const [
@@ -62,20 +29,20 @@ async function cursosDeLaBase(): Promise<CatalogoBase | null> {
     supabase.from("curso_sesiones").select("curso_slug, numero, titulo, slug"),
   ]);
 
-  if (errorFichas || errorArchivos || errorIndices) {
-    console.error("No se pudo leer el catálogo de cursos desde Supabase:", {
-      fichas: errorFichas?.message,
-      contenido: errorArchivos?.message,
-      sesiones: errorIndices?.message,
-    });
-    return null;
+  const error = errorFichas ?? errorArchivos ?? errorIndices;
+  if (error) {
+    // Fallar aquí es deliberado: volver a contenido empaquetado ocultaría una
+    // caída o una mala configuración de Supabase y podría revivir cursos
+    // archivados. La base es la única autoridad.
+    throw new Error(`No se pudo leer el catálogo de cursos desde Supabase: ${error.message}`);
   }
 
   const registrados = new Set((fichas ?? []).map((fila) => fila.slug));
-  if (!archivos?.length) return { cursos: [], registrados };
+  if (!archivos?.length) return [];
 
   const porCurso = new Map<string, Map<string, string>>();
   for (const fila of archivos) {
+    if (!registrados.has(fila.curso_slug)) continue;
     const mapa = porCurso.get(fila.curso_slug) ?? new Map<string, string>();
     mapa.set(fila.archivo, fila.contenido);
     porCurso.set(fila.curso_slug, mapa);
@@ -83,26 +50,31 @@ async function cursosDeLaBase(): Promise<CatalogoBase | null> {
 
   const indicePorCurso = new Map<string, { numero: number; titulo: string; slug: string }[]>();
   for (const fila of indices ?? []) {
+    if (!registrados.has(fila.curso_slug)) continue;
     const lista = indicePorCurso.get(fila.curso_slug) ?? [];
     lista.push({ numero: fila.numero, titulo: fila.titulo, slug: fila.slug });
     indicePorCurso.set(fila.curso_slug, lista);
   }
 
   const cursos: Curso[] = [];
-  for (const [slug, mapa] of porCurso) {
-    // Una fila de contenido huérfana no debe crear un curso fuera del catálogo.
-    if (!registrados.has(slug)) continue;
+  for (const slug of registrados) {
+    const mapa = porCurso.get(slug);
+    if (!mapa?.has("curso.md")) {
+      console.error(`El curso «${slug}» está registrado en Supabase pero no tiene curso.md visible.`);
+      continue;
+    }
 
     try {
       cursos.push(construirCurso(slug, mapa, indicePorCurso.get(slug) ?? []));
     } catch (e) {
-      // Un curso mal escrito queda fuera, pero no hace caer los demás.
+      // Un curso inválido no debe tumbar el resto del catálogo, pero tampoco
+      // puede sustituirse por una copia local.
       console.error(`No se pudo construir el curso «${slug}» desde Supabase:`, (e as Error).message);
     }
   }
 
-  return { cursos, registrados };
-}
+  return cursos;
+});
 
 export const buscarCurso = cache(async (slug: string) =>
   (await obtenerCursos()).find((c) => c.slug === slug),
