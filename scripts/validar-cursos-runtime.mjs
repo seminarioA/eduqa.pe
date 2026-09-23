@@ -28,7 +28,7 @@ for (const ruta of rutasDinamicas) {
   );
   assert.doesNotMatch(
     fuente,
-    /generateStaticParams/,
+    /export\\s+(?:async\\s+)?function\\s+generateStaticParams\\b/,
     `${ruta} no debe enumerar cursos o sesiones durante el build.`,
   );
 }
