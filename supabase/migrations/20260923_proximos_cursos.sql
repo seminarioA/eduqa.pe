@@ -122,6 +122,10 @@ using (
 
 revoke all on public.propuestas_curso from anon, authenticated;
 revoke all on public.votos_propuesta_curso from anon;
+-- El id puede leerse para que PostgREST pueda filtrar UPDATE por clave.
+-- prioridad_interna y creado_por no tienen SELECT directo: solo salen por la
+-- vista interna, que comprueba el rol antes de devolver filas.
+grant select (id) on public.propuestas_curso to authenticated;
 grant insert, update on public.propuestas_curso to authenticated;
 grant select on public.votos_propuesta_curso to authenticated;
 revoke insert, update, delete on public.votos_propuesta_curso from authenticated;
