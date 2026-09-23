@@ -63,12 +63,14 @@ export function TituloSplitFlap({
     );
 
     if (reducirMovimiento.matches || totalCaracteres === 0) {
-      setEstado({
-        texto,
-        resueltas: totalCaracteres,
-        animando: false,
-      });
-      return;
+      const inicio = window.setTimeout(() => {
+        setEstado({
+          texto,
+          resueltas: totalCaracteres,
+          animando: false,
+        });
+      }, 0);
+      return () => window.clearTimeout(inicio);
     }
 
     let fotograma = 0;
@@ -77,11 +79,13 @@ export function TituloSplitFlap({
       Math.round(DURACION_MS / INTERVALO_MS),
     );
 
-    setEstado({
-      texto: generarFotograma(texto, 0),
-      resueltas: 0,
-      animando: true,
-    });
+    const inicio = window.setTimeout(() => {
+      setEstado({
+        texto: generarFotograma(texto, 0),
+        resueltas: 0,
+        animando: true,
+      });
+    }, 0);
 
     const intervalo = window.setInterval(() => {
       fotograma += 1;
@@ -108,7 +112,10 @@ export function TituloSplitFlap({
       });
     }, INTERVALO_MS);
 
-    return () => window.clearInterval(intervalo);
+    return () => {
+      window.clearTimeout(inicio);
+      window.clearInterval(intervalo);
+    };
   }, [texto, totalCaracteres]);
 
   let posicionAnimable = 0;
