@@ -5,7 +5,7 @@ import type { IconoNombre } from "@/components/Iconos";
 
 export const marca = {
   nombre: "EDUQA.PE",
-  lema: "Formación técnica en vivo. Siempre en vivo.",
+  lema: "Democratizando la educación en tecnología",
   gancho:
     "Cursos cortos de tecnología dictados en directo, en español y desde Perú. Nada pregrabado, nada de ver videos solo a las once de la noche.",
   precio: 20,
