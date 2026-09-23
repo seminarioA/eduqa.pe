@@ -20,6 +20,8 @@ import { TituloEditable } from "@/components/TituloEditable";
 import { Listado } from "./Listado";
 import { AvisoTope } from "./AvisoTope";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Cursos & Microcursos — EDUQA.PE",
   robots: { index: false, follow: false },
