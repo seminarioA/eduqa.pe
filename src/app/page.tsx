@@ -143,18 +143,19 @@ export default async function Page() {
                 </span>
 
                 <div className="relative z-10 flex h-full min-h-[280px] flex-col px-5 pb-5 pt-8">
-                  <div aria-hidden="true" className="flex justify-center pt-2">
+                  <div
+                    aria-hidden="true"
+                    className="flex h-[112px] shrink-0 items-center justify-center"
+                  >
                     <Llama className="h-20 w-auto text-rojo-acento/70" />
                   </div>
 
-                  <div className="mt-auto pt-6">
-                    <h3 className="whitespace-nowrap text-center text-[13px] font-semibold leading-none tracking-tight text-texto">
-                      {pilar.titulo}
-                    </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-texto-suave">
-                      {pilar.texto}
-                    </p>
-                  </div>
+                  <h3 className="mt-5 whitespace-nowrap text-center text-[13px] font-semibold leading-none tracking-tight text-texto">
+                    {pilar.titulo}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-texto-suave">
+                    {pilar.texto}
+                  </p>
                 </div>
               </article>
             ))}
