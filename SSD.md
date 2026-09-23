@@ -467,7 +467,7 @@ Los totales finales de pruebas de la API se registran en el informe de entrega p
 |---|---|---|
 | D-01 | Mantener Next.js como unidad de despliegue | No se introducen microservicios para el CRUD. |
 | D-02 | Mantener Markdown como fuente del curso | El autor no necesita editar componentes TypeScript para publicar material. |
-| D-03 | Conservar respaldo local con precedencia de la base | Se protege la eliminación para evitar reapariciones. |
+| D-03 | Supabase es la única fuente de cursos en runtime | No existe fallback local: una caída de la base debe ser visible y un curso retirado no puede reaparecer desde archivos empaquetados. |
 | D-04 | Usar una RPC transaccional para el nuevo CRUD | El contenido, índice y revisión se confirman juntos. |
 | D-05 | Separar contenido y configuración | PUT reemplaza material; PATCH modifica campos operativos. |
 | D-06 | Proteger DELETE y conservar cursos con actividad | La alternativa operativa es archivar. |
