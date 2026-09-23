@@ -47,6 +47,23 @@ function booleano(valor: unknown, porDefecto: boolean) {
   return undefined;
 }
 
+/**
+ * Invalida únicamente las vistas que pueden reflejar la ficha o el contenido.
+ *
+ * El curso no necesita un nuevo build: la siguiente petición vuelve a resolver
+ * el catálogo y el Markdown desde Supabase.
+ */
+function revalidarCursoPublicado(slug: string, ruta?: string) {
+  revalidatePath("/");
+  revalidatePath("/cursos");
+  revalidatePath("/panel");
+  revalidatePath("/panel/cursos");
+  revalidatePath("/compras");
+  revalidatePath(`/pagar/${slug}`);
+  revalidatePath(`/cursos/${slug}`, "layout");
+  if (ruta) revalidatePath(`/rutas/${ruta}`);
+}
+
 function leerPublicacion(
   ficha: Record<string, unknown>,
   existente?: {
@@ -315,10 +332,7 @@ export async function publicarCurso(
     return { ok: false, error: `El material se guardó, pero no se pudo registrar su revisión: ${eRevision.message}` };
   }
 
-  revalidatePath("/cursos");
-  revalidatePath("/panel/cursos");
-  revalidatePath(`/cursos/${slug}`, "layout");
-  if (publicacion.ruta) revalidatePath(`/rutas/${publicacion.ruta.slug}`);
+  revalidarCursoPublicado(slug, publicacion.ruta?.slug ?? existe?.ruta ?? undefined);
 
   return {
     ok: true,
@@ -451,8 +465,7 @@ export async function crearCurso(
   const { error: eRevision } = await supabase.rpc("registrar_revision_curso", { p_slug: slug });
   if (eRevision) return { ok: false, error: `No se pudo registrar la revisión: ${eRevision.message}` };
 
-  revalidatePath("/panel/cursos");
-  revalidatePath("/cursos");
+  revalidarCursoPublicado(slug);
 
   return {
     ok: true,
