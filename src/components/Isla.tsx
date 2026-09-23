@@ -9,6 +9,7 @@ import {
   Bug,
   GraduationCap,
   LayoutDashboard,
+  ListChecks,
   LogIn,
   Megaphone,
   Newspaper,
@@ -108,13 +109,12 @@ export function Isla({
   if (/^\/cursos\/[^/]+\/[^/]+/.test(ruta)) return null;
 
   /*
-   * Enlaces principales organizados por áreas de uso:
-   * Alumnos y navegación pública disponen de Cursos, Blog, Calendario y Compras.
-   * La administración educativa tiene un solo módulo para cursos y rutas.
+   * Enlaces principales organizados por áreas de uso.
    */
   const enlaces: Enlace[] = autenticado
     ? [
         { href: "/cursos", etiqueta: "Cursos", Icono: GraduationCap },
+        { href: "/proximos-cursos", etiqueta: "Próximos cursos", Icono: ListChecks },
         { href: "/blog", etiqueta: "Blog", Icono: Newspaper },
         { href: "/calendario", etiqueta: "Calendario", Icono: CalendarDays },
         { href: "/compras", etiqueta: "Mis compras", Icono: Receipt },
