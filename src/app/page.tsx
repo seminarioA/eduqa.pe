@@ -122,24 +122,45 @@ export default async function Page() {
             {pilares.map((pilar, indice) => (
               <article
                 key={pilar.titulo}
-                className="flex min-h-[230px] flex-col rounded-xl border border-borde bg-fondo p-5"
+                className="relative min-h-[280px]"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <span className="text-xs font-semibold tabular-nums text-rojo-acento">
-                    0{indice + 1}
-                  </span>
-                  <div aria-hidden="true" className="shrink-0">
-                    <Llama className="h-16 w-auto text-rojo-acento/70" />
-                  </div>
-                </div>
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-fondo [clip-path:polygon(31%_0,100%_0,100%_100%,0_100%,0_24%,31%_24%)]"
+                />
 
-                <div className="mt-auto pt-6">
-                  <h3 className="text-base font-semibold leading-snug text-texto">
-                    {pilar.titulo}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-                    {pilar.texto}
-                  </p>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  className="pointer-events-none absolute inset-0 size-full text-borde"
+                >
+                  <path
+                    d="M31 0 H100 V100 H0 V24 H31 Z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
+
+                <span className="absolute left-5 top-4 z-10 text-xs font-semibold tabular-nums text-rojo-acento">
+                  0{indice + 1}
+                </span>
+
+                <div className="relative z-10 flex h-full min-h-[280px] flex-col px-5 pb-5 pt-8">
+                  <div aria-hidden="true" className="flex justify-center pt-2">
+                    <Llama className="h-20 w-auto text-rojo-acento/70" />
+                  </div>
+
+                  <div className="mt-auto pt-6">
+                    <h3 className="whitespace-nowrap text-center text-sm font-semibold leading-none text-texto xl:text-base">
+                      {pilar.titulo}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-texto-suave">
+                      {pilar.texto}
+                    </p>
+                  </div>
                 </div>
               </article>
             ))}
