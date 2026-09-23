@@ -3,7 +3,7 @@ export const ICONOS_CURSO = [
   "docker", "fastapi", "fortran", "githubactions", "gemini", "huggingface",
   "pandas", "postgresql", "python", "pytorch", "scikitlearn", "opencv",
   "linux", "n8n", "notebooklm", "redis", "sqlite", "supabase",
-  "libro", "nube", "datos", "matematicas", "farmacologia", "bioingenieria",
+  "libro", "soa", "nube", "datos", "matematicas", "farmacologia", "bioingenieria",
 ] as const;
 
 export type IconoNombre = (typeof ICONOS_CURSO)[number];
@@ -16,6 +16,7 @@ export function esIconoCurso(valor: unknown): valor is IconoNombre {
 export function resolverIconoCurso(slug: string, area: string, icono?: unknown): IconoNombre {
   if (esIconoCurso(icono)) return icono;
   if (slug.startsWith("fortran")) return "fortran";
+  if (slug.includes("soa")) return "soa";
   const porArea: Record<string, IconoNombre> = {
     "Matemáticas": "matematicas", "Farmacología": "farmacologia",
     "Bioingeniería": "bioingenieria", "Bases de Datos": "datos",

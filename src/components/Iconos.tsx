@@ -40,8 +40,44 @@ import {
 // Todos los cursos muestran un icono. Las tecnologías usan sus logotipos;
 // las materias generales usan símbolos de la biblioteca Lucide.
 
+function IconoSoa({ className }: { className?: string }) {
+  // Glifos originales de siete segmentos: estética de display/calculadora sin
+  // depender de una fuente externa ni redistribuir archivos tipográficos.
+  return (
+    <svg
+      viewBox="0 0 78 28"
+      className={className}
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <g>
+        {/* S */}
+        <rect x="2" y="2" width="20" height="3" rx="1" />
+        <rect x="2" y="4" width="3" height="9" rx="1" />
+        <rect x="2" y="12.5" width="20" height="3" rx="1" />
+        <rect x="19" y="15" width="3" height="9" rx="1" />
+        <rect x="2" y="23" width="20" height="3" rx="1" />
+
+        {/* O */}
+        <rect x="29" y="2" width="20" height="3" rx="1" />
+        <rect x="29" y="4" width="3" height="20" rx="1" />
+        <rect x="46" y="4" width="3" height="20" rx="1" />
+        <rect x="29" y="23" width="20" height="3" rx="1" />
+
+        {/* A */}
+        <rect x="56" y="2" width="20" height="3" rx="1" />
+        <rect x="56" y="4" width="3" height="20" rx="1" />
+        <rect x="73" y="4" width="3" height="20" rx="1" />
+        <rect x="56" y="12.5" width="20" height="3" rx="1" />
+      </g>
+    </svg>
+  );
+}
+
 const MAPA: Record<IconoNombre, ComponentType<{ className?: string }>> = {
   libro: BookOpen,
+  soa: IconoSoa,
   nube: CloudUpload,
   datos: Database,
   matematicas: Sigma,

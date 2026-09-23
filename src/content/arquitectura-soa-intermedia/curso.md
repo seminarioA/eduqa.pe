@@ -6,7 +6,7 @@ resumen: "Diseño de servicios e integraciones SOA: contratos síncronos y asín
 area: "Backend"
 nivel: INTERMEDIO
 horas: 48
-icono: libro
+icono: soa
 precio: 20
 estado: borrador
 acceso_libre: false
@@ -14,9 +14,9 @@ orden: 99
 ruta:
   slug: arquitectura-soa
   nombre: "Arquitectura SOA"
-  descripcion: "De los fundamentos a arquitecturas de servicios integrables, gobernables e implementables."
-  orden: 99
-  posicion: 2
+  descripcion: "Nivelación, fundamentos, diseño intermedio y gobierno avanzado de arquitecturas orientadas a servicios."
+  orden: 4
+  posicion: 3
   requisitos:
     - introduccion-arquitectura-soa
 ---

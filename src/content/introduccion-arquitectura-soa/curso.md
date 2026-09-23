@@ -6,7 +6,7 @@ resumen: "Los conceptos fundamentales de la arquitectura orientada a servicios s
 area: "Backend"
 nivel: INTRODUCCIÓN
 horas: 30
-icono: libro
+icono: soa
 precio: 20
 estado: borrador
 acceso_libre: false
@@ -14,8 +14,9 @@ orden: 99
 ruta:
   slug: arquitectura-soa
   nombre: "Arquitectura SOA"
-  descripcion: "De los conceptos fundamentales de SOA al diseño, gobierno e implementación de arquitecturas orientadas a servicios."
-  orden: 99
-  posicion: 1
-  requisitos: []
+  descripcion: "Nivelación, fundamentos, diseño intermedio y gobierno avanzado de arquitecturas orientadas a servicios."
+  orden: 4
+  posicion: 2
+  requisitos:
+    - nivelacion-arquitectura-soa
 ---
