@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test:iconos": "node scripts/validar-iconos-cursos.mjs",
     "test:catalogo": "node scripts/validar-catalogo-local.mjs",
+    "test:cursos:runtime": "node scripts/validar-cursos-runtime.mjs",
     "test:panel": "node scripts/validar-acciones-panel.mjs",
     "test:tickets": "node --test scripts/validar-tickets-commit.test.mjs",
     "test:python:tools": "node scripts/validar-herramientas-python.mjs",
