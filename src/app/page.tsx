@@ -511,10 +511,28 @@ export default async function Page() {
                     href="https://www.linkedin.com/company/eduqa-pe"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-colors hover:text-rojo-acento"
+                    className="inline-flex items-center gap-2 transition-colors hover:text-rojo-acento"
                   >
+                    <IconoRed nombre="linkedin" className="size-4" />
                     LinkedIn
                   </a>
+                </li>
+                <li>
+                  <Link
+                    href="/reclamaciones"
+                    className="inline-flex items-center gap-2 transition-colors hover:text-rojo-acento"
+                  >
+                    <span className="rounded bg-white px-1.5 py-1 ring-1 ring-borde">
+                      <img
+                        src="/libro-de-reclamaciones.svg"
+                        alt=""
+                        width={48}
+                        height={33}
+                        className="h-6 w-auto"
+                      />
+                    </span>
+                    Libro de Reclamaciones
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -522,36 +540,8 @@ export default async function Page() {
         </div>
 
         <div className="border-t border-borde bg-fondo/60">
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-6 py-5 text-sm text-texto-tenue sm:flex-row sm:items-center sm:justify-between">
-            <span>
-              © {new Date().getFullYear()} {marca.nombre}. Todos los derechos reservados.
-            </span>
-
-            <div className="flex items-center gap-4">
-              <a
-                href="https://www.linkedin.com/company/eduqa-pe"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="EDUQA.PE en LinkedIn"
-                className="inline-flex size-9 items-center justify-center rounded-lg border border-borde transition-colors hover:border-rojo-acento hover:text-rojo-acento"
-              >
-                <IconoRed nombre="linkedin" className="size-4" />
-              </a>
-
-              <Link
-                href="/reclamaciones"
-                aria-label="Libro de Reclamaciones"
-                className="rounded-md bg-white px-2 py-1.5 ring-1 ring-borde transition-opacity hover:opacity-80"
-              >
-                <img
-                  src="/libro-de-reclamaciones.svg"
-                  alt="Libro de Reclamaciones"
-                  width={64}
-                  height={44}
-                  className="h-9 w-auto"
-                />
-              </Link>
-            </div>
+          <div className="mx-auto w-full max-w-5xl px-6 py-5 text-sm text-texto-tenue">
+            © {new Date().getFullYear()} {marca.nombre}. Todos los derechos reservados.
           </div>
         </div>
       </footer>
