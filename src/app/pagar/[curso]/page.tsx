@@ -7,6 +7,8 @@ import { buscarCurso } from "@/lib/catalogo-cursos";
 import { Migas } from "@/components/Migas";
 import { PagoQr } from "./PagoQr";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Comprar curso — EDUQA.PE",
   robots: { index: false, follow: false },
