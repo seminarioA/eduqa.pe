@@ -120,9 +120,9 @@ using (
   or public.es_usuario_interno()
 );
 
-revoke all on public.propuestas_curso from anon;
+revoke all on public.propuestas_curso from anon, authenticated;
 revoke all on public.votos_propuesta_curso from anon;
-grant select, insert, update on public.propuestas_curso to authenticated;
+grant insert, update on public.propuestas_curso to authenticated;
 grant select on public.votos_propuesta_curso to authenticated;
 revoke insert, update, delete on public.votos_propuesta_curso from authenticated;
 
@@ -150,6 +150,37 @@ group by
 
 revoke all on public.v_proximos_cursos from anon;
 grant select on public.v_proximos_cursos to authenticated;
+
+-- La prioridad editorial y los borradores no salen por la vista pública.
+-- Esta vista solo devuelve filas cuando el JWT pertenece a un rol interno.
+create or replace view public.v_propuestas_curso_internas
+with (security_invoker = false) as
+select
+  p.id,
+  p.titulo,
+  p.subtitulo,
+  p.precio,
+  p.icono,
+  p.nivel,
+  p.area,
+  p.estado,
+  p.prioridad_interna,
+  p.creado_por,
+  p.curso_slug,
+  p.creada_en,
+  p.actualizada_en,
+  count(v.propuesta_id)::int as votos
+from public.propuestas_curso p
+left join public.votos_propuesta_curso v
+  on v.propuesta_id = p.id
+where public.es_usuario_interno()
+group by
+  p.id, p.titulo, p.subtitulo, p.precio, p.icono, p.nivel, p.area,
+  p.estado, p.prioridad_interna, p.creado_por, p.curso_slug,
+  p.creada_en, p.actualizada_en;
+
+revoke all on public.v_propuestas_curso_internas from anon;
+grant select on public.v_propuestas_curso_internas to authenticated;
 
 create or replace function public.votar_propuesta_curso(p_propuesta_id uuid)
 returns date
