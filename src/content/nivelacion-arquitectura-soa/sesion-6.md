@@ -119,10 +119,10 @@ La arquitectura debe identificar qué estado es observable mediante interaccione
 Clasifica cada ejemplo.
 
 # Pares
-- Índice interno de una tabla => estado privado
-- Reserva visible para comprador y tienda => estado compartido
-- Caché interna regenerable => estado privado
-- Estado de una orden consultable por consumidor y proveedor => estado compartido
+- Índice interno de una tabla => estado privado usado para implementación
+- Reserva visible para comprador y tienda => estado compartido de disponibilidad
+- Caché interna regenerable => estado privado derivado y regenerable
+- Estado de una orden consultable por consumidor y proveedor => estado compartido de la orden
 
 # Explicación
 El criterio es si el estado forma parte de la realidad observable compartida entre participantes.
