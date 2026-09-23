@@ -5,7 +5,7 @@ import http from 'node:http';
 import ts from 'typescript';
 import { cargar } from './validar-iconos-cursos.mjs';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const { cargarCursosLocales } = cargar(path.resolve('src/lib/curso-markdown.ts'));
+const { cargarCursosLocales } = cargar(path.resolve('src/lib/curso-markdown-local.ts'));
 const biblioteca = ts.transpileModule(fs.readFileSync('src/lib/fortran-web.ts','utf8'), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 let fallarDescarga = false;
 const servidor = http.createServer((req,res)=>{
