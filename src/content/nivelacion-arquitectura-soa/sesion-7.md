@@ -44,10 +44,10 @@ La cohesión se evalúa sobre significado y responsabilidad, no contando método
 Relaciona cada capacidad con la responsabilidad más cohesionada.
 
 # Pares
-- Autorizar pago => pagos
-- Consultar saldo => cuentas
-- Reservar inventario => inventario
-- Consultar disponibilidad => inventario
+- Autorizar pago => pagos — autorización
+- Consultar saldo => cuentas — consulta de saldo
+- Reservar inventario => inventario — reserva
+- Consultar disponibilidad => inventario — consulta de disponibilidad
 
 # Explicación
 Las capacidades se agrupan por responsabilidad y razones de cambio relacionadas.
