@@ -70,15 +70,11 @@ export default async function Page({
   const parametros = await searchParams;
   const mensaje = parametros.estado ? MENSAJES[parametros.estado] : undefined;
 
-  let ultimoTotal: number | null = null;
-  let puesto = 0;
-  const ranking = propuestas.map((propuesta, indice) => {
-    if (ultimoTotal === null || propuesta.votos < ultimoTotal) {
-      puesto = indice + 1;
-      ultimoTotal = propuesta.votos;
-    }
-    return { ...propuesta, puesto };
-  });
+  const ranking = propuestas.map((propuesta) => ({
+    ...propuesta,
+    puesto:
+      propuestas.findIndex((candidata) => candidata.votos === propuesta.votos) + 1,
+  }));
 
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-10 lg:pl-64 xl:pl-32 2xl:pl-6">
