@@ -11,6 +11,8 @@ import { FormularioCurso } from "./Formulario";
 import { CrearCurso } from "./Crear";
 import { CatalogoGestion } from "./CatalogoGestion";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Gestión de Cursos & Microcursos — EDUQA.PE",
   robots: { index: false, follow: false },
