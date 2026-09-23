@@ -1,7 +1,5 @@
 import "server-only";
 
-import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { resolverIconoCurso } from "@/lib/iconos-curso";
 import {
@@ -24,12 +22,10 @@ import {
  *
  * El formato está descrito en FORMATO-CURSO.md, junto a los cursos.
  *
- * Va marcado como `server-only`: lee del sistema de archivos, así que no
- * puede acabar en el paquete del navegador. Si alguien lo importa desde un
- * componente cliente, la compilación falla en lugar de romperse al ejecutar.
+ * Va marcado como `server-only` porque el material se obtiene en el servidor
+ * respetando las políticas de acceso de Supabase. Este módulo solo transforma
+ * texto Markdown ya recuperado; no descubre ni lee cursos del sistema de archivos.
  */
-
-const RAIZ = join(process.cwd(), "src", "content");
 
 type Frontmatter = Record<string, unknown>;
 
@@ -535,24 +531,4 @@ export function construirCurso(
     ...(preludio ? { preludio } : {}),
     lecciones,
   };
-}
-
-/** Carga un curso desde su carpeta en el repositorio. */
-export function cargarCurso(carpeta: string, raiz = RAIZ): Curso {
-  const dir = join(raiz, carpeta);
-  const archivos = new Map(
-    readdirSync(dir)
-      .filter((f) => f.endsWith(".md"))
-      .map((f) => [f, readFileSync(join(dir, f), "utf8")] as const),
-  );
-  return construirCurso(carpeta, archivos);
-}
-
-/** Descubre carpetas con ficha; agregar Markdown no requiere editar un registro. */
-export function cargarCursosLocales(raiz = RAIZ): Curso[] {
-  return readdirSync(raiz, { withFileTypes: true })
-    .filter((entrada) => entrada.isDirectory() && existsSync(join(raiz, entrada.name, "curso.md")))
-    .map((entrada) => entrada.name)
-    .sort()
-    .map((carpeta) => cargarCurso(carpeta, raiz));
 }
