@@ -88,10 +88,6 @@ export function TarjetaCursoMatricula({
         </div>
       </div>
 
-      <p className="mt-3 font-mono text-[10px] tracking-wider text-texto-tenue">
-        {curso.codigo}
-      </p>
-
       <h2 className="mt-2 text-base font-semibold leading-snug group-hover:text-rojo-acento">
         {curso.titulo}
       </h2>
@@ -183,38 +179,43 @@ export function TarjetaCursoMatricula({
     );
   }
 
-  // Sin matricular: la tarjeta muestra el botón de matrícula.
+  // Sin matricular: la acción de compra queda fuera de la ficha para no
+  // mezclar el contenido académico con la acción comercial.
   return (
-    <div className="group flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5">
-      {cabecera}
-      {pie}
+    <div className="flex flex-col">
+      <div className="group flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5">
+        {cabecera}
+        {pie}
 
-      {bloqueado ? (
+        {!bloqueado && (
+          <form action={accion} className="mt-3">
+            <input type="hidden" name="curso" value={curso.slug} />
+            <Boton
+              type="submit"
+              disabled={enviando}
+              className="w-full py-2 text-xs"
+            >
+              {enviando && <Loader2 size={14} className="animate-spin" aria-hidden="true" />}
+              {enviando ? "Matriculando…" : "Matricularme gratis"}
+            </Boton>
+          </form>
+        )}
+
+        {!bloqueado && estado && !estado.ok && (
+          <p role="alert" className="mt-2 text-[11px] leading-snug text-rojo-acento">
+            {estado.error}
+          </p>
+        )}
+      </div>
+
+      {bloqueado && (
         <Link
           href={`/pagar/${curso.slug}`}
-          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-rojo px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
+          className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-rojo px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
         >
           <Lock size={13} aria-hidden="true" />
           Comprar por S/{curso.precio.toFixed(2)}
         </Link>
-      ) : (
-        <form action={accion} className="mt-3">
-          <input type="hidden" name="curso" value={curso.slug} />
-          <Boton
-            type="submit"
-            disabled={enviando}
-            className="w-full py-2 text-xs"
-          >
-            {enviando && <Loader2 size={14} className="animate-spin" aria-hidden="true" />}
-            {enviando ? "Matriculando…" : "Matricularme gratis"}
-          </Boton>
-        </form>
-      )}
-
-      {estado && !estado.ok && (
-        <p role="alert" className="mt-2 text-[11px] leading-snug text-rojo-acento">
-          {estado.error}
-        </p>
       )}
     </div>
   );
