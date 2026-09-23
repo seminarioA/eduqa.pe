@@ -3,10 +3,8 @@ import Image from "next/image";
 import {
   ArrowRight,
   BadgeCheck,
-  BookOpen,
   Check,
   ChevronDown,
-  Clock,
   Mail,
   Radio,
   UserPlus,
@@ -19,23 +17,36 @@ import {
   promesas,
   plazaLibre,
 } from "@/lib/catalogo";
-import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { LIMITE_PLAN_GRATIS } from "@/lib/matriculas";
-import { precios } from "@/lib/precios";
 import { usuarioActual } from "@/lib/supabase/servidor";
-import { Icono, IconoRed, Stack } from "@/components/Iconos";
+import { IconoRed, Stack } from "@/components/Iconos";
 import { Llama } from "@/components/Llama";
 import { SelectorTema } from "@/components/Tema";
 import { Boton, Seccion } from "@/components/ui";
 
+const pilares = [
+  {
+    titulo: "Siempre en vivo",
+    texto: "Clases en directo para preguntar, corregir y comprobar lo aprendido.",
+  },
+  {
+    titulo: "Nichos técnicos poco atendidos",
+    texto: "Formación accesible en español para áreas técnicas poco cubiertas.",
+  },
+  {
+    titulo: "Todo listo para practicar",
+    texto: "Herramientas, ejemplos y ejercicios preparados para entrar y trabajar.",
+  },
+  {
+    titulo: "Rigor verificable",
+    texto: "Contenido respaldado por documentación oficial, libros y ejemplos ejecutados.",
+  },
+];
+
 export default async function Page() {
   // La portada cambia según haya sesión: a quien ya entró no se le ofrece
   // crear cuenta como llamada principal.
-  const [usuario, tarifas] = await Promise.all([usuarioActual(), precios()]);
-
-  // Solo los cursos que la base deja ver. Sin sesión, RLS deja pasar los
-  // públicos; los borradores y privados no llegan hasta acá.
-  const abiertos = (await obtenerCursos()).filter((c) => tarifas.has(c.slug));
+  const usuario = await usuarioActual();
 
   return (
     <>
@@ -101,78 +112,31 @@ export default async function Page() {
           </div>
         </header>
 
-        {/* Cursos con material publicado */}
-        {abiertos.length > 0 && (
-          <Seccion titulo="Abiertos ahora" ancho="amplio">
-            <p className="-mt-4 mb-8 max-w-2xl leading-relaxed text-texto-suave">
-              Estos ya tienen material publicado: la teoría y todo el código de las
-              sesiones, con las citas a la documentación oficial de cada herramienta.
-            </p>
+        {/* Pilares fundamentales */}
+        <Seccion titulo="Nuestros 4 pilares fundamentales" ancho="amplio">
+          <p className="-mt-4 mb-8 max-w-2xl leading-relaxed text-texto-suave">
+            La propuesta educativa de EDUQA.PE se sostiene en cuatro principios claros.
+          </p>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {abiertos.map((c) => {
-                const t = tarifas.get(c.slug);
-                return (
-                  <Link
-                    key={c.slug}
-                    href={
-                      usuario
-                        ? "/cursos"
-                        : t?.acceso_libre
-                          ? // Se lee sin cuenta: no tiene sentido mandarlo antes
-                            // a registrarse.
-                            `/cursos/${c.slug}/${c.lecciones[0].slug}`
-                          : "/registro"
-                    }
-                    className="group flex flex-col rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <Icono
-                          nombre={c.icono}
-                          className="size-9 shrink-0 text-texto-tenue transition-colors group-hover:text-rojo-acento"
-                        />
-                      <span className="flex shrink-0 flex-col items-end gap-1">
-                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900">
-                          {c.nivel}
-                        </span>
-                        {t?.acceso_libre && (
-                          <span className="rounded-full bg-rojo-tenue px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-rojo-acento ring-1 ring-inset ring-rojo-acento/25">
-                            Sin cuenta
-                          </span>
-                        )}
-                      </span>
-                    </div>
-
-                    <h3 className="mt-4 text-base font-semibold leading-snug group-hover:text-rojo-acento">
-                      {t?.titulo ?? c.titulo}
-                    </h3>
-                    <p className="mt-2 flex-1 text-sm leading-relaxed text-texto-suave">
-                      {t?.resumen ?? c.resumen}
-                    </p>
-
-                    <div className="mt-4 flex items-center justify-between border-t border-borde pt-2.5 text-xs text-texto-tenue">
-                      <span className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
-                          <BookOpen size={13} aria-hidden="true" />
-                          {c.lecciones.length} sesiones
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock size={13} aria-hidden="true" />
-                          {c.horas} h
-                        </span>
-                      </span>
-                      <ArrowRight
-                        size={14}
-                        aria-hidden="true"
-                        className="opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
-                      />
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </Seccion>
-        )}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {pilares.map((pilar, indice) => (
+              <article
+                key={pilar.titulo}
+                className="rounded-xl border border-borde bg-fondo p-5"
+              >
+                <span className="text-xs font-semibold tabular-nums text-rojo-acento">
+                  0{indice + 1}
+                </span>
+                <h3 className="mt-3 text-base font-semibold text-texto">
+                  {pilar.titulo}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-texto-suave">
+                  {pilar.texto}
+                </p>
+              </article>
+            ))}
+          </div>
+        </Seccion>
 
         {/* Cómo se accede */}
         <Seccion titulo="Cómo se accede">
