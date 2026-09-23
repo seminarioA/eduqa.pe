@@ -22,6 +22,7 @@ import { usuarioActual } from "@/lib/supabase/servidor";
 import { IconoRed, Stack } from "@/components/Iconos";
 import { Llama } from "@/components/Llama";
 import { SelectorTema } from "@/components/Tema";
+import { TituloSplitFlap } from "@/components/TituloSplitFlap";
 import { Boton, Seccion } from "@/components/ui";
 
 const pilares = [
@@ -66,9 +67,10 @@ export default async function Page() {
 
             <div className="mt-10 grid items-center gap-12 sm:grid-cols-[1fr_auto]">
               <div>
-                <h1 className="text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">
-                  {marca.lema}
-                </h1>
+                <TituloSplitFlap
+                  texto={marca.lema}
+                  className="text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl"
+                />
 
                 <p className="mt-5 max-w-xl text-lg leading-relaxed text-sobre-rojo-suave">
                   {marca.gancho}
