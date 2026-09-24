@@ -5,7 +5,7 @@ titulo: "Introducción a yt-dlp"
 resumen: "Uso de yt-dlp desde cero: instalación, dependencias, ejecución por línea de órdenes, selección de entradas, red, descargas, archivos, subtítulos, autenticación y postprocesamiento básico."
 area: "DevOps"
 nivel: INTRODUCCIÓN
-horas: 76
+horas: 90
 icono: python
 paquetes: ["yt-dlp"]
 precio: 20
