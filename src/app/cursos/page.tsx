@@ -168,7 +168,7 @@ export default async function Page() {
             matriculado: m?.estado === "activa" || m?.estado === "completada",
             completado: m?.estado === "completada",
             precio: t?.precio ?? 0,
-            inscritoEn: m?.creada_en ? new Date(m.creada_en).getTime() : null,
+            matriculadoEn: m?.creada_en ? new Date(m.creada_en).getTime() : null,
             vistas: vistasPorCurso.get(c.slug) ?? 0,
           };
         })}
