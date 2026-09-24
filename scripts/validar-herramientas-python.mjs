@@ -71,8 +71,11 @@ assert.ok(posicionIndice > posicionSandbox, "El sandbox debe ir antes de las ses
 assert.ok(posicionQuiz > posicionIndice, "El quiz debe ir después de las sesiones");
 assert.match(leccion, /Sandbox de Python/);
 assert.match(leccion, /Quiz de Python/);
-assert.match(sandbox, /ejecutarPython\(borrador\.codigo, \{ aislado: true \}\)/);
-assert.match(sandbox, /Descargar \.py/);
+assert.match(sandbox, /ejecutarProyectoPython\(/);
+assert.match(sandbox, /proyecto\.archivos\.map/);
+assert.match(sandbox, /activo\.nombre/);
+assert.match(sandbox, /enlace\.download = archivo\.nombre/);
+assert.match(sandbox, /PROYECTO_INICIAL_PYTHON/);
 assert.doesNotMatch(quiz, /#[0-9a-f]{3,8}/i, "El quiz solo usa tokens de color");
 assert.match(quiz, /evento\.key !== "Enter"/);
 assert.match(quiz, /aria-keyshortcuts="Enter"/);
