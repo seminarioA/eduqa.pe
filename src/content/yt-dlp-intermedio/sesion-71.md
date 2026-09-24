@@ -9,7 +9,23 @@ Título, número e identificador de pista.
 
 # artists y artist
 
-Lista de artistas y versión separada por comas.
+`artists` es la lista de artistas; `artist` contiene la misma información unida por comas.
+
+> Doc: [Output Template — music fields](https://github.com/yt-dlp/yt-dlp#output-template)
+
+```ejercicio
+# Enunciado
+Completa el campo que contiene una lista de artistas.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(artists)s
+
+# Pista
+Está en plural.
+```
 
 # genres y genre
 
@@ -39,20 +55,6 @@ Número de disco u otro medio físico.
 
 ```ejercicio
 # Enunciado
-Completa el campo que contiene una lista de artistas.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(artists)s
-
-# Pista
-Está en plural.
-```
-
-```ejercicio
-# Enunciado
 Completa el campo de número de disco.
 
 # Plantilla
@@ -67,43 +69,6 @@ Combina disc y number.
 
 # Cierre
 
+Los campos musicales separan pista, artistas, géneros, compositores, álbum y disco para poder construir nombres o metadata especializada.
+
 La sesión siguiente cubre campos condicionales que solo existen en determinadas etapas u opciones.
-\n\n```ejercicio
-# Enunciado
-Completa el campo que contiene una lista de artistas.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(artists)s
-
-# Pista
-Está en plural.
-```\n\n```ejercicio
-# Enunciado
-Completa el campo que contiene una lista de artistas.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(artists)s
-
-# Pista
-Está en plural.
-```
-
-```ejercicio
-# Enunciado
-Completa el campo de número de disco.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(disc_number)s
-
-# Pista
-Combina disc y number.
-```
