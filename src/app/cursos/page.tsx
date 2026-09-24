@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Infinity as Infinito, UserRound } from "lucide-react";
-import { obtenerCursos } from "@/lib/catalogo-cursos";
+import { obtenerCursos, publicacionesCursos } from "@/lib/catalogo-cursos";
 import { valoraciones } from "@/lib/valoraciones";
 import { rutas } from "@/lib/rutas";
 import { popularidad, ordenarPorPopularidad, ordenarRutasPorPopularidad } from "@/lib/popularidad";
@@ -29,14 +29,16 @@ export default async function Page() {
   const usuario = await usuarioActual();
   if (!usuario) redirect("/acceder?volverA=/cursos");
 
-  const [perfil, matriculas, tarifas, progreso, avisos, titulos] = await Promise.all([
-    perfilActual(),
-    misMatriculas(),
-    precios(),
-    miProgreso(),
-    avisosVisibles(),
-    titulosSeccion(),
-  ]);
+  const [perfil, matriculas, tarifas, progreso, avisos, titulos, publicaciones] =
+    await Promise.all([
+      perfilActual(),
+      misMatriculas(),
+      precios(),
+      miProgreso(),
+      avisosVisibles(),
+      titulosSeccion(),
+      publicacionesCursos(),
+    ]);
   const vistasPorCurso = contarPorCurso(progreso);
   const plan = resumenPlan(perfil, matriculas);
   const esAdmin = perfil?.es_admin ?? false;
@@ -88,6 +90,7 @@ export default async function Page() {
               matricula?.estado === "activa" || matricula?.estado === "completada",
             precio: tarifa.precio ?? 0,
             icono: c.icono,
+            publicadoEn: publicaciones.get(c.slug) ?? null,
           };
         })}
         cabecera={<Tablero avisos={avisos} />}
@@ -167,6 +170,7 @@ export default async function Page() {
             precio: t?.precio ?? 0,
             matriculadoEn: m?.creada_en ? new Date(m.creada_en).getTime() : null,
             vistas: vistasPorCurso.get(c.slug) ?? 0,
+            publicadoEn: publicaciones.get(c.slug) ?? null,
           };
         })}
       />
