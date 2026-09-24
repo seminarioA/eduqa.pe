@@ -47,10 +47,17 @@ export function TarjetaCuentaFlip({
     <div
       className="h-full min-h-[450px] cursor-pointer"
       style={{ perspective: "1400px" }}
-      onMouseEnter={() => setGirada(true)}
-      onMouseLeave={() => setGirada(false)}
+      onPointerMove={(evento) => {
+        if (evento.pointerType !== "mouse") return;
+        const objetivo = evento.target as HTMLElement;
+        setGirada(!objetivo.closest("[data-no-flip]"));
+      }}
+      onPointerLeave={(evento) => {
+        if (evento.pointerType === "mouse") setGirada(false);
+      }}
       onClick={(evento) => {
-        if ((evento.target as HTMLElement).closest("a")) return;
+        const objetivo = evento.target as HTMLElement;
+        if (objetivo.closest("a, [data-no-flip]")) return;
         setGirada((valor) => !valor);
       }}
       aria-label="Tarjeta de cuenta: pasa el cursor o haz clic para ver más información"
@@ -136,7 +143,10 @@ export function TarjetaCuentaFlip({
               )}
             </dl>
 
-            <div className="mt-auto pt-6">
+            <div
+              data-no-flip
+              className="mt-auto -mx-6 -mb-6 px-6 pb-6 pt-6"
+            >
               <Link
                 href="/ajustes"
                 className="inline-flex w-full items-center justify-center rounded-lg border border-white/25 bg-white/10 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/20"
@@ -243,7 +253,10 @@ export function TarjetaCuentaFlip({
               </div>
             </div>
 
-            <div className="mt-auto pt-6">
+            <div
+              data-no-flip
+              className="mt-auto -mx-6 -mb-6 px-6 pb-6 pt-6"
+            >
               <Link
                 href="/ajustes"
                 className="inline-flex w-full items-center justify-center rounded-lg border border-white/25 bg-white/10 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/20"
