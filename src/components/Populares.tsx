@@ -12,6 +12,8 @@ export type CursoPopular = {
   matriculado: boolean;
   precio: number;
   icono?: IconoNombre;
+  /** Fecha ISO del primer lanzamiento público. */
+  publicadoEn?: string | null;
 };
 
 /**
@@ -24,9 +26,11 @@ export type CursoPopular = {
 export function TarjetaPopular({
   curso,
   alTope,
+  resaltarNuevo = false,
 }: {
   curso: CursoPopular;
   alTope: boolean;
+  resaltarNuevo?: boolean;
 }) {
   const bloqueado = !curso.matriculado && alTope;
 
@@ -58,7 +62,9 @@ export function TarjetaPopular({
 
   if (bloqueado) {
     return (
-      <div className="group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md">
+      <div
+        className={`group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md ${resaltarNuevo ? "curso-sheen" : ""}`}
+      >
         <Link
           href={`/cursos/${curso.slug}/${curso.primeraLeccion}`}
           className="flex min-h-0 flex-1 flex-col p-5 pb-12 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-rojo-acento"
@@ -88,7 +94,7 @@ export function TarjetaPopular({
   return (
     <Link
       href={`/cursos/${curso.slug}/${curso.primeraLeccion}`}
-      className="group flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
+      className={`group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento ${resaltarNuevo ? "curso-sheen" : ""}`}
     >
       {contenido}
 
