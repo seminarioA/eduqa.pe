@@ -1,5 +1,6 @@
 import { buscarCurso } from "@/lib/catalogo-cursos";
 import { informacionEditorialCurso } from "@/lib/info-curso";
+import { marcaActual } from "@/lib/marca";
 import { estaMatriculado, perfilActual } from "@/lib/matriculas";
 import { generarPdfInformacionCurso } from "@/lib/pdf-informacion-curso";
 import { esAccesoLibre } from "@/lib/precios";
@@ -31,8 +32,25 @@ function formatoLegible(formato: string | undefined) {
   return "Curso";
 }
 
+async function svgDeMarca(request: Request) {
+  const marca = await marcaActual();
+  const personalizado = marca.cabecera ?? marca.sidebar ?? marca.cierre;
+  if (personalizado) return personalizado;
+
+  try {
+    const respuesta = await fetch(new URL("/llama.svg", request.url), {
+      cache: "force-cache",
+    });
+    if (respuesta.ok) return await respuesta.text();
+  } catch {
+    // El PDF sigue siendo válido aunque falle el fallback visual.
+  }
+
+  return null;
+}
+
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ curso: string }> },
 ) {
   const { curso: cursoSlug } = await params;
@@ -58,15 +76,20 @@ export async function GET(
     }
   }
 
-  const ruta = (await rutaDeCadaCurso()).get(cursoSlug);
+  const [ruta, logoSvg] = await Promise.all([
+    rutaDeCadaCurso().then((rutas) => rutas.get(cursoSlug)),
+    svgDeMarca(request),
+  ]);
+
   const requisitos =
     info.requisitos.length > 0
       ? info.requisitos.map((requisito) => requisito.nombre).join(" · ")
       : "Sin prerrequisitos";
 
-  const pdf = generarPdfInformacionCurso({
+  const pdf = await generarPdfInformacionCurso({
     titulo: curso.titulo,
     resumen: curso.resumen,
+    logoSvg,
     ficha: [
       { etiqueta: "Título", valor: curso.titulo },
       { etiqueta: "Código editorial", valor: info.codigo ?? "Sin código" },
@@ -86,7 +109,9 @@ export async function GET(
       },
       {
         etiqueta: "Precio individual",
-        valor: info.acceso_libre ? "Acceso libre" : `S/ ${info.precio.toFixed(2)}`,
+        valor: info.acceso_libre
+          ? "Acceso libre"
+          : `S/ ${info.precio.toFixed(2)}`,
       },
       {
         etiqueta: "Ruta de aprendizaje",
