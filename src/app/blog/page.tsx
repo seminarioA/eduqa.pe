@@ -7,6 +7,7 @@ import {
   obtenerCategoriasBlog,
 } from "@/lib/blog-medium";
 import { BlogCard } from "@/components/BlogCard";
+import { posicionObjetoCaratula, resolverCaratulaBlog } from "@/lib/blog-types";
 import { Migas } from "@/components/Migas";
 import { perfilActual } from "@/lib/matriculas";
 import { GestionMedium } from "@/components/blog/GestionMedium";
@@ -45,6 +46,7 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
     ? articulos.filter((articulo) => articulo.categorias.includes(tema))
     : articulos;
   const destacado = filtrados[0];
+  const caratulaDestacada = destacado ? resolverCaratulaBlog(destacado) : null;
   const lista = filtrados.slice(1);
 
   return (
@@ -120,14 +122,17 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
 
       {destacado && (
         <section className="mt-10" aria-label="Artículo destacado">
-          <div className="overflow-hidden rounded-3xl border border-borde bg-superficie shadow-sm transition-all hover:border-rojo-acento">
+          <div className="overflow-hidden rounded-3xl bg-superficie shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
             <div className="grid grid-cols-1 md:grid-cols-12">
-              {destacado.portada && (
+              {caratulaDestacada && (
                 <div className="relative aspect-video w-full overflow-hidden bg-fondo md:col-span-7 md:aspect-auto">
                   <img
-                    src={destacado.portada}
-                    alt={destacado.titulo}
+                    src={caratulaDestacada.url}
+                    alt={caratulaDestacada.alt}
                     className="h-full w-full object-cover"
+                    style={{
+                      objectPosition: posicionObjetoCaratula(caratulaDestacada.posicion),
+                    }}
                   />
                   <div className="absolute left-4 top-4 rounded-full bg-rojo px-3 py-1 text-xs font-bold text-white shadow-md">
                     Destacado
@@ -136,7 +141,7 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
               )}
               <div
                 className={`flex flex-col justify-center p-8 ${
-                  destacado.portada ? "md:col-span-5" : "md:col-span-12"
+                  caratulaDestacada ? "md:col-span-5" : "md:col-span-12"
                 }`}
               >
                 <div className="flex flex-wrap gap-2">
@@ -192,7 +197,7 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
             ))}
           </div>
         ) : !destacado ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-borde p-12 text-center">
+          <div className="mt-6 rounded-2xl bg-superficie p-12 text-center">
             <Newspaper size={32} className="mx-auto text-texto-tenue" />
             <p className="mt-3 text-sm text-texto-suave">
               No hay artículos disponibles en este momento.
