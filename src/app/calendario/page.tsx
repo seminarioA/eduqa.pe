@@ -38,7 +38,7 @@ export default async function Page() {
         Calendario
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-        Las clases en vivo de las ediciones en las que estás inscrito. Las horas
+        Las clases en vivo de las ediciones en las que estás matriculado. Las horas
         son de Perú.
       </p>
 
