@@ -96,7 +96,7 @@ export function TarjetaCursoMatricula({
       </p>
 
       {/* La barra solo tiene sentido cuando hay algo que medir: si no estás
-          inscrito, no hay progreso del que hablar. */}
+          matriculado, no hay progreso del que hablar. */}
       {curso.matriculado && (
         <div className="mt-3">
           <div className="flex items-center justify-between text-[11px] text-texto-tenue">
