@@ -157,12 +157,12 @@ export function TarjetaCursoMatricula({
         <div className="mt-3 flex items-center justify-between border-t border-borde pt-2.5 text-xs text-texto-tenue">
           <span className="flex items-center gap-3">
             <span className="flex items-center gap-1">
-              <BookOpen size={13} aria-hidden="true" />
-              {curso.sesiones}
+              <BookOpen size={13} className="shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{curso.sesiones}</span>
             </span>
             <span className="flex items-center gap-1">
-              <Clock size={13} aria-hidden="true" />
-              {curso.horas} h
+              <Clock size={13} className="shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{curso.horas} h</span>
             </span>
           </span>
           {comoAdmin && !curso.matriculado ? (
@@ -185,7 +185,7 @@ export function TarjetaCursoMatricula({
   // curvo, evitando que la tarjeta crezca por añadir un botón externo.
   return (
     <div className="group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo">
-      <div className={`flex min-h-0 flex-1 flex-col p-5 ${bloqueado ? "pb-[4.5rem]" : ""}`}>
+      <div className={`flex min-h-0 flex-1 flex-col p-5 ${bloqueado ? "pb-12" : ""}`}>
         {cabecera}
 
         {!bloqueado && (
@@ -224,7 +224,7 @@ export function TarjetaCursoMatricula({
 
       {bloqueado && (
         <>
-          <div className="absolute bottom-0 left-0 flex h-14 w-1/2 flex-nowrap items-center justify-start gap-3 overflow-hidden whitespace-nowrap border-t border-borde px-5 text-[11px] leading-none text-texto-tenue">
+          <div className="absolute bottom-0 left-0 flex h-9 w-1/2 flex-nowrap items-center justify-start gap-3 overflow-hidden whitespace-nowrap border-t border-borde px-5 text-[11px] leading-none text-texto-tenue">
             <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
               <BookOpen size={13} className="shrink-0" aria-hidden="true" />
               <span className="whitespace-nowrap">{curso.sesiones}</span>
@@ -237,7 +237,7 @@ export function TarjetaCursoMatricula({
 
           <Link
             href={`/pagar/${curso.slug}`}
-            className="absolute bottom-0 right-0 flex h-14 w-1/2 flex-nowrap items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-tl-2xl border-l border-t border-borde bg-rojo px-3 text-[11px] font-semibold leading-none text-white transition-colors hover:bg-rojo-hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
+            className="absolute bottom-0 right-0 flex h-9 w-1/2 flex-nowrap items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-tl-xl border-l border-t border-borde bg-rojo px-3 text-[11px] font-semibold leading-none text-white transition-colors hover:bg-rojo-hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
           >
             <Lock size={13} className="shrink-0" aria-hidden="true" />
             <span className="whitespace-nowrap">S/{curso.precio.toFixed(2)}</span>
