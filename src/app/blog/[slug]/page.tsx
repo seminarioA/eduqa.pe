@@ -13,6 +13,10 @@ import {
 import { buscarArticuloBlog, obtenerArticulosBlog } from "@/lib/blog-medium";
 import { Migas } from "@/components/Migas";
 import { ProgresoLectura } from "@/components/blog/ProgresoLectura";
+import {
+  BotonCompartirArticulo,
+  ContenidoArticulo,
+} from "@/components/blog/MotorBlog";
 
 export async function generateStaticParams() {
   const articulos = await obtenerArticulosBlog();
@@ -102,23 +106,31 @@ export default async function ArticuloPage({
             {articulo.resumen}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-texto-tenue">
-            <div className="flex items-center gap-2">
-              <span className="flex size-7 items-center justify-center rounded-full bg-rojo-tenue text-xs font-bold text-rojo-acento">
-                E
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-texto-tenue">
+              <div className="flex items-center gap-2">
+                <span className="flex size-7 items-center justify-center rounded-full bg-rojo-tenue text-xs font-bold text-rojo-acento">
+                  E
+                </span>
+                <span className="font-semibold text-texto">{articulo.autor}</span>
+              </div>
+              <span>·</span>
+              <span className="flex items-center gap-1.5">
+                <Calendar size={13} aria-hidden="true" />
+                <time dateTime={articulo.fechaIso}>{articulo.fecha}</time>
               </span>
-              <span className="font-semibold text-texto">{articulo.autor}</span>
+              <span>·</span>
+              <span className="flex items-center gap-1.5">
+                <Clock size={13} aria-hidden="true" />
+                {articulo.minutosLectura} min de lectura
+              </span>
             </div>
-            <span>·</span>
-            <span className="flex items-center gap-1.5">
-              <Calendar size={13} aria-hidden="true" />
-              <time dateTime={articulo.fechaIso}>{articulo.fecha}</time>
-            </span>
-            <span>·</span>
-            <span className="flex items-center gap-1.5">
-              <Clock size={13} aria-hidden="true" />
-              {articulo.minutosLectura} min de lectura
-            </span>
+
+            <BotonCompartirArticulo
+              titulo={articulo.titulo}
+              resumen={articulo.resumen}
+              slug={articulo.slug}
+            />
           </div>
         </header>
 
@@ -132,10 +144,7 @@ export default async function ArticuloPage({
           </div>
         )}
 
-        <div
-          className="prose prose-lg dark:prose-invert mt-10 max-w-none prose-headings:scroll-mt-24 prose-headings:font-semibold prose-headings:tracking-tight prose-p:leading-8 prose-li:leading-7 prose-a:text-rojo-acento prose-pre:rounded-2xl prose-pre:border prose-pre:border-borde prose-img:rounded-2xl"
-          dangerouslySetInnerHTML={{ __html: articulo.contenido }}
-        />
+        <ContenidoArticulo contenido={articulo.contenido} />
 
         <section
           className="mt-14 rounded-3xl border border-rojo-acento/30 bg-gradient-to-br from-superficie via-rojo-tenue/20 to-fondo p-8 text-center"
