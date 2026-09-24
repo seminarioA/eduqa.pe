@@ -4,7 +4,7 @@ import { cache } from "react";
 import { clienteServidor } from "@/lib/supabase/servidor";
 
 /**
- * Personas que se matricularon o compraron cada curso.
+ * Matrículas únicas por curso.
  *
  * Sale de una vista que solo expone el recuento: quién se matriculó en qué no
  * se puede consultar desde aquí.
@@ -32,7 +32,7 @@ export function ordenarPorPopularidad<T extends { slug: string }>(
     .map((x) => x.curso);
 }
 
-/** Una ruta recibe la suma de compras o inscripciones de sus cursos visibles. */
+/** Una ruta recibe la suma de matrículas de sus cursos visibles. */
 export function ordenarRutasPorPopularidad<T extends { cursos: { slug: string }[] }>(
   rutas: T[],
   cuentas: Map<string, number>,
