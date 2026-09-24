@@ -2,7 +2,7 @@
 
 import {
   type FormEvent,
-  type KeyboardEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent,
   type UIEvent,
   useEffect,
@@ -153,7 +153,7 @@ export function SandboxPython() {
     if (!menuArchivo) return;
 
     const cerrar = () => setMenuArchivo(null);
-    const tecla = (evento: globalThis.KeyboardEvent) => {
+    const tecla = (evento: KeyboardEvent) => {
       if (evento.key === "Escape") cerrar();
     };
 
@@ -336,7 +336,7 @@ export function SandboxPython() {
     });
   }
 
-  function manejarTecla(evento: KeyboardEvent<HTMLTextAreaElement>) {
+  function manejarTecla(evento: ReactKeyboardEvent<HTMLTextAreaElement>) {
     if ((evento.ctrlKey || evento.metaKey) && evento.key === "Enter") {
       evento.preventDefault();
       void ejecutar();
