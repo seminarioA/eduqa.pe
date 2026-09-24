@@ -16,7 +16,7 @@ export async function matricularse(
   if (!(await buscarCurso(cursoSlug))) return { ok: false, error: "Ese curso no existe." };
 
   const usuario = await usuarioActual();
-  if (!usuario) return { ok: false, error: "Entra a tu cuenta para inscribirte." };
+  if (!usuario) return { ok: false, error: "Entra a tu cuenta para matricularte." };
 
   const supabase = await clienteServidor();
   const { error } = await supabase
@@ -35,7 +35,7 @@ export async function matricularse(
     }
     if (error.code === "23505") return { ok: true }; // ya estaba matriculado
     console.error("[matricularse]", error);
-    return { ok: false, error: "No pudimos inscribirte. Intenta de nuevo." };
+    return { ok: false, error: "No pudimos matricularte. Intenta de nuevo." };
   }
 
   revalidatePath("/cursos");

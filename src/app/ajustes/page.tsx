@@ -64,6 +64,7 @@ export default async function Page() {
             <Formulario
               nombre={perfil?.nombre ?? ""}
               telefono={perfil?.telefono ?? ""}
+              pais={perfil?.pais ?? ""}
             />
           </div>
         </div>

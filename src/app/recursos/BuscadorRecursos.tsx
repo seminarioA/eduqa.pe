@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BookOpenCheck, Library, Plug, Search } from "lucide-react";
+import { BookOpenCheck, Library, Plug, Search, WandSparkles } from "lucide-react";
 import type { Recurso } from "@/lib/recursos";
 
-const ICONOS = { redaccion: BookOpenCheck, api: Plug, "tipos-de-preguntas": Library };
+const ICONOS = {
+  redaccion: BookOpenCheck,
+  api: Plug,
+  "tipos-de-preguntas": Library,
+  "animaciones-ui": WandSparkles,
+};
 
 export function BuscadorRecursos({ recursos }: { recursos: Recurso[] }) {
   const [busqueda, setBusqueda] = useState("");

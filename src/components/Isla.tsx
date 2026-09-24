@@ -18,6 +18,7 @@ import {
   Receipt,
   Settings,
   Stamp,
+  UserRound,
   UserRoundPlus,
 } from "lucide-react";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -126,9 +127,13 @@ export function Isla({
         ...(esInterno
           ? [{ href: "/recursos", etiqueta: "Recursos", Icono: Library }]
           : []),
+        {
+          href: "/panel",
+          etiqueta: esInterno ? "Panel" : "Mi cuenta",
+          Icono: esInterno ? LayoutDashboard : UserRound,
+        },
         ...(esAdmin
           ? [
-              { href: "/panel", etiqueta: "Panel", Icono: LayoutDashboard },
               { href: "/panel/cursos", etiqueta: "Gestión académica", Icono: GraduationCap },
               { href: "/panel/avisos", etiqueta: "Avisos", Icono: Megaphone },
               { href: "/panel/reportes", etiqueta: "Reportes", Icono: Bug },

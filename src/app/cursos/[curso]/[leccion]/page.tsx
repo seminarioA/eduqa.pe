@@ -34,6 +34,7 @@ import { Ejercicios } from "@/components/curso/Ejercicios";
 import { EjercicioPunto } from "@/components/curso/EjercicioPunto";
 import { ejerciciosPython1 } from "@/content/python-ejercicios";
 import { VistaDiapositivas } from "@/components/sqlite/VistaDiapositivas";
+import { SincronizarCurso } from "@/components/curso/SincronizarCurso";
 
 export const dynamic = "force-dynamic";
 
@@ -225,6 +226,7 @@ export default async function Page({
 
   return (
     <div className="flex min-h-dvh">
+      <SincronizarCurso curso={cursoSlug} />
       {/* El intérprete se trae al abrir la sesión, no al pulsar Ejecutar. */}
       {ejecutable && <CargandoCurso paquetes={curso.paquetes} />}
 

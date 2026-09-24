@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { clienteServidor, usuarioActual } from "@/lib/supabase/servidor";
+import { CODIGOS_PAIS } from "@/lib/paises";
 
 export type EstadoPerfil = { ok: boolean; error?: string };
 
@@ -12,11 +13,10 @@ export type EstadoPerfil = { ok: boolean; error?: string };
  * Por eso se pide completo y no se deriva del correo, que suele ser un alias.
  */
 /**
- * El teléfono es opcional y se guarda en formato internacional. La validación
- * es deliberadamente laxa: los formatos varían por país y rechazar un número
- * válido por exceso de celo es peor que guardar uno raro.
+ * El teléfono es opcional. El cliente combina el prefijo del país con el
+ * número local y lo envía en formato internacional: +<código><número>.
  */
-const RE_TELEFONO = /^\+?[\d\s()-]{6,20}$/;
+const RE_TELEFONO = /^\+\d{6,15}$/;
 
 export async function guardarNombre(
   _prev: EstadoPerfil | null,
@@ -24,6 +24,7 @@ export async function guardarNombre(
 ): Promise<EstadoPerfil> {
   const nombre = String(formData.get("nombre") ?? "").trim().replace(/\s+/g, " ");
   const telefono = String(formData.get("telefono") ?? "").trim();
+  const pais = String(formData.get("pais") ?? "").trim().toUpperCase();
 
   if (nombre.length < 3)
     return { ok: false, error: "Escribe tu nombre completo." };
@@ -32,7 +33,9 @@ export async function guardarNombre(
   if (nombre.length > 80)
     return { ok: false, error: "Ese nombre es demasiado largo." };
   if (telefono && !RE_TELEFONO.test(telefono))
-    return { ok: false, error: "Ese número no parece válido." };
+    return { ok: false, error: "Ese número de teléfono no parece válido." };
+  if (pais && !CODIGOS_PAIS.has(pais))
+    return { ok: false, error: "Selecciona un país válido." };
 
   const usuario = await usuarioActual();
   if (!usuario) return { ok: false, error: "Inicia sesión primero." };
@@ -42,7 +45,7 @@ export async function guardarNombre(
     .from("perfiles")
     // Vacío se guarda como null, no como cadena vacía: el teléfono es
     // opcional y "sin dato" no es lo mismo que "dato en blanco".
-    .update({ nombre, telefono: telefono || null })
+    .update({ nombre, telefono: telefono || null, pais: pais || null })
     .eq("id", usuario.id);
 
   if (error) {
@@ -52,6 +55,8 @@ export async function guardarNombre(
 
   revalidatePath("/cursos");
   revalidatePath("/perfil");
+  revalidatePath("/ajustes");
+  revalidatePath("/panel");
   return { ok: true };
 }
 

@@ -46,8 +46,17 @@ for (const ruta of rutasDinamicas) {
   );
 }
 
-const acciones = leer("src/app/panel/cursos/acciones.ts");
-for (const tabla of ["cursos", "curso_contenido", "curso_sesiones"]) {
+const paginaLeccion = leer("src/app/cursos/[curso]/[leccion]/page.tsx");
+const sincronizador = leer("src/components/curso/SincronizarCurso.tsx");
+const migracionRealtime = leer("supabase/migrations/20260924070000_cursos_realtime.sql");
+assert.match(paginaLeccion, /<SincronizarCurso curso=\{cursoSlug\} \/>/, "La sesión abierta debe suscribirse a cambios del curso.");
+for (const tabla of ["curso_contenido", "curso_sesiones", "cursos"]) {
+  assert.match(sincronizador, new RegExp(`table: "${tabla}"`), `Realtime debe observar ${tabla}.`);
+  assert.match(migracionRealtime, new RegExp(`add table public\\.${tabla}`), `${tabla} debe estar en supabase_realtime.`);
+}
+assert.match(sincronizador, /router\.refresh\(\)/, "Los cambios deben refrescar el Server Component sin recargar la pestaña.");
+
+const acciones = leer("src/app/panel/cursos/acciones.ts");for (const tabla of ["cursos", "curso_contenido", "curso_sesiones"]) {
   assert.match(acciones, new RegExp(`from\\("${tabla}"\\)`), `La publicación debe escribir ${tabla}.`);
 }
 assert.match(acciones, /revalidarCursoPublicado\(slug/, "La publicación debe invalidar las vistas después de escribir en Supabase.");

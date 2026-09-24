@@ -76,15 +76,22 @@ export default async function Page() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
       <Listado
-        populares={ordenarPorPopularidad(disponibles, cuentas).map((c) => ({
-          slug: c.slug,
-          codigo: tarifas.get(c.slug)!.codigo,
-          titulo: tarifas.get(c.slug)?.titulo ?? c.titulo,
-          resumen: tarifas.get(c.slug)?.resumen ?? c.resumen,
-          primeraLeccion: c.lecciones[0].slug,
-          matriculas: cuentas.get(c.slug) ?? 0,
-          icono: c.icono,
-        }))}
+        populares={ordenarPorPopularidad(disponibles, cuentas).map((c) => {
+          const matricula = porCurso.get(c.slug);
+          const tarifa = tarifas.get(c.slug)!;
+          return {
+            slug: c.slug,
+            codigo: tarifa.codigo,
+            titulo: tarifa.titulo ?? c.titulo,
+            resumen: tarifa.resumen ?? c.resumen,
+            primeraLeccion: c.lecciones[0].slug,
+            matriculas: cuentas.get(c.slug) ?? 0,
+            matriculado:
+              matricula?.estado === "activa" || matricula?.estado === "completada",
+            precio: tarifa.precio ?? 0,
+            icono: c.icono,
+          };
+        })}
         cabecera={<Tablero avisos={avisos} />}
         acciones={
           <MenuPerfil
@@ -168,7 +175,7 @@ export default async function Page() {
             matriculado: m?.estado === "activa" || m?.estado === "completada",
             completado: m?.estado === "completada",
             precio: t?.precio ?? 0,
-            inscritoEn: m?.creada_en ? new Date(m.creada_en).getTime() : null,
+            matriculadoEn: m?.creada_en ? new Date(m.creada_en).getTime() : null,
             vistas: vistasPorCurso.get(c.slug) ?? 0,
           };
         })}

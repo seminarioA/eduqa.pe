@@ -36,7 +36,7 @@ export async function generarQrDePago(
     return {
       ok: false,
       error:
-        "Los pagos todavía no están habilitados. Escríbenos y te inscribimos a mano.",
+        "Los pagos todavía no están habilitados. Escríbenos y te matriculamos a mano.",
     };
   }
 

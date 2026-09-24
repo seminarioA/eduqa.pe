@@ -253,3 +253,74 @@ export async function ejecutarPython(
     liberar();
   }
 }
+
+
+/**
+ * Ejecuta un archivo dentro de un proyecto local de varios archivos.
+ *
+ * Los archivos se materializan temporalmente en el filesystem virtual de
+ * Pyodide, por lo que imports entre archivos y lecturas relativas funcionan
+ * como en un proyecto pequeño de escritorio. El directorio de trabajo se
+ * restaura siempre al terminar.
+ */
+export async function ejecutarProyectoPython(
+  archivos: Array<{ nombre: string; codigo: string }>,
+  activo: string,
+): Promise<Ejecucion> {
+  const serializado = JSON.stringify(
+    JSON.stringify(
+      archivos.map(({ nombre, codigo }) => ({
+        nombre,
+        codigo,
+      })),
+    ),
+  );
+  const nombreActivo = JSON.stringify(activo);
+
+  const programa = `
+import json as _json_eduqa
+import os as _os_eduqa
+import pathlib as _pathlib_eduqa
+import runpy as _runpy_eduqa
+import shutil as _shutil_eduqa
+import sys as _sys_eduqa
+
+_archivos_eduqa = _json_eduqa.loads(${serializado})
+_activo_eduqa = ${nombreActivo}
+_base_eduqa = _pathlib_eduqa.Path("/tmp/eduqa_python_sandbox")
+_base_eduqa.mkdir(parents=True, exist_ok=True)
+
+for _entrada_eduqa in list(_base_eduqa.iterdir()):
+    if _entrada_eduqa.is_dir():
+        _shutil_eduqa.rmtree(_entrada_eduqa)
+    else:
+        _entrada_eduqa.unlink()
+
+for _archivo_eduqa in _archivos_eduqa:
+    (_base_eduqa / _archivo_eduqa["nombre"]).write_text(
+        _archivo_eduqa["codigo"],
+        encoding="utf-8",
+    )
+
+_cwd_eduqa = _os_eduqa.getcwd()
+_ruta_eduqa = str(_base_eduqa)
+
+for _modulo_nombre_eduqa, _modulo_eduqa in list(_sys_eduqa.modules.items()):
+    _origen_eduqa = getattr(_modulo_eduqa, "__file__", None)
+    if _origen_eduqa and str(_origen_eduqa).startswith(_ruta_eduqa):
+        _sys_eduqa.modules.pop(_modulo_nombre_eduqa, None)
+
+try:
+    _os_eduqa.chdir(_base_eduqa)
+    _sys_eduqa.path.insert(0, _ruta_eduqa)
+    _runpy_eduqa.run_path(_activo_eduqa, run_name="__main__")
+finally:
+    _os_eduqa.chdir(_cwd_eduqa)
+    if _sys_eduqa.path and _sys_eduqa.path[0] == _ruta_eduqa:
+        _sys_eduqa.path.pop(0)
+
+_resultado_eduqa = None
+`;
+
+  return ejecutarPython(programa, { aislado: true });
+}

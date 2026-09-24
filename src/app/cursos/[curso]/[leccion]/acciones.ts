@@ -69,7 +69,7 @@ export async function valorarCurso(
   if (error) {
     // El caso normal es que no esté matriculado: la política lo rechaza y el
     // mensaje que devuelve la base no sirve para enseñárselo a nadie.
-    return { ok: false, error: "Solo puedes valorar un curso en el que estés inscrito." };
+    return { ok: false, error: "Solo puedes valorar un curso en el que estés matriculado." };
   }
 
   revalidatePath("/cursos");
