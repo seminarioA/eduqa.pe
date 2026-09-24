@@ -36,12 +36,11 @@ export function TelefonoInternacional({
   const [codigoPais, setCodigoPais] = useState(paisDetectado.codigo);
 
   const numeroInicial = useMemo(() => {
-    const telefono = (telefonoInicial ?? "").trim();
-    if (!telefono) return "";
-    if (telefono.startsWith(paisDetectado.prefijo)) {
-      return telefono.slice(paisDetectado.prefijo.length).trim();
-    }
-    return telefono.replace(/^\+/, "").trim();
+    const digitos = (telefonoInicial ?? "").replace(/\D/g, "");
+    if (!digitos) return "";
+
+    const prefijo = paisDetectado.prefijo.replace(/\D/g, "");
+    return digitos.startsWith(prefijo) ? digitos.slice(prefijo.length) : digitos;
   }, [telefonoInicial, paisDetectado.prefijo]);
 
   const [numero, setNumero] = useState(numeroInicial);
