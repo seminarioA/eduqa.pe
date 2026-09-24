@@ -46,9 +46,9 @@ export function TelefonoInternacional({
 
   const [numero, setNumero] = useState(numeroInicial);
   const pais = paisPorCodigo(codigoPais) ?? paisDetectado;
-  const telefonoCompleto = numero.trim()
-    ? `${pais.prefijo} ${numero.trim()}`
-    : "";
+  const digitos = numero.replace(/\D/g, "");
+  const prefijo = pais.prefijo.replace(/\D/g, "");
+  const telefonoCompleto = digitos ? `+${prefijo}${digitos}` : "";
 
   return (
     <div>
