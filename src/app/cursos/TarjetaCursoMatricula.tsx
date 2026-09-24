@@ -237,10 +237,10 @@ export function TarjetaCursoMatricula({
 
           <Link
             href={`/pagar/${curso.slug}`}
-            className="absolute bottom-0 right-0 flex h-14 w-[62%] items-center justify-center gap-1.5 rounded-tl-2xl border-l border-t border-borde bg-rojo px-4 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
+            className="absolute bottom-0 right-0 flex h-14 w-[62%] flex-nowrap items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-tl-2xl border-l border-t border-borde bg-rojo px-4 text-xs font-semibold leading-none text-white transition-colors hover:bg-rojo-hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
           >
-            <Lock size={13} aria-hidden="true" />
-            Comprar por S/{curso.precio.toFixed(2)}
+            <Lock size={13} className="shrink-0" aria-hidden="true" />
+            <span className="whitespace-nowrap">Comprar por S/{curso.precio.toFixed(2)}</span>
           </Link>
         </>
       )}
