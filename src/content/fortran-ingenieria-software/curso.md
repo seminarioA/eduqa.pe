@@ -7,7 +7,7 @@ area: "Lenguajes"
 nivel: AVANZADO
 horas: 16
 icono: fortran
-precio: 20
+precio: 49.90
 estado: publico
 acceso_libre: false
 orden: 18
