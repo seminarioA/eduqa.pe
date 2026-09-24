@@ -186,7 +186,9 @@ export function Listado({
                 />
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {populares.map((c) => <TarjetaPopular key={c.slug} curso={c} />)}
+                {populares.map((c) => (
+                  <TarjetaPopular key={c.slug} curso={c} alTope={alTope} />
+                ))}
               </div>
             </section>
           )}
