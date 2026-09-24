@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import { guardarNombre, type EstadoPerfil } from "./acciones";
 import { Boton, Campo, claseInput } from "@/components/ui";
-import { SelectorPais } from "./SelectorPais";
+import { TelefonoInternacional } from "./TelefonoInternacional";
 
 export function Formulario({
   nombre,
@@ -39,21 +39,12 @@ export function Formulario({
       </Campo>
 
       <Campo
-        etiqueta="País"
-        ayuda="Selecciona tu país de residencia."
+        etiqueta="Teléfono"
+        ayuda="Elige el país para aplicar el prefijo internacional."
       >
-        <SelectorPais valorInicial={pais} />
-      </Campo>
-
-      <Campo etiqueta="Teléfono">
-        <input
-          name="telefono"
-          type="tel"
-          maxLength={20}
-          defaultValue={telefono}
-          autoComplete="tel"
-          placeholder="+51 987 654 321"
-          className={claseInput}
+        <TelefonoInternacional
+          telefonoInicial={telefono}
+          paisInicial={pais}
         />
       </Campo>
 
