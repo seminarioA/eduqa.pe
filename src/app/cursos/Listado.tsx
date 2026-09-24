@@ -107,13 +107,19 @@ export function Listado({
 
     if (activos.size === 0) return;
 
-    setCursosConSheen(activos);
-    const temporizador = window.setTimeout(
-      () => setCursosConSheen(new Set()),
-      DURACION_SHEEN_MS,
-    );
+    let temporizador: number | undefined;
+    const frame = window.requestAnimationFrame(() => {
+      setCursosConSheen(activos);
+      temporizador = window.setTimeout(
+        () => setCursosConSheen(new Set()),
+        DURACION_SHEEN_MS,
+      );
+    });
 
-    return () => window.clearTimeout(temporizador);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      if (temporizador !== undefined) window.clearTimeout(temporizador);
+    };
   }, [cursos, populares]);
 
   // Solo las áreas que de verdad tienen cursos: un filtro que no filtra nada
