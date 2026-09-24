@@ -106,26 +106,24 @@ export default async function ArticuloPage({
             {articulo.resumen}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-4 text-xs text-texto-tenue">
-              <div className="flex items-center gap-2">
-                <span className="flex size-7 items-center justify-center rounded-full bg-rojo-tenue text-xs font-bold text-rojo-acento">
-                  E
-                </span>
-                <span className="font-semibold text-texto">{articulo.autor}</span>
-              </div>
-              <span>·</span>
-              <span className="flex items-center gap-1.5">
-                <Calendar size={13} aria-hidden="true" />
-                <time dateTime={articulo.fechaIso}>{articulo.fecha}</time>
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-texto-tenue">
+            <div className="flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-full bg-rojo-tenue text-xs font-bold text-rojo-acento">
+                E
               </span>
-              <span>·</span>
-              <span className="flex items-center gap-1.5">
-                <Clock size={13} aria-hidden="true" />
-                {articulo.minutosLectura} min de lectura
-              </span>
+              <span className="font-semibold text-texto">{articulo.autor}</span>
             </div>
-
+            <span>·</span>
+            <span className="flex items-center gap-1.5">
+              <Calendar size={13} aria-hidden="true" />
+              <time dateTime={articulo.fechaIso}>{articulo.fecha}</time>
+            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1.5">
+              <Clock size={13} aria-hidden="true" />
+              {articulo.minutosLectura} min de lectura
+            </span>
+            <span>·</span>
             <BotonCompartirArticulo
               titulo={articulo.titulo}
               resumen={articulo.resumen}
@@ -135,7 +133,7 @@ export default async function ArticuloPage({
         </header>
 
         {articulo.portada && (
-          <div className="mt-8 overflow-hidden rounded-3xl border border-borde bg-fondo shadow-sm">
+          <div className="mt-8 overflow-hidden rounded-3xl bg-fondo shadow-sm">
             <img
               src={articulo.portada}
               alt={articulo.titulo}
@@ -147,7 +145,7 @@ export default async function ArticuloPage({
         <ContenidoArticulo contenido={articulo.contenido} />
 
         <section
-          className="mt-14 rounded-3xl border border-rojo-acento/30 bg-gradient-to-br from-superficie via-rojo-tenue/20 to-fondo p-8 text-center"
+          className="mt-14 rounded-3xl bg-gradient-to-br from-superficie via-rojo-tenue/20 to-fondo p-8 text-center shadow-sm"
           aria-label="Aprende más en EDUQA.PE"
         >
           <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-rojo-tenue text-rojo-acento">
