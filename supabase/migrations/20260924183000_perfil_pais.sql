@@ -1,4 +1,4 @@
--- País de residencia del usuario, guardado como código ISO 3166-1 alpha-2.
+-- País usado para el prefijo telefónico, guardado como código ISO 3166-1 alpha-2.
 
 alter table public.perfiles
   add column if not exists pais text;
@@ -19,4 +19,4 @@ end
 $$;
 
 comment on column public.perfiles.pais is
-  'Código ISO 3166-1 alpha-2 del país seleccionado por el usuario.';
+  'Código ISO 3166-1 alpha-2 del país usado para el prefijo telefónico.';
