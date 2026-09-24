@@ -1,7 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { BookOpen, ExternalLink, Newspaper, Tag } from "lucide-react";
-import {\n  obtenerArticulosBlog,\n  obtenerArticulosMedium,\n  obtenerCategoriasBlog,\n} from "@/lib/blog-medium";
+import {
+  obtenerArticulosBlog,
+  obtenerArticulosMedium,
+  obtenerCategoriasBlog,
+} from "@/lib/blog-medium";
 import { BlogCard } from "@/components/BlogCard";
 import { Migas } from "@/components/Migas";
 import { perfilActual } from "@/lib/matriculas";
@@ -24,12 +28,14 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
-  const [articulos, categorias, perfil, consulta] = await Promise.all([
-    obtenerArticulosBlog(),
-    obtenerCategoriasBlog(),
-    perfilActual(),
-    searchParams,
-  ]);
+  const [articulos, articulosMedium, categorias, perfil, consulta] =
+    await Promise.all([
+      obtenerArticulosBlog(),
+      obtenerArticulosMedium(),
+      obtenerCategoriasBlog(),
+      perfilActual(),
+      searchParams,
+    ]);
 
   const tema =
     typeof consulta.tema === "string" && categorias.includes(consulta.tema)
