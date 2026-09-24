@@ -23,6 +23,22 @@ Título e identificador de serie o programa.
 
 Título, número e identificador de temporada.
 
+> Doc: [Output Template — chapter and series fields](https://github.com/yt-dlp/yt-dlp#output-template)
+
+```ejercicio
+# Enunciado
+Completa el identificador de temporada.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(season_id)s
+
+# Pista
+Termina en _id.
+```
+
 # episode, episode_number y episode_id
 
 Título, número e identificador del episodio.
@@ -43,59 +59,8 @@ print("%(___)s")
 Combina episode y number.
 ```
 
-```ejercicio
-# Enunciado
-Completa el identificador de temporada.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(season_id)s
-
-# Pista
-Termina en _id.
-```
-
 # Cierre
 
+Los campos chapter, series, season y episode permiten construir nombres y estructuras de salida coherentes para contenido episódico.
+
 La sesión siguiente cubre pistas, artistas, álbumes y discos.
-\n\n```ejercicio
-# Enunciado
-Completa el campo numérico de episodio.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(episode_number)s
-
-# Pista
-Combina episode y number.
-```\n\n```ejercicio
-# Enunciado
-Completa el campo numérico de episodio.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(episode_number)s
-
-# Pista
-Combina episode y number.
-```
-
-```ejercicio
-# Enunciado
-Completa el identificador de temporada.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(season_id)s
-
-# Pista
-Termina en _id.
-```
