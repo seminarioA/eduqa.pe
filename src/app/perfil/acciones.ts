@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { clienteServidor, usuarioActual } from "@/lib/supabase/servidor";
+import { CODIGOS_PAIS } from "@/lib/paises";
 
 export type EstadoPerfil = { ok: boolean; error?: string };
 
@@ -24,6 +25,7 @@ export async function guardarNombre(
 ): Promise<EstadoPerfil> {
   const nombre = String(formData.get("nombre") ?? "").trim().replace(/\s+/g, " ");
   const telefono = String(formData.get("telefono") ?? "").trim();
+  const pais = String(formData.get("pais") ?? "").trim().toUpperCase();
 
   if (nombre.length < 3)
     return { ok: false, error: "Escribe tu nombre completo." };
@@ -33,6 +35,8 @@ export async function guardarNombre(
     return { ok: false, error: "Ese nombre es demasiado largo." };
   if (telefono && !RE_TELEFONO.test(telefono))
     return { ok: false, error: "Ese número no parece válido." };
+  if (pais && !CODIGOS_PAIS.has(pais))
+    return { ok: false, error: "Selecciona un país válido." };
 
   const usuario = await usuarioActual();
   if (!usuario) return { ok: false, error: "Inicia sesión primero." };
@@ -42,7 +46,7 @@ export async function guardarNombre(
     .from("perfiles")
     // Vacío se guarda como null, no como cadena vacía: el teléfono es
     // opcional y "sin dato" no es lo mismo que "dato en blanco".
-    .update({ nombre, telefono: telefono || null })
+    .update({ nombre, telefono: telefono || null, pais: pais || null })
     .eq("id", usuario.id);
 
   if (error) {
@@ -52,6 +56,8 @@ export async function guardarNombre(
 
   revalidatePath("/cursos");
   revalidatePath("/perfil");
+  revalidatePath("/ajustes");
+  revalidatePath("/panel");
   return { ok: true };
 }
 
