@@ -6,8 +6,8 @@ import {
   CheckCircle2,
   ChevronRight,
   Clock3,
+  Download,
   FileText,
-  Info,
   ListTree,
   Route,
   ShieldCheck,
@@ -123,7 +123,9 @@ export default async function InformacionCursoPage({
         : [];
 
   const requisitos =
-    info.requisitos.length > 0 ? info.requisitos.join(", ") : "Sin prerrequisitos";
+    info.requisitos.length > 0
+      ? info.requisitos.map((requisito) => requisito.nombre).join(" · ")
+      : "Sin prerrequisitos";
 
   return (
     <div className="flex min-h-dvh">
@@ -151,7 +153,16 @@ export default async function InformacionCursoPage({
           <header className="border-b border-borde pb-8">
             <div className="flex items-start justify-between gap-4">
               <p className="font-mono text-sm text-rojo-acento">Ficha del curso</p>
-              <SelectorTema />
+              <div className="flex items-center gap-2">
+                <a
+                  href={`/api/v1/cursos/${curso.slug}/informacion/pdf`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-borde px-3 py-2 text-xs font-medium text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rojo-acento"
+                >
+                  <Download size={15} aria-hidden="true" />
+                  Descargar PDF
+                </a>
+                <SelectorTema />
+              </div>
             </div>
             <h1 className="mt-2 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               Información del curso
@@ -160,16 +171,6 @@ export default async function InformacionCursoPage({
               {curso.titulo}
             </p>
 
-            <div className="mt-5 flex gap-3 rounded-xl border border-borde bg-superficie p-4">
-              <Info size={18} className="mt-0.5 shrink-0 text-rojo-acento" aria-hidden="true" />
-              <div>
-                <p className="text-sm font-medium">Sección informativa y opcional</p>
-                <p className="mt-1 text-xs leading-relaxed text-texto-suave">
-                  Consultarla no registra una sesión vista, no suma progreso y no es
-                  necesaria para completar el curso.
-                </p>
-              </div>
-            </div>
           </header>
 
           <section className="mt-10" aria-labelledby="ficha-academica">
@@ -184,7 +185,7 @@ export default async function InformacionCursoPage({
               {curso.resumen}
             </p>
 
-            <dl className="mt-5 grid gap-x-8 border-y border-borde sm:grid-cols-2">
+            <dl className="mt-5 border-y border-borde">
               <Dato etiqueta="Título" valor={curso.titulo} />
               <Dato etiqueta="Código editorial" valor={info.codigo ?? "Sin código"} />
               <Dato etiqueta="Revisión" valor={String(info.revision)} />
