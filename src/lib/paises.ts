@@ -217,12 +217,16 @@ export function paisPorCodigo(codigo?: string | null) {
 
 export function paisPorTelefono(telefono?: string | null) {
   if (!telefono) return null;
-  const normalizado = telefono.trim();
+  const digitos = telefono.replace(/\D/g, "");
 
   return (
     [...PAISES]
-      .sort((a, b) => b.prefijo.length - a.prefijo.length)
-      .find((pais) => normalizado.startsWith(pais.prefijo)) ?? null
+      .sort(
+        (a, b) =>
+          b.prefijo.replace(/\D/g, "").length -
+          a.prefijo.replace(/\D/g, "").length,
+      )
+      .find((pais) => digitos.startsWith(pais.prefijo.replace(/\D/g, ""))) ?? null
   );
 }
 
