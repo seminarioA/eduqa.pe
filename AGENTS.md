@@ -16,6 +16,13 @@ Un curso se autoriza en Markdown, pero en runtime vive únicamente en Supabase. 
 Los cursos antiguos (`python.ts`, `sqlite.ts`, `redis.ts`, `bioingenieria.ts`)
 todavía están en TypeScript. Al tocarlos, conviene pasarlos a Markdown.
 
+# Interfaz y cards
+
+- Las cards no usan bordes perimetrales completos para separarse del fondo.
+- La jerarquía entre cards se resuelve con fondo, espacio, elevación/sombra, tipografía o divisores parciales.
+- Los bordes completos quedan reservados para controles donde expresan estado o affordance (por ejemplo inputs, tablas o botones cuando corresponda), no como marco decorativo de una card.
+- Esta regla aplica también a bloques editoriales del blog: notas, índices, CTA y paneles informativos no deben verse como cajas delineadas.
+
 # Calidad y verificación obligatoria
 
 - Entregar un archivo o completar una implementación no equivale a terminar la tarea.
