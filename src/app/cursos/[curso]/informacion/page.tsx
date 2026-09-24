@@ -123,7 +123,7 @@ export default async function InformacionCursoPage({
         : [];
 
   const requisitos =
-    info.requisitos.length > 0 ? info.requisitos.join(", ") : "Sin prerrequisitos";
+    info.requisitos.length > 0\n      ? info.requisitos.map((requisito) => requisito.nombre).join(" · ")\n      : "Sin prerrequisitos";
 
   return (
     <div className="flex min-h-dvh">
@@ -184,7 +184,7 @@ export default async function InformacionCursoPage({
               {curso.resumen}
             </p>
 
-            <dl className="mt-5 grid gap-x-8 border-y border-borde sm:grid-cols-2">
+            <dl className="mt-5 border-y border-borde">
               <Dato etiqueta="Título" valor={curso.titulo} />
               <Dato etiqueta="Código editorial" valor={info.codigo ?? "Sin código"} />
               <Dato etiqueta="Revisión" valor={String(info.revision)} />
