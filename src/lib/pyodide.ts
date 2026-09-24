@@ -304,6 +304,12 @@ for _archivo_eduqa in _archivos_eduqa:
 
 _cwd_eduqa = _os_eduqa.getcwd()
 _ruta_eduqa = str(_base_eduqa)
+
+for _modulo_nombre_eduqa, _modulo_eduqa in list(_sys_eduqa.modules.items()):
+    _origen_eduqa = getattr(_modulo_eduqa, "__file__", None)
+    if _origen_eduqa and str(_origen_eduqa).startswith(_ruta_eduqa):
+        _sys_eduqa.modules.pop(_modulo_nombre_eduqa, None)
+
 try:
     _os_eduqa.chdir(_base_eduqa)
     _sys_eduqa.path.insert(0, _ruta_eduqa)
