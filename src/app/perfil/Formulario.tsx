@@ -4,13 +4,16 @@ import { useActionState } from "react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import { guardarNombre, type EstadoPerfil } from "./acciones";
 import { Boton, Campo, claseInput } from "@/components/ui";
+import { SelectorPais } from "./SelectorPais";
 
 export function Formulario({
   nombre,
   telefono,
+  pais,
 }: {
   nombre: string;
   telefono: string;
+  pais: string;
 }) {
   const [estado, accion, guardando] = useActionState<EstadoPerfil | null, FormData>(
     guardarNombre,
@@ -33,6 +36,13 @@ export function Formulario({
           placeholder="Ana Lucía Quispe Rojas"
           className={claseInput}
         />
+      </Campo>
+
+      <Campo
+        etiqueta="País"
+        ayuda="Selecciona tu país de residencia."
+      >
+        <SelectorPais valorInicial={pais} />
       </Campo>
 
       <Campo etiqueta="Teléfono">
