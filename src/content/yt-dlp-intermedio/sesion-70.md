@@ -60,3 +60,42 @@ Termina en _id.
 # Cierre
 
 La sesión siguiente cubre pistas, artistas, álbumes y discos.
+\n\n```ejercicio
+# Enunciado
+Completa el campo numérico de episodio.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(episode_number)s
+
+# Pista
+Combina episode y number.
+```\n\n```ejercicio
+# Enunciado
+Completa el campo numérico de episodio.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(episode_number)s
+
+# Pista
+Combina episode y number.
+```
+
+```ejercicio
+# Enunciado
+Completa el identificador de temporada.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(season_id)s
+
+# Pista
+Termina en _id.
+```

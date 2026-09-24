@@ -80,3 +80,42 @@ Combina playlist, webpage y url.
 # Cierre
 
 La sesión siguiente cubre capítulos, series, temporadas y episodios.
+\n\n```ejercicio
+# Enunciado
+Completa el campo que representa el índice dentro de la playlist.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(playlist_index)s
+
+# Pista
+Termina en index.
+```\n\n```ejercicio
+# Enunciado
+Completa el campo que representa el índice dentro de la playlist.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(playlist_index)s
+
+# Pista
+Termina en index.
+```
+
+```ejercicio
+# Enunciado
+Completa el campo de URL de la playlist.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(playlist_webpage_url)s
+
+# Pista
+Combina playlist, webpage y url.
+```

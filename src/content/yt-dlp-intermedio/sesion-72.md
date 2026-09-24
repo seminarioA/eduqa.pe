@@ -84,3 +84,42 @@ Combina formats y table.
 # Cierre
 
 Todos los grupos de campos documentados ya están identificados. La sesión siguiente aplica templates completos del README.
+\n\n```ejercicio
+# Enunciado
+Completa el campo que contiene la ruta real después de descargar.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(filepath)s
+
+# Pista
+Está disponible después de la descarga.
+```\n\n```ejercicio
+# Enunciado
+Completa el campo que contiene la ruta real después de descargar.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(filepath)s
+
+# Pista
+Está disponible después de la descarga.
+```
+
+```ejercicio
+# Enunciado
+Completa el campo de tabla de formatos para --print.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(formats_table)s
+
+# Pista
+Combina formats y table.
+```

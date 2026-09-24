@@ -88,3 +88,42 @@ Termina en count.
 # Cierre
 
 La sesión siguiente cubre extractor, URLs y clasificación.
+\n\n```ejercicio
+# Enunciado
+Completa el campo que distingue un directo actual.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(is_live)s
+
+# Pista
+Es booleano.
+```\n\n```ejercicio
+# Enunciado
+Completa el campo que distingue un directo actual.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(is_live)s
+
+# Pista
+Es booleano.
+```
+
+```ejercicio
+# Enunciado
+Completa el campo de guardados.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(save_count)s
+
+# Pista
+Termina en count.
+```
