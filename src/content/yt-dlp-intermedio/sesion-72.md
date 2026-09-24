@@ -21,6 +21,22 @@ Disponible en `--print`: nombre calculado del archivo, que puede diferir del nom
 
 Tabla equivalente a `--list-formats`.
 
+> Doc: [Output Template — fields available only in --print](https://github.com/yt-dlp/yt-dlp#output-template)
+
+```ejercicio
+# Enunciado
+Completa el campo de tabla de formatos para --print.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(formats_table)s
+
+# Pista
+Combina formats y table.
+```
+
 # thumbnails_table
 
 Tabla equivalente a `--list-thumbnails`.
@@ -35,7 +51,23 @@ Tabla de captions automáticos.
 
 # filepath
 
-Disponible después de descarga, en `post_process` o `after_move`: ruta real del vídeo descargado.
+Disponible después de la descarga, en `post_process` o `after_move`: ruta real del vídeo descargado.
+
+> Doc: [Output Template — fields available after download](https://github.com/yt-dlp/yt-dlp#output-template)
+
+```ejercicio
+# Enunciado
+Completa el campo que contiene la ruta real después de descargar.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(filepath)s
+
+# Pista
+Está disponible después de la descarga.
+```
 
 # SponsorBlock: start_time y end_time
 
@@ -53,73 +85,8 @@ Nombres amigables de categorías.
 
 Tipo de acción SponsorBlock.
 
-```ejercicio
-# Enunciado
-Completa el campo que contiene la ruta real después de descargar.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(filepath)s
-
-# Pista
-Está disponible después de la descarga.
-```
-
-```ejercicio
-# Enunciado
-Completa el campo de tabla de formatos para --print.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(formats_table)s
-
-# Pista
-Combina formats y table.
-```
-
 # Cierre
 
-Todos los grupos de campos documentados ya están identificados. La sesión siguiente aplica templates completos del README.
-\n\n```ejercicio
-# Enunciado
-Completa el campo que contiene la ruta real después de descargar.
+Los campos condicionales aparecen únicamente en determinadas etapas u opciones; no deben asumirse disponibles en cualquier output template.
 
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(filepath)s
-
-# Pista
-Está disponible después de la descarga.
-```\n\n```ejercicio
-# Enunciado
-Completa el campo que contiene la ruta real después de descargar.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(filepath)s
-
-# Pista
-Está disponible después de la descarga.
-```
-
-```ejercicio
-# Enunciado
-Completa el campo de tabla de formatos para --print.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(formats_table)s
-
-# Pista
-Combina formats y table.
-```
+La sesión siguiente aplica templates completos del README.
