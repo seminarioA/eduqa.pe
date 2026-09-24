@@ -5,7 +5,7 @@ titulo: "Métricas, directos y disponibilidad"
 
 # view_count y concurrent_view_count
 
-`view_count` representa visualizaciones acumuladas; `concurrent_view_count` espectadores concurrentes actuales.
+`view_count` representa visualizaciones acumuladas; `concurrent_view_count` representa espectadores concurrentes actuales.
 
 # like_count y dislike_count
 
@@ -27,6 +27,22 @@ Cantidad de comentarios. El README advierte que algunos extractores solo conocen
 
 Cantidad de guardados o marcadores.
 
+> Doc: [Output Template — available fields](https://github.com/yt-dlp/yt-dlp#output-template)
+
+```ejercicio
+# Enunciado
+Completa el campo de guardados.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(save_count)s
+
+# Pista
+Termina en count.
+```
+
 # age_limit
 
 Restricción de edad en años.
@@ -37,23 +53,7 @@ Puede ser `not_live`, `is_live`, `is_upcoming`, `was_live` o `post_live`.
 
 # is_live y was_live
 
-Booleanos para directo actual y contenido que originalmente fue directo.
-
-# playable_in_embed
-
-Indica si puede reproducirse en players embebidos.
-
-# availability
-
-Puede describir estados como `private`, `premium_only`, `subscriber_only`, `needs_auth`, `unlisted` o `public`.
-
-# media_type
-
-Clasificación del sitio, por ejemplo episode, clip o trailer.
-
-# start_time y end_time
-
-Segundos de inicio y fin indicados por la URL.
+`is_live` indica que el contenido está en directo en este momento; `was_live` indica que originalmente fue una emisión en directo.
 
 > Doc: [Output Template — available fields](https://github.com/yt-dlp/yt-dlp#output-template)
 
@@ -68,62 +68,27 @@ print("%(___)s")
 %(is_live)s
 
 # Pista
-Es booleano.
+Es el campo booleano cuyo nombre empieza por is_.
 ```
 
-```ejercicio
-# Enunciado
-Completa el campo de guardados.
+# playable_in_embed
 
-# Plantilla
-print("%(___)s")
+Indica si el contenido puede reproducirse en reproductores embebidos.
 
-# Esperado
-%(save_count)s
+# availability
 
-# Pista
-Termina en count.
-```
+Puede describir estados como `private`, `premium_only`, `subscriber_only`, `needs_auth`, `unlisted` o `public`.
+
+# media_type
+
+Clasificación del sitio, por ejemplo episode, clip o trailer.
+
+# start_time y end_time
+
+Segundos de inicio y fin indicados por la URL.
 
 # Cierre
 
+Las métricas describen interacción y audiencia, mientras que los campos live y availability describen el estado actual y las restricciones del contenido.
+
 La sesión siguiente cubre extractor, URLs y clasificación.
-\n\n```ejercicio
-# Enunciado
-Completa el campo que distingue un directo actual.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(is_live)s
-
-# Pista
-Es booleano.
-```\n\n```ejercicio
-# Enunciado
-Completa el campo que distingue un directo actual.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(is_live)s
-
-# Pista
-Es booleano.
-```
-
-```ejercicio
-# Enunciado
-Completa el campo de guardados.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(save_count)s
-
-# Pista
-Termina en count.
-```
