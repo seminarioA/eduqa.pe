@@ -9,16 +9,13 @@ import {
   Stamp,
   ArrowUpRight,
   Sparkles,
-  CalendarDays,
-  Mail,
-  ShieldCheck,
 } from "lucide-react";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { Migas } from "@/components/Migas";
 import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { misMatriculas, perfilActual } from "@/lib/matriculas";
-import { Llama } from "@/components/Llama";
 import { Icono } from "@/components/Iconos";
+import { TarjetaCuentaFlip } from "@/components/panel/TarjetaCuentaFlip";
 
 export const metadata: Metadata = {
   title: "Panel — EDUQA.PE",
@@ -46,7 +43,15 @@ export default async function Page() {
   const cursosPorSlug = new Map(catalogo.map((c) => [c.slug, c]));
   const nombre = perfil?.nombre?.trim() || usuario.email?.split("@")[0] || "Usuario";
   const rol = perfil?.es_admin ? "Administrador" : "Alumno";
-  const inicial = nombre.charAt(0).toUpperCase();
+  const cursosActivos = matriculas.filter((m) => m.estado === "activa").length;
+  const cursosCompletados = matriculas.filter((m) => m.estado === "completada").length;
+  const planHasta = perfil?.plan_hasta
+    ? new Date(perfil.plan_hasta).toLocaleDateString("es-PE", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-10 lg:pl-64 xl:pl-32 2xl:pl-6">
@@ -66,82 +71,19 @@ export default async function Page() {
       {/* Identidad y cursos activos */}
       <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)] lg:items-stretch">
         {/* Photocheck de usuario */}
-        <article className="relative overflow-hidden rounded-2xl border border-rojo bg-rojo text-white">
-          <div className="flex h-full flex-col p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-white">
-                  EDUQA.PE
-                </p>
-                <h2 className="mt-1 text-xs font-semibold uppercase tracking-wider text-white/75">
-                  Datos de la cuenta
-                </h2>
-              </div>
-
-              <Llama className="h-10 w-auto text-white" />
-            </div>
-
-            <div className="mt-6 flex flex-col items-center text-center">
-              <div className="flex size-20 items-center justify-center overflow-hidden rounded-2xl border border-white/30 bg-white/10 text-3xl font-bold text-white shadow-sm">
-                {perfil?.foto ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={perfil.foto}
-                    alt={`Foto de ${nombre}`}
-                    className="size-full object-cover"
-                  />
-                ) : (
-                  inicial
-                )}
-              </div>
-
-              <h3 className="mt-4 max-w-full truncate text-lg font-bold text-white">
-                {nombre}
-              </h3>
-              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-                <ShieldCheck size={12} className="text-white" />
-                {rol}
-              </span>
-            </div>
-
-            <dl className="mt-6 space-y-3 border-t border-white/20 pt-5">
-              <div className="flex items-start gap-3">
-                <Mail size={15} className="mt-0.5 shrink-0 text-white/70" />
-                <div className="min-w-0">
-                  <dt className="text-[10px] uppercase tracking-wide text-white/65">
-                    Correo
-                  </dt>
-                  <dd className="mt-0.5 truncate text-xs font-medium text-white">
-                    {usuario.email}
-                  </dd>
-                </div>
-              </div>
-
-              {alta && (
-                <div className="flex items-start gap-3">
-                  <CalendarDays size={15} className="mt-0.5 shrink-0 text-white/70" />
-                  <div>
-                    <dt className="text-[10px] uppercase tracking-wide text-white/65">
-                      Miembro desde
-                    </dt>
-                    <dd className="mt-0.5 text-xs font-medium text-white">
-                      {alta}
-                    </dd>
-                  </div>
-                </div>
-              )}
-            </dl>
-
-            <div className="mt-auto pt-6">
-              <Link
-                href="/ajustes"
-                className="inline-flex w-full items-center justify-center rounded-lg border border-white/25 bg-white/10 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/20"
-              >
-                Editar perfil
-              </Link>
-            </div>
-          </div>
-        </article>
+        <TarjetaCuentaFlip
+          nombre={nombre}
+          rol={rol}
+          correo={usuario.email}
+          alta={alta}
+          foto={perfil?.foto}
+          telefono={perfil?.telefono}
+          plan={perfil?.plan}
+          planHasta={planHasta}
+          rolInterno={perfil?.rol}
+          cursosActivos={cursosActivos}
+          cursosCompletados={cursosCompletados}
+        />
 
         {/* Cursos activos */}
         <article className="rounded-2xl border border-borde bg-superficie p-6">
