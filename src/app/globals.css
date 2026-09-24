@@ -212,6 +212,51 @@ input.buscador-cursos[type="search"]::-webkit-search-cancel-button {
   }
 }
 
+/*
+ * Sheen de lanzamiento: solo se aplica durante unos segundos a cursos
+ * publicados en las últimas 24 h y que este navegador todavía no vio.
+ * El pseudo-elemento no intercepta clics ni altera el layout de la tarjeta.
+ */
+@keyframes curso-sheen-pasa {
+  0% {
+    transform: translateX(-180%) skewX(-14deg);
+  }
+  68% {
+    transform: translateX(240%) skewX(-14deg);
+  }
+  100% {
+    transform: translateX(240%) skewX(-14deg);
+  }
+}
+
+.curso-sheen::after {
+  content: "";
+  position: absolute;
+  z-index: 20;
+  top: -12%;
+  bottom: -12%;
+  left: 0;
+  width: 42%;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 18%,
+    var(--color-rojo-tenue) 38%,
+    var(--color-rojo-acento) 50%,
+    var(--color-rojo-tenue) 62%,
+    transparent 82%
+  );
+  opacity: 0.26;
+  transform: translateX(-180%) skewX(-14deg);
+  animation: curso-sheen-pasa 1.4s ease-in-out 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curso-sheen::after {
+    display: none;
+  }
+}
+
 /* Animación de apertura y cierre de Radix Collapsible. */
 @keyframes desplegar {
   from {

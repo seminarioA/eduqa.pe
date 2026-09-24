@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { BookOpen, Flame, Route, Search, X } from "lucide-react";
 import { TarjetaCursoMatricula, type DatosCurso } from "./TarjetaCursoMatricula";
 import { Selector } from "@/components/Selector";
@@ -36,6 +36,9 @@ const ORDENES = [
 type Orden = (typeof ORDENES)[number]["valor"];
 
 const TODAS = "todas";
+const VENTANA_LANZAMIENTO_MS = 24 * 60 * 60 * 1000;
+const DURACION_SHEEN_MS = 4500;
+const PREFIJO_LANZAMIENTO_VISTO = "eduqa:curso-lanzamiento-visto:";
 
 export function Listado({
   cursos,
@@ -66,6 +69,52 @@ export function Listado({
   const [busqueda, setBusqueda] = useState("");
   const [area, setArea] = useState<string>(TODAS);
   const [orden, setOrden] = useState<Orden>("recientes");
+  const [cursosConSheen, setCursosConSheen] = useState<Set<string>>(
+    () => new Set(),
+  );
+
+  useEffect(() => {
+    const ahora = Date.now();
+    const candidatos = [...cursos, ...populares].filter((curso) => {
+      if (!curso.publicadoEn) return false;
+      const publicado = Date.parse(curso.publicadoEn);
+      if (!Number.isFinite(publicado)) return false;
+      const edad = ahora - publicado;
+      return edad >= 0 && edad <= VENTANA_LANZAMIENTO_MS;
+    });
+
+    if (candidatos.length === 0) return;
+
+    const activos = new Set<string>();
+
+    for (const curso of candidatos) {
+      const clave =
+        PREFIJO_LANZAMIENTO_VISTO +
+        curso.slug +
+        ":" +
+        encodeURIComponent(curso.publicadoEn ?? "");
+
+      try {
+        if (window.localStorage.getItem(clave)) continue;
+        window.localStorage.setItem(clave, "1");
+      } catch {
+        // Si el navegador bloquea localStorage, el efecto sigue siendo visual
+        // y no debe impedir que el catálogo funcione.
+      }
+
+      activos.add(curso.slug);
+    }
+
+    if (activos.size === 0) return;
+
+    setCursosConSheen(activos);
+    const temporizador = window.setTimeout(
+      () => setCursosConSheen(new Set()),
+      DURACION_SHEEN_MS,
+    );
+
+    return () => window.clearTimeout(temporizador);
+  }, [cursos, populares]);
 
   // Solo las áreas que de verdad tienen cursos: un filtro que no filtra nada
   // es ruido.
@@ -187,7 +236,12 @@ export function Listado({
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {populares.map((c) => (
-                  <TarjetaPopular key={c.slug} curso={c} alTope={alTope} />
+                  <TarjetaPopular
+                    key={c.slug}
+                    curso={c}
+                    alTope={alTope}
+                    resaltarNuevo={cursosConSheen.has(c.slug)}
+                  />
                 ))}
               </div>
             </section>
@@ -274,6 +328,7 @@ export function Listado({
                     curso={c}
                     alTope={alTope}
                     esAdmin={esAdmin}
+                    resaltarNuevo={cursosConSheen.has(c.slug)}
                   />
                 ))}
               </div>

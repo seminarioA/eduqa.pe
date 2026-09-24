@@ -31,16 +31,20 @@ export type DatosCurso = {
   precio: number;
   /** Nota media y número de votos. Ausente mientras nadie haya valorado. */
   valoracion?: { promedio: number; total: number };
+  /** Fecha ISO del primer lanzamiento público. */
+  publicadoEn?: string | null;
 };
 
 export function TarjetaCursoMatricula({
   curso,
   alTope,
   esAdmin = false,
+  resaltarNuevo = false,
 }: {
   curso: DatosCurso;
   alTope: boolean;
   esAdmin?: boolean;
+  resaltarNuevo?: boolean;
 }) {
   const [estado, accion, enviando] = useActionState<EstadoMatricula | null, FormData>(
     matricularse,
@@ -96,7 +100,7 @@ export function TarjetaCursoMatricula({
       </p>
 
       {/* La barra solo tiene sentido cuando hay algo que medir: si no estás
-          inscrito, no hay progreso del que hablar. */}
+          matriculado, no hay progreso del que hablar. */}
       {curso.matriculado && (
         <div className="mt-3">
           <div className="flex items-center justify-between text-[11px] text-texto-tenue">
@@ -151,7 +155,7 @@ export function TarjetaCursoMatricula({
     return (
       <Link
         href={`/cursos/${curso.slug}/${curso.primeraLeccion}`}
-        className="group flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
+        className={`group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo p-5 transition-all hover:-translate-y-0.5 hover:border-rojo-acento hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento ${resaltarNuevo ? "curso-sheen" : ""}`}
       >
         {cabecera}
         <div className="mt-3 flex items-center justify-between border-t border-borde pt-2.5 text-xs text-texto-tenue">
@@ -184,7 +188,9 @@ export function TarjetaCursoMatricula({
   // a la izquierda y el CTA ocupa la esquina inferior derecha con un borde
   // curvo, evitando que la tarjeta crezca por añadir un botón externo.
   return (
-    <div className="group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo">
+    <div
+      className={`group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo ${resaltarNuevo ? "curso-sheen" : ""}`}
+    >
       <div className={`flex min-h-0 flex-1 flex-col p-5 ${bloqueado ? "pb-12" : ""}`}>
         {cabecera}
 
@@ -225,13 +231,13 @@ export function TarjetaCursoMatricula({
       {bloqueado && (
         <>
           <div className="absolute bottom-0 left-0 flex h-9 w-1/2 flex-nowrap items-center justify-start gap-3 overflow-hidden whitespace-nowrap border-t border-borde px-5 text-[11px] leading-none text-texto-tenue">
-            <span className="flex items-center gap-1">
-              <BookOpen size={13} aria-hidden="true" />
-              {curso.sesiones}
+            <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
+              <BookOpen size={13} className="shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{curso.sesiones}</span>
             </span>
-            <span className="flex items-center gap-1">
-              <Clock size={13} aria-hidden="true" />
-              {curso.horas} h
+            <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
+              <Clock size={13} className="shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{curso.horas} h</span>
             </span>
           </div>
 
