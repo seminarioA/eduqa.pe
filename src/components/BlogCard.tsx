@@ -1,23 +1,27 @@
 import Link from "next/link";
 import { Clock, Calendar, ArrowUpRight } from "lucide-react";
 import type { ArticuloBlog } from "@/lib/blog-medium";
+import { posicionObjetoCaratula, resolverCaratulaBlog } from "@/lib/blog-types";
 
 export function BlogCard({ articulo }: { articulo: ArticuloBlog }) {
+  const caratula = resolverCaratulaBlog(articulo);
+
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-borde bg-superficie transition-all duration-300 hover:-translate-y-1 hover:border-rojo-acento hover:shadow-lg">
-      {articulo.portada ? (
+    <article className="group flex flex-col overflow-hidden rounded-2xl bg-superficie shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      {caratula ? (
         <div className="relative aspect-video w-full overflow-hidden bg-fondo">
           <img
-            src={articulo.portada}
-            alt={articulo.titulo}
+            src={caratula.url}
+            alt={caratula.alt}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            style={{ objectPosition: posicionObjetoCaratula(caratula.posicion) }}
             loading="lazy"
           />
           <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
             {articulo.categorias.slice(0, 2).map((cat) => (
               <span
                 key={cat}
-                className="rounded-full bg-fondo/90 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-texto backdrop-blur-sm ring-1 ring-borde"
+                className="rounded-full bg-fondo/90 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-texto backdrop-blur-sm shadow-sm"
               >
                 {cat}
               </span>
