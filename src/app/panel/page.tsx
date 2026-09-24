@@ -12,12 +12,13 @@ import {
   CalendarDays,
   Mail,
   ShieldCheck,
-  UserRound,
 } from "lucide-react";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { Migas } from "@/components/Migas";
 import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { misMatriculas, perfilActual } from "@/lib/matriculas";
+import { Llama } from "@/components/Llama";
+import { Icono } from "@/components/Iconos";
 
 export const metadata: Metadata = {
   title: "Panel — EDUQA.PE",
@@ -65,47 +66,52 @@ export default async function Page() {
       {/* Identidad y cursos activos */}
       <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)] lg:items-stretch">
         {/* Photocheck de usuario */}
-        <article className="relative overflow-hidden rounded-2xl border border-borde bg-superficie">
-          <div className="h-1 w-full bg-rojo-acento" />
-
-          <div className="flex h-full flex-col p-6 pt-5">
+        <article className="relative overflow-hidden rounded-2xl border border-rojo bg-rojo text-white">
+          <div className="flex h-full flex-col p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-rojo-acento">
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-white">
                   EDUQA.PE
                 </p>
-                <h2 className="mt-1 text-xs font-semibold uppercase tracking-wider text-texto-tenue">
+                <h2 className="mt-1 text-xs font-semibold uppercase tracking-wider text-white/75">
                   Datos de la cuenta
                 </h2>
               </div>
 
-              <div className="flex size-9 items-center justify-center rounded-lg border border-borde bg-fondo text-texto-tenue">
-                <UserRound size={17} />
-              </div>
+              <Llama className="h-10 w-auto text-white" />
             </div>
 
             <div className="mt-6 flex flex-col items-center text-center">
-              <div className="flex size-20 items-center justify-center rounded-2xl border border-rojo-acento/30 bg-rojo-tenue text-3xl font-bold text-rojo-acento shadow-sm">
-                {inicial}
+              <div className="flex size-20 items-center justify-center overflow-hidden rounded-2xl border border-white/30 bg-white/10 text-3xl font-bold text-white shadow-sm">
+                {perfil?.foto ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={perfil.foto}
+                    alt={`Foto de ${nombre}`}
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  inicial
+                )}
               </div>
 
-              <h3 className="mt-4 max-w-full truncate text-lg font-bold text-texto">
+              <h3 className="mt-4 max-w-full truncate text-lg font-bold text-white">
                 {nombre}
               </h3>
-              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-borde bg-fondo px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-texto-suave">
-                <ShieldCheck size={12} className="text-rojo-acento" />
+              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                <ShieldCheck size={12} className="text-white" />
                 {rol}
               </span>
             </div>
 
-            <dl className="mt-6 space-y-3 border-t border-borde pt-5">
+            <dl className="mt-6 space-y-3 border-t border-white/20 pt-5">
               <div className="flex items-start gap-3">
-                <Mail size={15} className="mt-0.5 shrink-0 text-texto-tenue" />
+                <Mail size={15} className="mt-0.5 shrink-0 text-white/70" />
                 <div className="min-w-0">
-                  <dt className="text-[10px] uppercase tracking-wide text-texto-tenue">
+                  <dt className="text-[10px] uppercase tracking-wide text-white/65">
                     Correo
                   </dt>
-                  <dd className="mt-0.5 truncate text-xs font-medium text-texto">
+                  <dd className="mt-0.5 truncate text-xs font-medium text-white">
                     {usuario.email}
                   </dd>
                 </div>
@@ -113,12 +119,12 @@ export default async function Page() {
 
               {alta && (
                 <div className="flex items-start gap-3">
-                  <CalendarDays size={15} className="mt-0.5 shrink-0 text-texto-tenue" />
+                  <CalendarDays size={15} className="mt-0.5 shrink-0 text-white/70" />
                   <div>
-                    <dt className="text-[10px] uppercase tracking-wide text-texto-tenue">
+                    <dt className="text-[10px] uppercase tracking-wide text-white/65">
                       Miembro desde
                     </dt>
-                    <dd className="mt-0.5 text-xs font-medium text-texto">
+                    <dd className="mt-0.5 text-xs font-medium text-white">
                       {alta}
                     </dd>
                   </div>
@@ -129,7 +135,7 @@ export default async function Page() {
             <div className="mt-auto pt-6">
               <Link
                 href="/ajustes"
-                className="inline-flex w-full items-center justify-center rounded-lg border border-borde bg-fondo px-3 py-2 text-xs font-medium text-texto transition-colors hover:border-rojo-acento hover:text-rojo-acento"
+                className="inline-flex w-full items-center justify-center rounded-lg border border-white/25 bg-white/10 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/20"
               >
                 Editar perfil
               </Link>
@@ -190,7 +196,7 @@ export default async function Page() {
                     className="group flex items-center gap-3 rounded-xl border border-borde bg-fondo p-3 transition-colors hover:border-rojo-acento/60"
                   >
                     <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-borde bg-superficie text-rojo-acento transition-colors group-hover:border-rojo-acento/40">
-                      <BookOpen size={18} />
+                      <Icono nombre={info?.icono} className="size-5" />
                     </div>
 
                     <div className="min-w-0 flex-1">
