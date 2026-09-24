@@ -169,8 +169,11 @@ export const informacionEditorialCurso = cache(
     }
     if (!data) return null;
 
-    const legacy = (data.requisitos ?? []).filter(
-      (requisito): requisito is string =>
+    const requisitosCrudos: unknown[] = Array.isArray(data.requisitos)
+      ? data.requisitos
+      : [];
+    const legacy = requisitosCrudos.filter(
+      (requisito: unknown): requisito is string =>
         typeof requisito === "string" && requisito.length > 0,
     );
     const requisitos = await requisitosVisibles(data.id, legacy);
