@@ -10,6 +10,7 @@ import { cerrarSesion } from "@/app/acceder/acciones";
 import { CabeceraApp } from "@/components/CabeceraApp";
 import { Migas } from "@/components/Migas";
 import { Documento } from "@/components/Documento";
+import { ItemsRecurso } from "../ItemsRecurso";
 
 export const metadata: Metadata = {
   title: "Cómo se escribe un curso — EDUQA.PE",
@@ -57,6 +58,7 @@ export default async function Page() {
       <div className="mt-16">
         <Documento markdown={formato} />
       </div>
+      <ItemsRecurso slug="redaccion" administrador={Boolean(perfil?.es_admin || perfil?.rol === "admin")} />
     </div>
   );
 }
