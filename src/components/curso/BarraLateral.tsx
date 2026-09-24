@@ -6,6 +6,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import {
   ChevronRight,
   FlaskConical,
+  Info,
   ListChecks,
   Menu,
   PanelLeftClose,
@@ -198,6 +199,7 @@ function Contenido({
   onNavegar,
   herramientas,
   codigo,
+  informacionActiva = false,
 }: {
   curso: Curso;
   actual?: Leccion;
@@ -206,6 +208,7 @@ function Contenido({
   onNavegar?: () => void;
   herramientas?: HerramientaCurso[];
   codigo?: string | null;
+  informacionActiva?: boolean;
 }) {
   return (
     <nav className="flex h-full flex-col">
@@ -260,6 +263,27 @@ function Contenido({
               ))}
           </div>
         )}
+
+        <div className="mt-4 border-t border-borde pt-4">
+          <Link
+            href={`/cursos/${curso.slug}/informacion`}
+            onClick={onNavegar}
+            aria-current={informacionActiva ? "page" : undefined}
+            className={`flex items-start gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rojo-acento ${
+              informacionActiva
+                ? "bg-rojo-tenue font-medium text-rojo-acento"
+                : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
+            }`}
+          >
+            <Info size={15} className="mt-0.5 shrink-0" aria-hidden="true" />
+            <span>
+              <span className="block">Información del curso</span>
+              <span className="mt-0.5 block text-[10px] font-normal text-texto-tenue">
+                Opcional · no cuenta para completar
+              </span>
+            </span>
+          </Link>
+        </div>
       </div>
     </nav>
   );
@@ -276,12 +300,14 @@ export function BarraLateral({
   inicio = "/cursos",
   herramientas,
   codigo,
+  informacionActiva = false,
 }: {
   curso: Curso;
   actual?: Leccion;
   inicio?: string;
   herramientas?: HerramientaCurso[];
   codigo?: string | null;
+  informacionActiva?: boolean;
 }) {
   const [movilAbierta, setMovilAbierta] = useState(false);
   const [plegada, setPlegada] = useState(false);
@@ -338,6 +364,7 @@ export function BarraLateral({
               inicio={inicio}
               herramientas={herramientas}
               codigo={codigo}
+              informacionActiva={informacionActiva}
               seccionActiva={seccionActiva}
               onNavegar={() => setMovilAbierta(false)}
             />
@@ -374,8 +401,6 @@ export function BarraLateral({
                   aria-label={herramienta.etiqueta}
                   aria-current={herramienta.activa ? "page" : undefined}
                   className={`rounded-lg p-2 transition-colors hover:bg-superficie ${
-                    herramienta.tipo === "quiz" ? "mt-auto mb-10" : ""
-                  } ${
                     herramienta.activa ? "bg-rojo-tenue text-rojo-acento" : "text-texto-suave hover:text-rojo-acento"
                   }`}
                 >
@@ -383,6 +408,18 @@ export function BarraLateral({
                 </Link>
               );
             })}
+            <Link
+              href={`/cursos/${curso.slug}/informacion`}
+              aria-label="Información del curso (opcional)"
+              aria-current={informacionActiva ? "page" : undefined}
+              className={`mt-auto mb-10 rounded-lg p-2 transition-colors hover:bg-superficie ${
+                informacionActiva
+                  ? "bg-rojo-tenue text-rojo-acento"
+                  : "text-texto-suave hover:text-rojo-acento"
+              }`}
+            >
+              <Info size={18} aria-hidden="true" />
+            </Link>
           </div>
         ) : (
           <div className="relative h-full">
@@ -401,6 +438,7 @@ export function BarraLateral({
               inicio={inicio}
               herramientas={herramientas}
               codigo={codigo}
+              informacionActiva={informacionActiva}
               seccionActiva={seccionActiva}
             />
           </div>
