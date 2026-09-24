@@ -11,7 +11,10 @@ export function Migas({ items }: { items: Miga[] }) {
   return (
     <nav aria-label="Ruta de navegación" className="mb-6">
       <ol className="flex flex-wrap items-center gap-1 text-sm text-texto-tenue">
-        <li className="flex items-center gap-1">
+        <li
+          className="miga-stagger flex items-center gap-1"
+          style={{ animationDelay: "0ms" }}
+        >
           <Link
             href="/"
             aria-label="Inicio"
@@ -24,7 +27,11 @@ export function Migas({ items }: { items: Miga[] }) {
         {items.map((m, i) => {
           const ultimo = i === items.length - 1;
           return (
-            <li key={`${m.texto}-${i}`} className="flex items-center gap-1">
+            <li
+              key={`${m.texto}-${i}`}
+              className="miga-stagger flex items-center gap-1"
+              style={{ animationDelay: `${(i + 1) * 65}ms` }}
+            >
               <ChevronRight size={13} aria-hidden="true" className="shrink-0 opacity-60" />
               {m.href && !ultimo ? (
                 <Link href={m.href} className="transition-colors hover:text-rojo-acento">
