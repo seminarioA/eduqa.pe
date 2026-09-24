@@ -496,7 +496,10 @@ export function SandboxPython() {
                         autoFocus
                         value={nombreEdicion}
                         onChange={(evento) => setNombreEdicion(evento.target.value)}
-                        onBlur={() => confirmarEdicion()}
+                        onBlur={() => {
+                          setEdicion(null);
+                          setMensaje(null);
+                        }}
                         onKeyDown={(evento) => {
                           if (evento.key === "Escape") {
                             setEdicion(null);
@@ -552,7 +555,10 @@ export function SandboxPython() {
                         autoFocus
                         value={nombreEdicion}
                         onChange={(evento) => setNombreEdicion(evento.target.value)}
-                        onBlur={() => confirmarEdicion()}
+                        onBlur={() => {
+                          setEdicion(null);
+                          setMensaje(null);
+                        }}
                         onKeyDown={(evento) => {
                           if (evento.key === "Escape") {
                             setEdicion(null);
