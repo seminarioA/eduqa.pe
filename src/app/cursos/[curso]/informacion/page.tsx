@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import {
-  BookOpen,
   CalendarDays,
   CheckCircle2,
+  ChevronRight,
   Clock3,
   FileText,
   Info,
@@ -52,11 +52,9 @@ function formatoLegible(formato: string | undefined) {
 
 function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
   return (
-    <div className="rounded-xl border border-borde bg-superficie p-4">
-      <dt className="text-[11px] font-semibold uppercase tracking-wider text-texto-tenue">
-        {etiqueta}
-      </dt>
-      <dd className="mt-1.5 text-sm font-medium leading-relaxed text-texto">{valor}</dd>
+    <div className="flex min-w-0 items-baseline justify-between gap-4 border-b border-borde py-3 text-sm">
+      <dt className="shrink-0 text-texto-suave">{etiqueta}</dt>
+      <dd className="min-w-0 text-right font-medium leading-relaxed text-texto">{valor}</dd>
     </div>
   );
 }
@@ -186,7 +184,7 @@ export default async function InformacionCursoPage({
               {curso.resumen}
             </p>
 
-            <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <dl className="mt-5 grid gap-x-8 border-y border-borde sm:grid-cols-2">
               <Dato etiqueta="Título" valor={curso.titulo} />
               <Dato etiqueta="Código editorial" valor={info.codigo ?? "Sin código"} />
               <Dato etiqueta="Revisión" valor={String(info.revision)} />
@@ -279,93 +277,82 @@ export default async function InformacionCursoPage({
             </dl>
           </section>
 
-          <section className="mt-12 border-t border-borde pt-10" aria-labelledby="temario">
-            <div className="flex items-center gap-2">
-              <BookOpen size={19} className="text-rojo-acento" aria-hidden="true" />
-              <h2 id="temario" className="text-xl font-semibold tracking-tight">
-                Temario
-              </h2>
-            </div>
-
-            <ol className="mt-5 divide-y divide-borde rounded-2xl border border-borde">
-              {curso.lecciones.map((leccion) => (
-                <li key={leccion.slug} className="flex items-start gap-4 px-5 py-4">
-                  <span className="mt-0.5 font-mono text-xs text-texto-tenue">
-                    {String(leccion.numero).padStart(2, "0")}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <Link
-                      href={`/cursos/${curso.slug}/${leccion.slug}`}
-                      className="font-medium transition-colors hover:text-rojo-acento"
-                    >
-                      {leccion.titulo}
-                    </Link>
-                    <p className="mt-1 text-xs text-texto-tenue">
-                      {leccion.secciones.length}{" "}
-                      {leccion.secciones.length === 1 ? "apartado" : "apartados"} en el índice
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-
           <section
             className="mt-12 border-t border-borde pt-10"
-            aria-labelledby="indice-contenido"
+            aria-labelledby="temario-indice"
           >
             <div className="flex items-center gap-2">
               <ListTree size={19} className="text-rojo-acento" aria-hidden="true" />
-              <h2 id="indice-contenido" className="text-xl font-semibold tracking-tight">
-                Índice de contenido
+              <h2 id="temario-indice" className="text-xl font-semibold tracking-tight">
+                Temario e índice de contenido
               </h2>
             </div>
             <p className="mt-2 text-sm leading-relaxed text-texto-suave">
-              Índice navegable de las sesiones y sus apartados. Abrir un enlace te lleva
-              al punto exacto del contenido.
+              Cada sesión se puede expandir o compactar. Los apartados enlazan al punto
+              exacto del contenido.
             </p>
 
-            <div className="mt-5 space-y-4">
+            <div className="mt-5 overflow-hidden rounded-2xl border border-borde">
               {curso.lecciones.map((leccion) => (
-                <div key={leccion.slug} className="rounded-2xl border border-borde p-5">
-                  <Link
-                    href={`/cursos/${curso.slug}/${leccion.slug}`}
-                    className="flex items-center gap-2 font-semibold transition-colors hover:text-rojo-acento"
-                  >
-                    <span className="font-mono text-xs text-texto-tenue">
+                <details
+                  key={leccion.slug}
+                  className="group border-b border-borde last:border-b-0"
+                >
+                  <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 transition-colors hover:bg-superficie [&::-webkit-details-marker]:hidden">
+                    <span className="shrink-0 font-mono text-xs text-texto-tenue">
                       {String(leccion.numero).padStart(2, "0")}
                     </span>
-                    {leccion.titulo}
-                  </Link>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold">{leccion.titulo}</span>
+                      <span className="mt-0.5 block text-xs font-normal text-texto-tenue">
+                        {leccion.secciones.length}{" "}
+                        {leccion.secciones.length === 1 ? "apartado" : "apartados"}
+                      </span>
+                    </span>
+                    <ChevronRight
+                      size={16}
+                      className="shrink-0 text-texto-tenue transition-transform group-open:rotate-90"
+                      aria-hidden="true"
+                    />
+                  </summary>
 
-                  {leccion.secciones.length === 0 ? (
-                    <p className="mt-3 text-xs text-texto-tenue">
-                      Esta sesión no declara apartados adicionales.
-                    </p>
-                  ) : (
-                    <ul className="mt-3 space-y-1 border-l border-borde pl-3">
-                      {leccion.secciones.map((seccion) => (
-                        <li
-                          key={seccion.id}
-                          className={
-                            seccion.nivel === 1
-                              ? ""
-                              : seccion.nivel === 2
-                                ? "pl-4"
-                                : "pl-8"
-                          }
-                        >
-                          <Link
-                            href={`/cursos/${curso.slug}/${leccion.slug}#${seccion.id}`}
-                            className="block rounded px-2 py-1 text-sm text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
+                  <div className="border-t border-borde px-5 pb-5 pt-3">
+                    <Link
+                      href={`/cursos/${curso.slug}/${leccion.slug}`}
+                      className="inline-flex rounded px-2 py-1 text-sm font-medium text-rojo-acento transition-colors hover:bg-rojo-tenue"
+                    >
+                      Abrir sesión completa
+                    </Link>
+
+                    {leccion.secciones.length === 0 ? (
+                      <p className="mt-3 text-xs text-texto-tenue">
+                        Esta sesión no declara apartados adicionales.
+                      </p>
+                    ) : (
+                      <ul className="mt-3 space-y-1 border-l border-borde pl-3">
+                        {leccion.secciones.map((seccion) => (
+                          <li
+                            key={seccion.id}
+                            className={
+                              seccion.nivel === 1
+                                ? ""
+                                : seccion.nivel === 2
+                                  ? "pl-4"
+                                  : "pl-8"
+                            }
                           >
-                            {seccion.titulo}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                            <Link
+                              href={`/cursos/${curso.slug}/${leccion.slug}#${seccion.id}`}
+                              className="block rounded px-2 py-1 text-sm text-texto-suave transition-colors hover:bg-superficie hover:text-rojo-acento"
+                            >
+                              {seccion.titulo}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </details>
               ))}
             </div>
           </section>
