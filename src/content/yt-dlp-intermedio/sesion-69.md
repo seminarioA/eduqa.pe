@@ -31,6 +31,22 @@ Número total de elementos; puede no conocerse si la playlist no fue extraída p
 
 Índice del vídeo dentro de la playlist con padding según el índice final.
 
+> Doc: [Output Template — playlist fields](https://github.com/yt-dlp/yt-dlp#output-template)
+
+```ejercicio
+# Enunciado
+Completa el campo que representa el índice dentro de la playlist.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(playlist_index)s
+
+# Pista
+Termina en index.
+```
+
 # playlist_autonumber
 
 Posición en la cola de descarga con padding según longitud total.
@@ -51,20 +67,6 @@ URL de la página de playlist.
 
 ```ejercicio
 # Enunciado
-Completa el campo que representa el índice dentro de la playlist.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(playlist_index)s
-
-# Pista
-Termina en index.
-```
-
-```ejercicio
-# Enunciado
 Completa el campo de URL de la playlist.
 
 # Plantilla
@@ -79,43 +81,6 @@ Combina playlist, webpage y url.
 
 # Cierre
 
+Los contadores describen posición y cantidad; los campos playlist_* identifican la colección, su autoría y su página de origen.
+
 La sesión siguiente cubre capítulos, series, temporadas y episodios.
-\n\n```ejercicio
-# Enunciado
-Completa el campo que representa el índice dentro de la playlist.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(playlist_index)s
-
-# Pista
-Termina en index.
-```\n\n```ejercicio
-# Enunciado
-Completa el campo que representa el índice dentro de la playlist.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(playlist_index)s
-
-# Pista
-Termina en index.
-```
-
-```ejercicio
-# Enunciado
-Completa el campo de URL de la playlist.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(playlist_webpage_url)s
-
-# Pista
-Combina playlist, webpage y url.
-```
