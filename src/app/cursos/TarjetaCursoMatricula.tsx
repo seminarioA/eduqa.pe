@@ -224,20 +224,20 @@ export function TarjetaCursoMatricula({
 
       {bloqueado && (
         <>
-          <div className="absolute bottom-0 left-0 flex h-14 w-[40%] items-center gap-3 border-t border-borde px-5 text-xs text-texto-tenue">
-            <span className="flex items-center gap-1">
-              <BookOpen size={13} aria-hidden="true" />
-              {curso.sesiones}
+          <div className="absolute bottom-0 left-0 flex h-14 w-1/2 flex-nowrap items-center justify-center gap-3 overflow-hidden whitespace-nowrap border-t border-borde px-3 text-[11px] leading-none text-texto-tenue">
+            <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
+              <BookOpen size={13} className="shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{curso.sesiones}</span>
             </span>
-            <span className="flex items-center gap-1">
-              <Clock size={13} aria-hidden="true" />
-              {curso.horas} h
+            <span className="flex shrink-0 items-center gap-1 whitespace-nowrap">
+              <Clock size={13} className="shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{curso.horas} h</span>
             </span>
           </div>
 
           <Link
             href={`/pagar/${curso.slug}`}
-            className="absolute bottom-0 right-0 flex h-14 w-[62%] flex-nowrap items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-tl-2xl border-l border-t border-borde bg-rojo px-4 text-xs font-semibold leading-none text-white transition-colors hover:bg-rojo-hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
+            className="absolute bottom-0 right-0 flex h-14 w-1/2 flex-nowrap items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-tl-2xl border-l border-t border-borde bg-rojo px-3 text-[11px] font-semibold leading-none text-white transition-colors hover:bg-rojo-hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
           >
             <Lock size={13} className="shrink-0" aria-hidden="true" />
             <span className="whitespace-nowrap">Comprar por S/{curso.precio.toFixed(2)}</span>
