@@ -9,6 +9,7 @@ import { CabeceraApp } from "@/components/CabeceraApp";
 import { Migas } from "@/components/Migas";
 import { Documento } from "@/components/Documento";
 import { ClavesApi } from "./Claves";
+import { ItemsRecurso } from "../ItemsRecurso";
 
 export const metadata: Metadata = {
   title: "API para publicar cursos — EDUQA.PE",
@@ -263,6 +264,7 @@ export default async function Page() {
       <div className="mt-10">
         <Documento markdown={DOCUMENTO} />
       </div>
+      <ItemsRecurso slug="api" administrador={Boolean(perfil?.es_admin || perfil?.rol === "admin")} />
     </div>
   );
 }
