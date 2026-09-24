@@ -232,6 +232,7 @@ export const articuloJev: ArticuloBlog = {
   resumen:
     "Jev, de TypeSafe AI, propone separar generación y decisión: Choice, Score y Noul producen salidas tipadas para que el código actúe sobre probabilidades, no sobre texto libre.",
   contenido,
+  caratula: null,
   portada: null,
   fecha: "24 de septiembre de 2026",
   fechaIso: "2026-09-24T19:00:00.000Z",
