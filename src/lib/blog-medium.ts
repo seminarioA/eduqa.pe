@@ -1,21 +1,12 @@
 import "server-only";
 
 import { cache } from "react";
+import { articuloJev } from "@/content/blog/jev-typesafe-ai";
+import type { ArticuloBlog } from "@/lib/blog-types";
 
-export type ArticuloBlog = {
-  guid: string;
-  slug: string;
-  titulo: string;
-  resumen: string;
-  contenido: string;
-  portada: string | null;
-  fecha: string;
-  fechaIso: string;
-  autor: string;
-  enlaceMedium: string;
-  categorias: string[];
-  minutosLectura: number;
-};
+export type { ArticuloBlog } from "@/lib/blog-types";
+
+const articulosLocales: ArticuloBlog[] = [articuloJev];
 
 function extraerImagen(html: string): string | null {
   const m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
@@ -44,8 +35,8 @@ function slugificar(texto: string): string {
 }
 
 /**
- * Obtiene los artículos del blog sincronizados desde el feed de Medium de la empresa.
- * Si el feed falla o no contiene entradas, no se publica contenido inexistente.
+ * Obtiene los artículos sincronizados desde el feed de Medium de la empresa.
+ * Si el feed falla o no contiene entradas, no se publican artículos ficticios.
  */
 export const obtenerArticulosMedium = cache(async (): Promise<ArticuloBlog[]> => {
   const feedUrl =
@@ -66,12 +57,24 @@ export const obtenerArticulosMedium = cache(async (): Promise<ArticuloBlog[]> =>
     }
 
     const xml = await res.text();
-    const articulos = parsearRssMedium(xml);
-    return articulos;
+    return parsearRssMedium(xml);
   } catch (error) {
     console.warn("No se pudo consultar el feed de Medium:", error);
     return [];
   }
+});
+
+export const obtenerArticulosBlog = cache(async (): Promise<ArticuloBlog[]> => {
+  const medium = await obtenerArticulosMedium();
+  const locales = new Set(articulosLocales.map((articulo) => articulo.slug));
+
+  return [
+    ...articulosLocales,
+    ...medium.filter((articulo) => !locales.has(articulo.slug)),
+  ].sort(
+    (a, b) =>
+      new Date(b.fechaIso).getTime() - new Date(a.fechaIso).getTime(),
+  );
 });
 
 function parsearRssMedium(xml: string): ArticuloBlog[] {
@@ -80,9 +83,13 @@ function parsearRssMedium(xml: string): ArticuloBlog[] {
 
   for (const item of items) {
     const sacar = (tag: string) => {
-      const match = item.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"));
+      const match = item.match(
+        new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"),
+      );
       if (!match) return "";
-      return match[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1").trim();
+      return match[1]
+        .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1")
+        .trim();
     };
 
     const titulo = sacar("title");
@@ -92,12 +99,26 @@ function parsearRssMedium(xml: string): ArticuloBlog[] {
     const creator = sacar("dc:creator");
     const content = sacar("content:encoded") || sacar("description");
 
-    const categoriasMatches = item.match(/<category>([\s\S]*?)<\/category>/gi) ?? [];
+    const categoriasMatches =
+      item.match(/<category>([\s\S]*?)<\/category>/gi) ?? [];
     const categorias = categoriasMatches
-      .map((c) => c.replace(/<category[^>]*>|<\/category>/gi, "").replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1").trim())
+      .map((c) =>
+        c
+          .replace(/<category[^>]*>|<\/category>/gi, "")
+          .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1")
+          .trim(),
+      )
       .filter(Boolean);
 
-    if (!titulo || !content || !link || !pubDate || Number.isNaN(new Date(pubDate).getTime())) continue;
+    if (
+      !titulo ||
+      !content ||
+      !link ||
+      !pubDate ||
+      Number.isNaN(new Date(pubDate).getTime())
+    ) {
+      continue;
+    }
 
     const portada = extraerImagen(content);
     const textoPlano = limpiarTexto(content);
@@ -131,16 +152,27 @@ function parsearRssMedium(xml: string): ArticuloBlog[] {
   return articulos;
 }
 
-export const buscarArticuloMedium = cache(async (slug: string): Promise<ArticuloBlog | undefined> => {
-  const articulos = await obtenerArticulosMedium();
-  return articulos.find((a) => a.slug === slug);
-});
+export const buscarArticuloBlog = cache(
+  async (slug: string): Promise<ArticuloBlog | undefined> => {
+    const articulos = await obtenerArticulosBlog();
+    return articulos.find((articulo) => articulo.slug === slug);
+  },
+);
+
+export const buscarArticuloMedium = cache(
+  async (slug: string): Promise<ArticuloBlog | undefined> => {
+    const articulos = await obtenerArticulosMedium();
+    return articulos.find((articulo) => articulo.slug === slug);
+  },
+);
 
 export const obtenerCategoriasBlog = cache(async (): Promise<string[]> => {
-  const articulos = await obtenerArticulosMedium();
+  const articulos = await obtenerArticulosBlog();
   const set = new Set<string>();
-  for (const a of articulos) {
-    for (const c of a.categorias) set.add(c);
+
+  for (const articulo of articulos) {
+    for (const categoria of articulo.categorias) set.add(categoria);
   }
+
   return [...set];
 });

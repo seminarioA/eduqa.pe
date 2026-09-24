@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { obtenerArticulosMedium } from "@/lib/blog-medium";
+import { obtenerArticulosBlog } from "@/lib/blog-medium";
 import { obtenerCatalogoPublico } from "@/lib/catalogo-publico";
 import { esCursoIndexable, urlAbsoluta } from "@/lib/seo";
 
@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const ahora = new Date();
   const [catalogoResultado, blogResultado] = await Promise.allSettled([
     obtenerCatalogoPublico(),
-    obtenerArticulosMedium(),
+    obtenerArticulosBlog(),
   ]);
 
   const estaticas: MetadataRoute.Sitemap = [

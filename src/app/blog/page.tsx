@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { BookOpen, ExternalLink, Newspaper, Tag } from "lucide-react";
-import { obtenerArticulosMedium, obtenerCategoriasBlog } from "@/lib/blog-medium";
+import {\n  obtenerArticulosBlog,\n  obtenerArticulosMedium,\n  obtenerCategoriasBlog,\n} from "@/lib/blog-medium";
 import { BlogCard } from "@/components/BlogCard";
 import { Migas } from "@/components/Migas";
 import { perfilActual } from "@/lib/matriculas";
@@ -9,11 +9,13 @@ import { GestionMedium } from "@/components/blog/GestionMedium";
 
 export const metadata: Metadata = {
   title: "Blog Técnico — EDUQA.PE",
-  description: "Artículos disponibles desde el canal Medium de EDUQA.PE.",
+  description:
+    "Artículos técnicos de EDUQA.PE y publicaciones sincronizadas desde Medium.",
   alternates: { canonical: "/blog" },
   openGraph: {
     title: "Blog Técnico — EDUQA.PE",
-    description: "Artículos disponibles desde el canal Medium de EDUQA.PE.",
+    description:
+      "Artículos técnicos de EDUQA.PE y publicaciones sincronizadas desde Medium.",
     type: "website",
     url: "/blog",
   },
@@ -23,15 +25,16 @@ export const revalidate = 3600;
 
 export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
   const [articulos, categorias, perfil, consulta] = await Promise.all([
-    obtenerArticulosMedium(),
+    obtenerArticulosBlog(),
     obtenerCategoriasBlog(),
     perfilActual(),
     searchParams,
   ]);
 
-  const tema = typeof consulta.tema === "string" && categorias.includes(consulta.tema)
-    ? consulta.tema
-    : "";
+  const tema =
+    typeof consulta.tema === "string" && categorias.includes(consulta.tema)
+      ? consulta.tema
+      : "";
   const filtrados = tema
     ? articulos.filter((articulo) => articulo.categorias.includes(tema))
     : articulos;
@@ -42,7 +45,7 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
     <div className="mx-auto w-full max-w-5xl px-6 py-14 lg:pl-64 xl:pl-32 2xl:pl-6">
       <div className="flex items-center justify-between">
         <Migas items={[{ texto: "Blog Técnico" }]} />
-        {destacado && (
+        {destacado?.enlaceMedium && (
           <a
             href={destacado.enlaceMedium}
             target="_blank"
@@ -60,16 +63,23 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
           Blog
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-texto-suave">
-          Artículos publicados en el canal Medium de EDUQA.PE.
+          Ingeniería de software, inteligencia artificial y aprendizaje técnico,
+          con artículos propios y publicaciones del canal Medium de EDUQA.PE.
         </p>
       </header>
 
-      {perfil?.es_admin && <GestionMedium articulos={articulos.length} />}
+      {perfil?.es_admin && <GestionMedium articulos={articulosMedium.length} />}
 
-      {/* Un selector sigue ocupando una línea aunque el feed traiga decenas de temas. */}
       {categorias.length > 0 && (
-        <form action="/blog" method="get" className="mt-8 flex flex-wrap items-center gap-3 border-y border-borde py-4">
-          <label htmlFor="tema-blog" className="flex items-center gap-1.5 text-sm font-medium text-texto-suave">
+        <form
+          action="/blog"
+          method="get"
+          className="mt-8 flex flex-wrap items-center gap-3 border-y border-borde py-4"
+        >
+          <label
+            htmlFor="tema-blog"
+            className="flex items-center gap-1.5 text-sm font-medium text-texto-suave"
+          >
             <Tag size={15} aria-hidden="true" /> Tema
           </label>
           <select
@@ -79,16 +89,29 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
             className="max-w-full rounded-lg border border-borde bg-fondo px-3 py-2 text-sm text-texto focus:border-rojo-acento focus:outline-2 focus:outline-rojo-acento"
           >
             <option value="">Todos los temas</option>
-            {categorias.map((categoria) => <option key={categoria} value={categoria}>{categoria}</option>)}
+            {categorias.map((categoria) => (
+              <option key={categoria} value={categoria}>
+                {categoria}
+              </option>
+            ))}
           </select>
-          <button type="submit" className="rounded-lg border border-borde px-3 py-2 text-sm font-medium text-texto transition-colors hover:bg-superficie">
+          <button
+            type="submit"
+            className="rounded-lg border border-borde px-3 py-2 text-sm font-medium text-texto transition-colors hover:bg-superficie"
+          >
             Filtrar
           </button>
-          {tema && <Link href="/blog" className="text-sm text-texto-suave hover:text-rojo-acento">Limpiar</Link>}
+          {tema && (
+            <Link
+              href="/blog"
+              className="text-sm text-texto-suave hover:text-rojo-acento"
+            >
+              Limpiar
+            </Link>
+          )}
         </form>
       )}
 
-      {/* Artículo destacado */}
       {destacado && (
         <section className="mt-10" aria-label="Artículo destacado">
           <div className="overflow-hidden rounded-3xl border border-borde bg-superficie shadow-sm transition-all hover:border-rojo-acento">
@@ -105,25 +128,32 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
                   </div>
                 </div>
               )}
-              <div className={`flex flex-col justify-center p-8 ${destacado.portada ? "md:col-span-5" : "md:col-span-12"}`}>
+              <div
+                className={`flex flex-col justify-center p-8 ${
+                  destacado.portada ? "md:col-span-5" : "md:col-span-12"
+                }`}
+              >
                 <div className="flex flex-wrap gap-2">
-                  {destacado.categorias.slice(0, 3).map((c) => (
+                  {destacado.categorias.slice(0, 3).map((categoria) => (
                     <span
-                      key={c}
+                      key={categoria}
                       className="rounded-full bg-rojo-tenue px-2.5 py-0.5 text-[11px] font-semibold text-rojo-acento"
                     >
-                      {c}
+                      {categoria}
                     </span>
                   ))}
                 </div>
 
                 <h2 className="mt-4 text-2xl font-bold leading-tight tracking-tight text-texto">
-                  <Link href={`/blog/${destacado.slug}`} className="hover:text-rojo-acento transition-colors">
+                  <Link
+                    href={`/blog/${destacado.slug}`}
+                    className="transition-colors hover:text-rojo-acento"
+                  >
                     {destacado.titulo}
                   </Link>
                 </h2>
 
-                <p className="mt-3 text-sm leading-relaxed text-texto-suave line-clamp-4">
+                <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-texto-suave">
                   {destacado.resumen}
                 </p>
 
@@ -145,7 +175,6 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
         </section>
       )}
 
-      {/* Grid de artículos */}
       <section className="mt-12" aria-label="Todos los artículos">
         <h2 className="text-xl font-semibold tracking-tight text-texto">
           Artículos recientes
@@ -160,7 +189,7 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
           <div className="mt-6 rounded-2xl border border-dashed border-borde p-12 text-center">
             <Newspaper size={32} className="mx-auto text-texto-tenue" />
             <p className="mt-3 text-sm text-texto-suave">
-              No hay artículos disponibles desde el canal Medium en este momento.
+              No hay artículos disponibles en este momento.
             </p>
           </div>
         ) : null}
