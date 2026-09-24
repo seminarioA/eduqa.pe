@@ -8,7 +8,6 @@ import {
   CalendarDays,
   Mail,
   Phone,
-  RotateCcw,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -45,7 +44,17 @@ export function TarjetaCuentaFlip({
   const inicial = nombre.charAt(0).toUpperCase();
 
   return (
-    <div className="h-full min-h-[450px]" style={{ perspective: "1400px" }}>
+    <div
+      className="h-full min-h-[450px] cursor-pointer"
+      style={{ perspective: "1400px" }}
+      onMouseEnter={() => setGirada(true)}
+      onMouseLeave={() => setGirada(false)}
+      onClick={(evento) => {
+        if ((evento.target as HTMLElement).closest("a")) return;
+        setGirada((valor) => !valor);
+      }}
+      aria-label="Tarjeta de cuenta: pasa el cursor o haz clic para ver más información"
+    >
       <div
         className="relative h-full min-h-[450px] w-full transition-transform duration-700 ease-in-out motion-reduce:transition-none"
         style={{
@@ -69,17 +78,7 @@ export function TarjetaCuentaFlip({
                 </h2>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setGirada(true)}
-                  aria-label="Ver más información de la cuenta"
-                  className="rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                >
-                  Ver más
-                </button>
-                <Llama className="h-10 w-auto text-white" />
-              </div>
+              <Llama className="h-10 w-auto text-white" />
             </div>
 
             <div className="mt-6 flex flex-col items-center text-center">
@@ -167,14 +166,7 @@ export function TarjetaCuentaFlip({
                 </h2>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setGirada(false)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                <RotateCcw size={11} />
-                Volver
-              </button>
+              <Llama className="h-10 w-auto text-white" />
             </div>
 
             <div className="mt-6 grid gap-3">
