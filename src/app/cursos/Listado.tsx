@@ -9,13 +9,13 @@ import { TarjetaPopular } from "@/components/Populares";
 import { TituloEditable } from "@/components/TituloEditable";
 
 /**
- * `inscritoEn` es la fecha de inscripción en milisegundos, o null si el
- * usuario todavía no se inscribió. Se pasa ya convertida desde el servidor:
+ * `matriculadoEn` es la fecha de matrícula en milisegundos, o null si el
+ * usuario todavía no se matriculó. Se pasa ya convertida desde el servidor:
  * mandar la cadena ISO obligaría a parsearla en cada comparación.
  */
 export type CursoListado = DatosCurso & {
   area: string;
-  inscritoEn: number | null;
+  matriculadoEn: number | null;
   /** Sesiones marcadas como completadas. */
   vistas: number;
 };
@@ -50,7 +50,7 @@ export function Listado({
 }: {
   cursos: CursoListado[];
   rutas?: DatosRuta[];
-  /** Tres cursos más comprados o inscritos: abren el catálogo. */
+  /** Tres cursos más matriculados: abren el catálogo. */
   populares?: Parameters<typeof TarjetaPopular>[0]["curso"][];
   alTope: boolean;
   esAdmin?: boolean;
@@ -115,16 +115,16 @@ export function Listado({
           return b.horas - a.horas;
         case "progreso":
           return b.vistas / b.sesiones - a.vistas / a.sesiones;
-        // En los dos órdenes por fecha, quien no está inscrito no tiene fecha
-        // que comparar: va al final en lugar de colarse entre los inscritos.
+        // En los dos órdenes por fecha, quien no está matriculado no tiene fecha
+        // que comparar: va al final en lugar de colarse entre los matriculados.
         case "antiguos":
-          if (a.inscritoEn === null) return b.inscritoEn === null ? 0 : 1;
-          if (b.inscritoEn === null) return -1;
-          return a.inscritoEn - b.inscritoEn;
+          if (a.matriculadoEn === null) return b.matriculadoEn === null ? 0 : 1;
+          if (b.matriculadoEn === null) return -1;
+          return a.matriculadoEn - b.matriculadoEn;
         default:
-          if (a.inscritoEn === null) return b.inscritoEn === null ? 0 : 1;
-          if (b.inscritoEn === null) return -1;
-          return b.inscritoEn - a.inscritoEn;
+          if (a.matriculadoEn === null) return b.matriculadoEn === null ? 0 : 1;
+          if (b.matriculadoEn === null) return -1;
+          return b.matriculadoEn - a.matriculadoEn;
       }
     });
   }, [cursos, area, orden, busqueda]);
