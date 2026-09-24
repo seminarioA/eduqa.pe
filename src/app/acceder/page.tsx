@@ -8,10 +8,20 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+function destinoSeguro(valor: string | string[] | undefined) {
+  return typeof valor === "string" && valor.startsWith("/") && !valor.startsWith("//")
+    ? valor
+    : "/panel";
+}
+
 export default async function Page({ searchParams }: PageProps<"/acceder">) {
   // Next 16: searchParams llega como promesa.
-  const { volverA } = await searchParams;
-  const destino = typeof volverA === "string" ? volverA : "/panel";
+  const { volverA, error } = await searchParams;
+  const destino = destinoSeguro(volverA);
+  const errorInicial =
+    error === "oauth_google"
+      ? "No pudimos completar el acceso con Google. Intenta de nuevo."
+      : undefined;
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-6 py-12">
@@ -32,7 +42,7 @@ export default async function Page({ searchParams }: PageProps<"/acceder">) {
         </p>
 
         <div className="mt-6">
-          <Formulario volverA={destino} />
+          <Formulario volverA={destino} errorInicial={errorInicial} />
         </div>
       </div>
     </main>
