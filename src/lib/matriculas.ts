@@ -6,6 +6,7 @@ export type Perfil = {
   id: string;
   nombre: string | null;
   telefono: string | null;
+  pais: string | null;
   plan: "gratis" | "pago";
   plan_hasta: string | null;
   es_admin: boolean;
@@ -28,7 +29,7 @@ export async function perfilActual(): Promise<Perfil | null> {
   const supabase = await clienteServidor();
   const { data } = await supabase
     .from("perfiles")
-    .select("id, nombre, telefono, plan, plan_hasta, es_admin, foto, rol")
+    .select("id, nombre, telefono, pais, plan, plan_hasta, es_admin, foto, rol")
     .eq("id", usuario.id)
     .single();
 
