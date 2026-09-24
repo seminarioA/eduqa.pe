@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, Copy, Share2 } from "lucide-react";
+import { Check, Share2 } from "lucide-react";
 
 type BotonCompartirArticuloProps = {
   titulo: string;
@@ -72,7 +72,7 @@ export function BotonCompartirArticulo({
     <button
       type="button"
       onClick={compartir}
-      className="inline-flex min-h-9 items-center gap-2 rounded-xl border border-borde bg-superficie px-3 py-2 text-xs font-semibold text-texto-suave transition-colors hover:border-rojo-acento hover:text-texto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
+      className="inline-flex items-center gap-1.5 text-xs font-medium text-texto-tenue transition-colors hover:text-rojo-acento focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
       aria-live="polite"
     >
       {copiado ? (
