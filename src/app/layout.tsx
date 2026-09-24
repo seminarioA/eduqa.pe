@@ -45,10 +45,7 @@ export default async function RootLayout({
   // por request porque `marcaActual` está cacheada.
   const { sidebar } = await marcaActual();
 
-  const gtmIdConfigurado = process.env.NEXT_PUBLIC_GTM_ID?.trim() ?? "";
-  const gtmId = /^GTM-[A-Z0-9]+$/i.test(gtmIdConfigurado)
-    ? gtmIdConfigurado
-    : null;
+  const gtmId = "GTM-PRP5PMK2";
 
   return (
     <html
@@ -57,18 +54,15 @@ export default async function RootLayout({
       className={`${inter.variable} ${exo2.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      {gtmId && (
-        <Script id="google-tag-manager" strategy="beforeInteractive">
+      <Script id="google-tag-manager" strategy="beforeInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','${gtmId}');`}
         </Script>
-      )}
       <body className="flex min-h-full flex-col font-sans">
-        {gtmId && (
-          <noscript>
+        <noscript>
             <iframe
               src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
               height="0"
@@ -77,7 +71,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               title="Google Tag Manager"
             />
           </noscript>
-        )}
         {/* Antes de nada: si la preferencia guardada es monocromo, la clase
             tiene que estar puesta ya en el primer pintado. */}
         <script dangerouslySetInnerHTML={{ __html: GUION_ARRANQUE }} />
