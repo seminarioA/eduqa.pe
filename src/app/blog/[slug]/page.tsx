@@ -11,6 +11,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { buscarArticuloBlog, obtenerArticulosBlog } from "@/lib/blog-medium";
+import { posicionObjetoCaratula, resolverCaratulaBlog } from "@/lib/blog-types";
 import { Migas } from "@/components/Migas";
 import { ProgresoLectura } from "@/components/blog/ProgresoLectura";
 import {
@@ -32,6 +33,8 @@ export async function generateMetadata({
   const articulo = await buscarArticuloBlog(slug);
   if (!articulo) return { title: "Artículo no encontrado — EDUQA.PE" };
 
+  const caratula = resolverCaratulaBlog(articulo);
+
   return {
     title: `${articulo.titulo} — Blog EDUQA.PE`,
     description: articulo.resumen,
@@ -43,7 +46,7 @@ export async function generateMetadata({
       publishedTime: articulo.fechaIso,
       authors: [articulo.autor],
       url: `/blog/${articulo.slug}`,
-      images: articulo.portada ? [{ url: articulo.portada }] : [],
+      images: caratula ? [{ url: caratula.url, alt: caratula.alt }] : [],
     },
   };
 }
@@ -59,6 +62,8 @@ export default async function ArticuloPage({
   if (!articulo) {
     notFound();
   }
+
+  const caratula = resolverCaratulaBlog(articulo);
 
   return (
     <>
@@ -132,14 +137,15 @@ export default async function ArticuloPage({
           </div>
         </header>
 
-        {articulo.portada && (
-          <div className="mt-8 overflow-hidden rounded-3xl bg-fondo shadow-sm">
+        {caratula && (
+          <figure className="mt-8 overflow-hidden rounded-3xl bg-fondo shadow-sm">
             <img
-              src={articulo.portada}
-              alt={articulo.titulo}
+              src={caratula.url}
+              alt={caratula.alt}
               className="aspect-video w-full object-cover"
+              style={{ objectPosition: posicionObjetoCaratula(caratula.posicion) }}
             />
-          </div>
+          </figure>
         )}
 
         <ContenidoArticulo contenido={articulo.contenido} />
