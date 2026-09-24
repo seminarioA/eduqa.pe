@@ -13,11 +13,10 @@ export type EstadoPerfil = { ok: boolean; error?: string };
  * Por eso se pide completo y no se deriva del correo, que suele ser un alias.
  */
 /**
- * El teléfono es opcional y se guarda en formato internacional. La validación
- * es deliberadamente laxa: los formatos varían por país y rechazar un número
- * válido por exceso de celo es peor que guardar uno raro.
+ * El teléfono es opcional. El cliente combina el prefijo del país con el
+ * número local y lo envía en formato internacional: +<código><número>.
  */
-const RE_TELEFONO = /^\+?[\d\s()-]{6,20}$/;
+const RE_TELEFONO = /^\+\d{6,15}$/;
 
 export async function guardarNombre(
   _prev: EstadoPerfil | null,
@@ -34,7 +33,7 @@ export async function guardarNombre(
   if (nombre.length > 80)
     return { ok: false, error: "Ese nombre es demasiado largo." };
   if (telefono && !RE_TELEFONO.test(telefono))
-    return { ok: false, error: "Ese número no parece válido." };
+    return { ok: false, error: "Ese número de teléfono no parece válido." };
   if (pais && !CODIGOS_PAIS.has(pais))
     return { ok: false, error: "Selecciona un país válido." };
 
