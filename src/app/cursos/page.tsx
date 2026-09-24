@@ -13,8 +13,6 @@ import { avisosVisibles } from "@/lib/avisos";
 import { titulosSeccion } from "@/lib/titulos-seccion";
 import { Tablero } from "@/components/Tablero";
 import { usuarioActual } from "@/lib/supabase/servidor";
-import { cerrarSesion } from "@/app/acceder/acciones";
-import { MenuPerfil } from "@/components/MenuPerfil";
 import { Migas } from "@/components/Migas";
 import { TituloEditable } from "@/components/TituloEditable";
 import { Listado } from "./Listado";
@@ -93,14 +91,6 @@ export default async function Page() {
           };
         })}
         cabecera={<Tablero avisos={avisos} />}
-        acciones={
-          <MenuPerfil
-            nombre={perfil?.nombre}
-            correo={usuario.email}
-            foto={perfil?.foto}
-            onSalir={cerrarSesion}
-          />
-        }
         entreBarraYRejilla={
           <>
             <div className="mt-8">
