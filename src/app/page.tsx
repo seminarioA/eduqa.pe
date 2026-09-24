@@ -439,7 +439,7 @@ export default async function Page() {
               </h2>
               <ul className="space-y-3 text-sm text-texto-suave">
                 <li>
-                  <Link href="/cursos" className="transition-colors hover:text-rojo-acento">
+                  <Link href="/catalogo" className="transition-colors hover:text-rojo-acento">
                     Cursos
                   </Link>
                 </li>

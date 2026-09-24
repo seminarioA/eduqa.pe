@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Exo_2, Inter } from "next/font/google";
 import Script from "next/script";
 import { marca } from "@/lib/catalogo";
+import { SITE_URL } from "@/lib/seo";
 import { ProveedorTema } from "@/components/Tema";
 import { GUION_ARRANQUE } from "@/lib/cromatismo";
 import { BotonReporte } from "@/components/reportes/BotonReporte";
@@ -18,6 +19,7 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const exo2 = Exo_2({ variable: "--font-exo2", subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: `${marca.nombre} — ${marca.lema}`,
   description: marca.gancho,
   openGraph: {

@@ -30,12 +30,14 @@ export async function generateMetadata({
   return {
     title: `${articulo.titulo} — Blog EDUQA.PE`,
     description: articulo.resumen,
+    alternates: { canonical: `/blog/${articulo.slug}` },
     openGraph: {
       title: articulo.titulo,
       description: articulo.resumen,
       type: "article",
       publishedTime: articulo.fechaIso,
       authors: [articulo.autor],
+      url: `/blog/${articulo.slug}`,
       images: articulo.portada ? [{ url: articulo.portada }] : [],
     },
   };
@@ -140,7 +142,7 @@ export default async function ArticuloPage({
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/cursos"
+            href="/catalogo"
             className="inline-flex items-center gap-2 rounded-xl bg-rojo px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
           >
             <BookOpen size={14} />

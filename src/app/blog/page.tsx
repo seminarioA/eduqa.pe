@@ -10,6 +10,13 @@ import { GestionMedium } from "@/components/blog/GestionMedium";
 export const metadata: Metadata = {
   title: "Blog Técnico — EDUQA.PE",
   description: "Artículos disponibles desde el canal Medium de EDUQA.PE.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Blog Técnico — EDUQA.PE",
+    description: "Artículos disponibles desde el canal Medium de EDUQA.PE.",
+    type: "website",
+    url: "/blog",
+  },
 };
 
 export const revalidate = 3600;

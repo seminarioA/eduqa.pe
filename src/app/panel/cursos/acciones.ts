@@ -56,6 +56,9 @@ function booleano(valor: unknown, porDefecto: boolean) {
 function revalidarCursoPublicado(slug: string, ruta?: string) {
   revalidatePath("/");
   revalidatePath("/cursos");
+  revalidatePath("/catalogo");
+  revalidatePath(`/catalogo/${slug}`);
+  revalidatePath("/sitemap.xml");
   revalidatePath("/panel");
   revalidatePath("/panel/cursos");
   revalidatePath("/compras");
