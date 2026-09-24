@@ -179,43 +179,70 @@ export function TarjetaCursoMatricula({
     );
   }
 
-  // Sin matricular: la acción de compra queda fuera de la ficha para no
-  // mezclar el contenido académico con la acción comercial.
+  // Sin matricular: la acción comercial forma parte de la propia tarjeta.
+  // En cursos bloqueados se reserva una franja inferior: los metadatos quedan
+  // a la izquierda y el CTA ocupa la esquina inferior derecha con un borde
+  // curvo, evitando que la tarjeta crezca por añadir un botón externo.
   return (
-    <div className="flex flex-col">
-      <div className="group flex aspect-square flex-col rounded-xl border border-borde bg-fondo p-5">
+    <div className="group relative flex aspect-square flex-col overflow-hidden rounded-xl border border-borde bg-fondo">
+      <div className={`flex min-h-0 flex-1 flex-col p-5 ${bloqueado ? "pb-[4.5rem]" : ""}`}>
         {cabecera}
-        {pie}
 
         {!bloqueado && (
-          <form action={accion} className="mt-3">
-            <input type="hidden" name="curso" value={curso.slug} />
-            <Boton
-              type="submit"
-              disabled={enviando}
-              className="w-full py-2 text-xs"
-            >
-              {enviando && <Loader2 size={14} className="animate-spin" aria-hidden="true" />}
-              {enviando ? "Matriculando…" : "Matricularme gratis"}
-            </Boton>
-          </form>
-        )}
+          <>
+            {pie}
 
-        {!bloqueado && estado && !estado.ok && (
-          <p role="alert" className="mt-2 text-[11px] leading-snug text-rojo-acento">
-            {estado.error}
-          </p>
+            <form action={accion} className="mt-3">
+              <input type="hidden" name="curso" value={curso.slug} />
+              <Boton
+                type="submit"
+                disabled={enviando}
+                className="w-full py-2 text-xs"
+              >
+                {enviando && (
+                  <Loader2
+                    size={14}
+                    className="animate-spin"
+                    aria-hidden="true"
+                  />
+                )}
+                {enviando ? "Matriculando…" : "Matricularme gratis"}
+              </Boton>
+            </form>
+
+            {estado && !estado.ok && (
+              <p
+                role="alert"
+                className="mt-2 text-[11px] leading-snug text-rojo-acento"
+              >
+                {estado.error}
+              </p>
+            )}
+          </>
         )}
       </div>
 
       {bloqueado && (
-        <Link
-          href={`/pagar/${curso.slug}`}
-          className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-rojo px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
-        >
-          <Lock size={13} aria-hidden="true" />
-          Comprar por S/{curso.precio.toFixed(2)}
-        </Link>
+        <>
+          <div className="absolute bottom-0 left-0 flex h-14 w-[40%] items-center gap-3 border-t border-borde px-5 text-xs text-texto-tenue">
+            <span className="flex items-center gap-1">
+              <BookOpen size={13} aria-hidden="true" />
+              {curso.sesiones}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock size={13} aria-hidden="true" />
+              {curso.horas} h
+            </span>
+          </div>
+
+          <Link
+            href={`/pagar/${curso.slug}`}
+            className="absolute bottom-0 right-0 flex h-14 w-[62%] items-center justify-center gap-1.5 rounded-tl-2xl border-l border-t border-borde bg-rojo px-4 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
+          >
+            <Lock size={13} aria-hidden="true" />
+            Comprar por S/{curso.precio.toFixed(2)}
+          </Link>
+        </>
       )}
     </div>
   );
