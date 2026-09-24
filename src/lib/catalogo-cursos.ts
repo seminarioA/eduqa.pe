@@ -76,6 +76,26 @@ export const obtenerCursos = cache(async (): Promise<Curso[]> => {
   return cursos;
 });
 
+/**
+ * Fecha de primer lanzamiento de cada curso.
+ *
+ * `publicado_en` se fija cuando el curso pasa por primera vez a estado
+ * `publico` y no cambia al editarlo después. Sirve para efectos efímeros de
+ * lanzamiento sin confundir una actualización editorial con un curso nuevo.
+ */
+export const publicacionesCursos = cache(async (): Promise<Map<string, string | null>> => {
+  const supabase = await clienteServidor();
+  const { data, error } = await supabase
+    .from("cursos")
+    .select("slug, publicado_en");
+
+  if (error) {
+    throw new Error(`No se pudieron leer las fechas de publicación: ${error.message}`);
+  }
+
+  return new Map((data ?? []).map((fila) => [fila.slug, fila.publicado_en]));
+});
+
 export const buscarCurso = cache(async (slug: string) =>
   (await obtenerCursos()).find((c) => c.slug === slug),
 );
