@@ -29,7 +29,7 @@ export function SelectorPais({ valorInicial }: { valorInicial?: string | null })
     <>
       <input type="hidden" name="pais" value={valor} />
 
-      <Select.Root value={valor || undefined} onValueChange={setValor}>
+      <Select.Root value={valor} onValueChange={setValor}>
         <Select.Trigger
           aria-label="País"
           className="flex w-full items-center justify-between gap-3 rounded-lg border border-borde-fuerte bg-fondo px-3 py-2.5 text-sm text-texto transition-colors hover:border-rojo-acento focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rojo-acento"
