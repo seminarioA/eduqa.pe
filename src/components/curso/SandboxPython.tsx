@@ -224,7 +224,7 @@ export function SandboxPython() {
             </div>
 
             <div className="relative min-h-0 flex-1 overflow-hidden">
-              <label htmlFor={\`\${id}-codigo\`} className="sr-only">
+              <label htmlFor={`${id}-codigo`} className="sr-only">
                 Código Python
               </label>
 
@@ -234,7 +234,7 @@ export function SandboxPython() {
               >
                 <div
                   className="pr-3"
-                  style={{ transform: \`translateY(-\${scrollEditor}px)\` }}
+                  style={{ transform: `translateY(-${scrollEditor}px)` }}
                 >
                   {lineas.map((linea) => (
                     <div key={linea}>{linea}</div>
@@ -243,7 +243,7 @@ export function SandboxPython() {
               </div>
 
               <textarea
-                id={\`\${id}-codigo\`}
+                id={`${id}-codigo`}
                 value={borrador.codigo}
                 onChange={(evento) => {
                   cambiar(evento.target.value);
