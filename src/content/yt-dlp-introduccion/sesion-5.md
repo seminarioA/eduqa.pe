@@ -92,7 +92,7 @@ True
 Completa la función estándar de Python que busca un ejecutable siguiendo el PATH.
 
 # Plantilla
-from shutil import ___
+from shutil import which
 
 resultado = ___("ffmpeg")
 print(resultado is None or isinstance(resultado, str))
@@ -101,7 +101,7 @@ print(resultado is None or isinstance(resultado, str))
 True
 
 # Pista
-La misma palabra completa ambos huecos lógicos, pero la plantilla admite un único reemplazo: escribe `which` en ambos lugares sustituyendo el marcador por una expresión que produzca ese nombre no es posible; por eso completa solo la importación y reutiliza el nombre ya importado.
+La función importada desde `shutil` se llama `which`.
 ```
 
 # Comprobar FFmpeg desde la terminal
