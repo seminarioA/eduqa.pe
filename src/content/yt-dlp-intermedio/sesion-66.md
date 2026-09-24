@@ -27,6 +27,20 @@ Cantidad de seguidores del canal.
 
 Indica si el canal está verificado.
 
+```ejercicio
+# Enunciado
+Completa el campo booleano de verificación del canal.
+
+# Plantilla
+print("%(___)s")
+
+# Esperado
+%(channel_is_verified)s
+
+# Pista
+Empieza con channel_.
+```
+
 # location
 
 Ubicación física donde se grabó el vídeo cuando está disponible.
@@ -53,20 +67,6 @@ print("%(___)s")
 
 # Pista
 No uses duration_string.
-```
-
-```ejercicio
-# Enunciado
-Completa el campo booleano de verificación del canal.
-
-# Plantilla
-print("%(___)s")
-
-# Esperado
-%(channel_is_verified)s
-
-# Pista
-Empieza con channel_.
 ```
 
 # Cierre
