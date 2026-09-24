@@ -224,59 +224,59 @@ export default async function InformacionCursoPage({
               </h2>
             </div>
 
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-borde p-5">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <UserRound size={16} className="text-rojo-acento" aria-hidden="true" />
+            <dl className="mt-5 divide-y divide-borde border-y border-borde">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3 text-sm">
+                <dt className="flex w-36 shrink-0 items-center gap-2 font-semibold">
+                  <UserRound size={15} className="text-rojo-acento" aria-hidden="true" />
                   Creación
-                </div>
-                <p className="mt-3 text-sm">
-                  <span className="text-texto-suave">Creado por:</span>{" "}
-                  {info.creado_por_nombre ?? "No registrado"}
-                </p>
-                <p className="mt-1 text-sm">
-                  <span className="text-texto-suave">Fecha:</span> {fecha(info.creado_en)}
-                </p>
+                </dt>
+                <dd className="text-texto-suave">
+                  Creado por:{" "}
+                  <span className="font-medium text-texto">
+                    {info.creado_por_nombre ?? "No registrado"}
+                  </span>
+                  <span className="mx-2 text-texto-tenue">·</span>
+                  Fecha: <span className="font-medium text-texto">{fecha(info.creado_en)}</span>
+                </dd>
               </div>
 
-              <div className="rounded-xl border border-borde p-5">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <CheckCircle2 size={16} className="text-rojo-acento" aria-hidden="true" />
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3 text-sm">
+                <dt className="flex w-36 shrink-0 items-center gap-2 font-semibold">
+                  <CheckCircle2 size={15} className="text-rojo-acento" aria-hidden="true" />
                   Aprobación
-                </div>
-                <p className="mt-3 text-sm">
-                  <span className="text-texto-suave">Aprobado por:</span>{" "}
-                  {info.aprobado_por_nombre ?? "No registrado"}
-                </p>
-                <p className="mt-1 text-sm">
-                  <span className="text-texto-suave">Fecha:</span> {fecha(info.aprobado_en)}
-                </p>
+                </dt>
+                <dd className="text-texto-suave">
+                  Aprobado por:{" "}
+                  <span className="font-medium text-texto">
+                    {info.aprobado_por_nombre ?? "No registrado"}
+                  </span>
+                  <span className="mx-2 text-texto-tenue">·</span>
+                  Fecha: <span className="font-medium text-texto">{fecha(info.aprobado_en)}</span>
+                </dd>
               </div>
 
-              <div className="rounded-xl border border-borde p-5">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <CalendarDays size={16} className="text-rojo-acento" aria-hidden="true" />
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3 text-sm">
+                <dt className="flex w-36 shrink-0 items-center gap-2 font-semibold">
+                  <CalendarDays size={15} className="text-rojo-acento" aria-hidden="true" />
                   Publicación
-                </div>
-                <p className="mt-3 text-sm">
-                  <span className="text-texto-suave">Fecha:</span> {fecha(info.publicado_en)}
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-texto-tenue">
-                  Se registra la primera vez que el curso pasa a estado público.
-                </p>
+                </dt>
+                <dd className="text-texto-suave">
+                  Fecha:{" "}
+                  <span className="font-medium text-texto">{fecha(info.publicado_en)}</span>
+                </dd>
               </div>
 
-              <div className="rounded-xl border border-borde p-5">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Clock3 size={16} className="text-rojo-acento" aria-hidden="true" />
-                  Última actualización
-                </div>
-                <p className="mt-3 text-sm">{fecha(info.actualizado_en)}</p>
-                <p className="mt-1 text-xs leading-relaxed text-texto-tenue">
-                  Corresponde a la última modificación registrada de la ficha del curso.
-                </p>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3 text-sm">
+                <dt className="flex w-36 shrink-0 items-center gap-2 font-semibold">
+                  <Clock3 size={15} className="text-rojo-acento" aria-hidden="true" />
+                  Actualización
+                </dt>
+                <dd className="text-texto-suave">
+                  Fecha:{" "}
+                  <span className="font-medium text-texto">{fecha(info.actualizado_en)}</span>
+                </dd>
               </div>
-            </div>
+            </dl>
           </section>
 
           <section className="mt-12 border-t border-borde pt-10" aria-labelledby="temario">

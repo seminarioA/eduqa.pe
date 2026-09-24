@@ -106,11 +106,13 @@ function Indice({
   actual,
   seccionActiva,
   onNavegar,
+  informacionActiva = false,
 }: {
   curso: Curso;
   actual?: Leccion;
   seccionActiva: string | null;
   onNavegar?: () => void;
+  informacionActiva?: boolean;
 }) {
   return (
     <ol className="space-y-1">
@@ -187,6 +189,28 @@ function Indice({
           </li>
         );
       })}
+
+      <li>
+        <div
+          className={`flex items-start gap-1 rounded-lg pr-1 ${
+            informacionActiva ? "bg-rojo-tenue" : "hover:bg-superficie"
+          }`}
+        >
+          <Link
+            href={`/cursos/${curso.slug}/informacion`}
+            onClick={onNavegar}
+            aria-current={informacionActiva ? "page" : undefined}
+            className={`flex-1 rounded-lg px-3 py-2 text-sm ${
+              informacionActiva
+                ? "font-medium text-rojo-acento"
+                : "text-texto-suave"
+            }`}
+          >
+            <span className="font-mono text-xs text-texto-tenue">i</span>{" "}
+            Información del curso
+          </Link>
+        </div>
+      </li>
     </ol>
   );
 }
@@ -249,6 +273,7 @@ function Contenido({
           actual={actual}
           seccionActiva={seccionActiva}
           onNavegar={onNavegar}
+          informacionActiva={informacionActiva}
         />
         {herramientas?.some((herramienta) => herramienta.tipo === "quiz") && (
           <div className="mt-4 border-t border-borde pt-4">
@@ -264,26 +289,6 @@ function Contenido({
           </div>
         )}
 
-        <div className="mt-4 border-t border-borde pt-4">
-          <Link
-            href={`/cursos/${curso.slug}/informacion`}
-            onClick={onNavegar}
-            aria-current={informacionActiva ? "page" : undefined}
-            className={`flex items-start gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rojo-acento ${
-              informacionActiva
-                ? "bg-rojo-tenue font-medium text-rojo-acento"
-                : "text-texto-suave hover:bg-superficie hover:text-rojo-acento"
-            }`}
-          >
-            <Info size={15} className="mt-0.5 shrink-0" aria-hidden="true" />
-            <span>
-              <span className="block">Información del curso</span>
-              <span className="mt-0.5 block text-[10px] font-normal text-texto-tenue">
-                Opcional · no cuenta para completar
-              </span>
-            </span>
-          </Link>
-        </div>
       </div>
     </nav>
   );
