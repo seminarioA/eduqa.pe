@@ -9,6 +9,10 @@ import {
   Stamp,
   ArrowUpRight,
   Sparkles,
+  CalendarDays,
+  Mail,
+  ShieldCheck,
+  UserRound,
 } from "lucide-react";
 import { usuarioActual } from "@/lib/supabase/servidor";
 import { Migas } from "@/components/Migas";
@@ -39,6 +43,9 @@ export default async function Page() {
 
   const catalogo = await obtenerCursos();
   const cursosPorSlug = new Map(catalogo.map((c) => [c.slug, c]));
+  const nombre = perfil?.nombre?.trim() || usuario.email?.split("@")[0] || "Usuario";
+  const rol = perfil?.es_admin ? "Administrador" : "Alumno";
+  const inicial = nombre.charAt(0).toUpperCase();
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-10 lg:pl-64 xl:pl-32 2xl:pl-6">
@@ -55,117 +62,167 @@ export default async function Page() {
         </div>
       </header>
 
-      {/* Ficha de usuario */}
-      <section className="mt-8 rounded-2xl border border-borde bg-superficie p-6">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-texto-tenue">
-          Datos de la cuenta
-        </h2>
+      {/* Identidad y cursos activos */}
+      <section className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)] lg:items-stretch">
+        {/* Photocheck de usuario */}
+        <article className="relative overflow-hidden rounded-2xl border border-borde bg-superficie">
+          <div className="h-1 w-full bg-rojo-acento" />
 
-        <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div>
-            <dt className="text-xs uppercase tracking-wide text-texto-tenue">Nombre</dt>
-            <dd className="mt-0.5 text-sm font-medium text-texto">
-              {perfil?.nombre ?? (
-                <span className="italic text-texto-tenue">Sin especificar</span>
-              )}
-            </dd>
-          </div>
+          <div className="flex h-full flex-col p-6 pt-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-rojo-acento">
+                  EDUQA.PE
+                </p>
+                <h2 className="mt-1 text-xs font-semibold uppercase tracking-wider text-texto-tenue">
+                  Datos de la cuenta
+                </h2>
+              </div>
 
-          <div>
-            <dt className="text-xs uppercase tracking-wide text-texto-tenue">Correo</dt>
-            <dd className="mt-0.5 truncate font-medium">{usuario.email}</dd>
-          </div>
-
-          <div>
-            <dt className="text-xs uppercase tracking-wide text-texto-tenue">Rol</dt>
-            <dd className="mt-0.5 text-sm font-medium text-texto">
-              {perfil?.es_admin ? "Administrador" : "Alumno"}
-            </dd>
-          </div>
-
-          {alta && (
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-texto-tenue">Miembro desde</dt>
-              <dd className="mt-0.5 text-sm text-texto-suave">{alta}</dd>
+              <div className="flex size-9 items-center justify-center rounded-lg border border-borde bg-fondo text-texto-tenue">
+                <UserRound size={17} />
+              </div>
             </div>
-          )}
-        </dl>
 
-        <div className="mt-6 flex gap-3 border-t border-borde pt-4">
-          <Link
-            href="/ajustes"
-            className="rounded-lg border border-borde bg-fondo px-3 py-1.5 text-xs font-medium text-texto transition-colors hover:border-rojo-acento hover:text-rojo-acento"
-          >
-            Editar perfil
-          </Link>
-        </div>
-      </section>
+            <div className="mt-6 flex flex-col items-center text-center">
+              <div className="flex size-20 items-center justify-center rounded-2xl border border-rojo-acento/30 bg-rojo-tenue text-3xl font-bold text-rojo-acento shadow-sm">
+                {inicial}
+              </div>
 
-      {/* Mis cursos: lo que ve cualquier usuario */}
-      <section className="mt-10">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-texto-tenue">
-            Mis Cursos Activos ({matriculas.length})
-          </h2>
-          <Link
-            href="/cursos"
-            className="text-xs font-medium text-rojo-acento hover:underline"
-          >
-            Ver catálogo completo →
-          </Link>
-        </div>
+              <h3 className="mt-4 max-w-full truncate text-lg font-bold text-texto">
+                {nombre}
+              </h3>
+              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-borde bg-fondo px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-texto-suave">
+                <ShieldCheck size={12} className="text-rojo-acento" />
+                {rol}
+              </span>
+            </div>
 
-        {matriculas.length === 0 ? (
-          <div className="mt-3 rounded-2xl border border-dashed border-borde p-8 text-center">
-            <p className="text-sm text-texto-suave">
-              Aún no te has matriculado en ningún curso.
-            </p>
+            <dl className="mt-6 space-y-3 border-t border-borde pt-5">
+              <div className="flex items-start gap-3">
+                <Mail size={15} className="mt-0.5 shrink-0 text-texto-tenue" />
+                <div className="min-w-0">
+                  <dt className="text-[10px] uppercase tracking-wide text-texto-tenue">
+                    Correo
+                  </dt>
+                  <dd className="mt-0.5 truncate text-xs font-medium text-texto">
+                    {usuario.email}
+                  </dd>
+                </div>
+              </div>
+
+              {alta && (
+                <div className="flex items-start gap-3">
+                  <CalendarDays size={15} className="mt-0.5 shrink-0 text-texto-tenue" />
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-wide text-texto-tenue">
+                      Miembro desde
+                    </dt>
+                    <dd className="mt-0.5 text-xs font-medium text-texto">
+                      {alta}
+                    </dd>
+                  </div>
+                </div>
+              )}
+            </dl>
+
+            <div className="mt-auto pt-6">
+              <Link
+                href="/ajustes"
+                className="inline-flex w-full items-center justify-center rounded-lg border border-borde bg-fondo px-3 py-2 text-xs font-medium text-texto transition-colors hover:border-rojo-acento hover:text-rojo-acento"
+              >
+                Editar perfil
+              </Link>
+            </div>
+          </div>
+        </article>
+
+        {/* Cursos activos */}
+        <article className="rounded-2xl border border-borde bg-superficie p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 items-center justify-center rounded-lg bg-rojo-tenue text-rojo-acento">
+                <BookOpen size={18} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-semibold text-texto">Cursos activos</h2>
+                  <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-fondo px-1.5 py-0.5 text-[10px] font-semibold text-texto-suave">
+                    {matriculas.length}
+                  </span>
+                </div>
+                <p className="mt-0.5 text-xs text-texto-tenue">
+                  Continúa donde lo dejaste.
+                </p>
+              </div>
+            </div>
+
             <Link
               href="/cursos"
-              className="mt-3 inline-block rounded-xl bg-rojo px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
+              className="text-xs font-medium text-rojo-acento hover:underline"
             >
-              Explorar cursos disponibles
+              Ver catálogo →
             </Link>
           </div>
-        ) : (
-          <div className="mt-3 divide-y divide-borde rounded-2xl border border-borde bg-superficie">
-            {matriculas.map((m) => {
-              const info = cursosPorSlug.get(m.curso_slug);
-              return (
-                <div
-                  key={m.curso_slug}
-                  className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-texto-tenue">
-                        {info?.area ?? "Curso"}
-                      </span>
-                      {info?.formato === "microcurso" && (
-                        <span className="rounded bg-rojo-tenue px-1.5 py-0.5 text-[9px] font-bold text-rojo-acento">
-                          Microcurso
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="mt-1 truncate text-sm font-semibold text-texto">
-                      {info?.titulo ?? m.curso_slug}
-                    </h3>
-                  </div>
 
-                  <div className="flex items-center gap-3">
+          {matriculas.length === 0 ? (
+            <div className="mt-6 rounded-xl border border-dashed border-borde p-8 text-center">
+              <div className="mx-auto flex size-10 items-center justify-center rounded-xl bg-fondo text-texto-tenue">
+                <BookOpen size={18} />
+              </div>
+              <p className="mt-3 text-sm text-texto-suave">
+                Aún no te has matriculado en ningún curso.
+              </p>
+              <Link
+                href="/cursos"
+                className="mt-4 inline-flex rounded-lg bg-rojo px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-rojo-hover"
+              >
+                Explorar cursos
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-6 space-y-3">
+              {matriculas.map((m) => {
+                const info = cursosPorSlug.get(m.curso_slug);
+                return (
+                  <div
+                    key={m.curso_slug}
+                    className="group flex items-center gap-3 rounded-xl border border-borde bg-fondo p-3 transition-colors hover:border-rojo-acento/60"
+                  >
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-borde bg-superficie text-rojo-acento transition-colors group-hover:border-rojo-acento/40">
+                      <BookOpen size={18} />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-[10px] uppercase tracking-wide text-texto-tenue">
+                          {info?.area ?? "Curso"}
+                        </span>
+                        {info?.formato === "microcurso" && (
+                          <span className="shrink-0 rounded bg-rojo-tenue px-1.5 py-0.5 text-[9px] font-bold text-rojo-acento">
+                            Microcurso
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="mt-0.5 truncate text-sm font-semibold text-texto">
+                        {info?.titulo ?? m.curso_slug}
+                      </h3>
+                    </div>
+
                     <Link
                       href={`/cursos/${m.curso_slug}`}
-                      className="inline-flex items-center gap-1 rounded-lg border border-borde bg-fondo px-3 py-1.5 text-xs font-medium text-texto transition-colors hover:border-rojo-acento"
+                      aria-label={`Continuar ${info?.titulo ?? m.curso_slug}`}
+                      className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-borde bg-superficie px-3 py-1.5 text-xs font-medium text-texto transition-colors hover:border-rojo-acento hover:text-rojo-acento"
                     >
-                      Continuar
+                      <span className="hidden sm:inline">Continuar</span>
                       <ArrowUpRight size={13} />
                     </Link>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
+        </article>
       </section>
 
       {/* Panel de administración modular */}
