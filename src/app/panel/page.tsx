@@ -16,11 +16,15 @@ import { obtenerCursos } from "@/lib/catalogo-cursos";
 import { misMatriculas, perfilActual } from "@/lib/matriculas";
 import { Icono } from "@/components/Iconos";
 import { TarjetaCuentaFlip } from "@/components/panel/TarjetaCuentaFlip";
+import { esInterno, NOMBRE_ROL } from "@/lib/roles";
 
-export const metadata: Metadata = {
-  title: "Panel — EDUQA.PE",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const perfil = await perfilActual();
+  return {
+    title: `${esInterno(perfil) ? "Panel" : "Mi cuenta"} — EDUQA.PE`,
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function Page() {
   const usuario = await usuarioActual();
@@ -42,7 +46,11 @@ export default async function Page() {
   const catalogo = await obtenerCursos();
   const cursosPorSlug = new Map(catalogo.map((c) => [c.slug, c]));
   const nombre = perfil?.nombre?.trim() || usuario.email?.split("@")[0] || "Usuario";
-  const rol = perfil?.es_admin ? "Administrador" : "Alumno";
+  const interno = esInterno(perfil);
+  const nombreSeccion = interno ? "Panel" : "Mi cuenta";
+  const rol =
+    (perfil?.rol && NOMBRE_ROL[perfil.rol]) ||
+    (perfil?.es_admin ? "Administrador" : "Alumno");
   const cursosActivos = matriculas.filter((m) => m.estado === "activa").length;
   const cursosCompletados = matriculas.filter((m) => m.estado === "completada").length;
   const planHasta = perfil?.plan_hasta
@@ -55,12 +63,12 @@ export default async function Page() {
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-10 lg:pl-64 xl:pl-32 2xl:pl-6">
-      <Migas items={[{ texto: "Panel" }]} />
+      <Migas items={[{ texto: nombreSeccion }]} />
 
       <header className="mt-4 flex flex-col justify-between gap-4 border-b border-borde pb-6 sm:flex-row sm:items-end">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-texto">
-            Panel de Usuario
+            {nombreSeccion}
           </h1>
           <p className="mt-1 text-sm text-texto-suave">
             Información de tu cuenta, cursos activos y accesos directos.
