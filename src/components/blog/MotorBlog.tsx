@@ -365,7 +365,6 @@ export function ContenidoArticulo({ contenido }: ContenidoArticuloProps) {
         .contenido-blog .nota,
         .contenido-blog [data-tipo="nota"] {
           margin: 1.75rem 0;
-          border: 1px solid color-mix(in srgb, var(--color-rojo-acento) 28%, var(--color-borde));
           border-left: 0.3rem solid var(--color-rojo-acento);
           border-radius: 0.9rem;
           background: color-mix(in srgb, var(--color-rojo-tenue) 55%, var(--color-fondo));
@@ -395,7 +394,6 @@ export function ContenidoArticulo({ contenido }: ContenidoArticuloProps) {
 
         .contenido-blog nav {
           margin: 1.75rem 0;
-          border: 1px solid var(--color-borde);
           border-radius: 1rem;
           background: var(--color-superficie);
           padding: 1rem 1.2rem;
@@ -403,7 +401,6 @@ export function ContenidoArticulo({ contenido }: ContenidoArticuloProps) {
 
         .contenido-blog details {
           margin: 1.75rem 0;
-          border: 1px solid var(--color-borde);
           border-radius: 0.9rem;
           background: var(--color-superficie);
           padding: 0.85rem 1rem;
