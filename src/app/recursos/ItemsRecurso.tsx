@@ -9,6 +9,9 @@ export async function ItemsRecurso({ slug, administrador }: { slug: SlugRecurso;
   return (
     <section className="mt-10">
       <p className="text-sm text-texto-tenue">Versión del recurso: v{documento.version}</p>
+      {items.length === 0 && administrador && (
+        <p className="mt-4 text-sm text-texto-suave">Este recurso todavía no tiene ítems adicionales. Puedes crear el primero abajo.</p>
+      )}
       {items.length > 0 && <div className="mt-8 space-y-8">
         {items.map((item) => (
           <article key={item.id} className="rounded-xl border border-borde bg-superficie p-5">
