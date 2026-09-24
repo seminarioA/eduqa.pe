@@ -7,7 +7,7 @@ area: "Lenguajes"
 nivel: INTRODUCCIÓN
 horas: 16
 icono: fortran
-precio: 20
+precio: 0
 estado: publico
 acceso_libre: true
 orden: 15
