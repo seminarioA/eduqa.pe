@@ -365,7 +365,6 @@ export function ContenidoArticulo({ contenido }: ContenidoArticuloProps) {
         .contenido-blog .nota,
         .contenido-blog [data-tipo="nota"] {
           margin: 1.75rem 0;
-          border-left: 0.3rem solid var(--color-rojo-acento);
           border-radius: 0.9rem;
           background: color-mix(in srgb, var(--color-rojo-tenue) 55%, var(--color-fondo));
           color: var(--color-texto-suave);
