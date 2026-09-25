@@ -1,7 +1,38 @@
 ---
 numero: 45
-titulo: "Sobrescritura, reanudación y archivos parciales"
+titulo: "Controlar sobrescritura y archivos parciales desde Python"
 ---
+
+# Definir la política de escritura
+
+Las decisiones de sobrescritura, reanudación y archivos temporales se expresan como opciones separadas. Python puede conservar esa política en una lista y reutilizarla para todas las descargas de un flujo.
+
+```python
+argumentos = ["--no-overwrites", "--continue", "--part"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--no-overwrites --continue --part
+```
+
+> Doc: [Filesystem Options](https://github.com/yt-dlp/yt-dlp#filesystem-options)
+
+```ejercicio
+# Enunciado
+Completa la opción que conserva archivos .part durante la descarga.
+
+# Plantilla
+argumentos = ["--no-overwrites", "--continue", "___"]
+print(" ".join(argumentos))
+
+# Esperado
+--no-overwrites --continue --part
+
+# Pista
+La opción coincide con la extensión temporal.
+```
+
 
 # -w y --no-overwrites
 
@@ -186,7 +217,10 @@ print("___")
 Niega --mtime.
 ```
 
-# Cierre de Introducción a yt-dlp con Python
+# Cierre con Python
+
+El curso termina con una política de escritura construida desde Python: sobrescritura, reanudación y temporales son argumentos explícitos y reutilizables.
+
 
 **Introducción a yt-dlp con Python** termina con el ciclo operativo básico:
 instalación, actualización, dependencias, opciones generales, red,
