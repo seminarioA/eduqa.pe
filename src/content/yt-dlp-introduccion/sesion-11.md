@@ -1,7 +1,39 @@
 ---
 numero: 11
-titulo: "Enumerar y limitar extractores"
+titulo: "Enumerar y limitar extractores desde Python"
 ---
+
+# Construir la selección de extractores desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--list-extractors"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--list-extractors
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--list-extractors
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --list-extractors
 
@@ -120,7 +152,10 @@ selección como `holodex.*,end,youtube`.
 Este valor forma parte del lenguaje de `--use-extractors`; no es el nombre de
 un sitio.
 
-# Cierre
+# Cierre con Python
+
+Python dejó la selección de extractores representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 `--list-extractors` obtiene nombres, `--extractor-descriptions` obtiene
 descripciones y `--use-extractors` controla cuáles participan en el matching.
