@@ -1,7 +1,38 @@
 ---
 numero: 31
-titulo: "Vídeo, playlist y límite de edad"
+titulo: "Controlar vídeo, playlist y edad desde Python"
 ---
+
+# Construir la decisión entre vídeo, playlist y límite de edad desde Python
+
+Python puede preparar estas políticas antes de ejecutar yt-dlp y conservarlas como datos. Esto permite combinar límites, condiciones y valores sin formar una cadena que deba reinterpretarse.
+
+```python
+argumentos = ["--no-playlist", "--age-limit", "18", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--no-playlist --age-limit 18 https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de la política.
+
+# Plantilla
+argumentos = ["___", "--age-limit", "18", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--no-playlist --age-limit 18 https://media.example/video
+
+# Pista
+La opción corresponde al control principal de la sesión.
+```
+
 
 # --no-playlist
 
@@ -100,7 +131,10 @@ yt-dlp --age-limit 18
 El nombre combina `age` y `limit`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la decisión entre vídeo, playlist y límite de edad disponible como configuración programática reutilizable.
+
 
 `--no-playlist` y `--yes-playlist` controlan una entrada ambigua entre vídeo
 y playlist. `--age-limit` añade una condición de selección basada en la edad
