@@ -1,7 +1,39 @@
 ---
 numero: 15
-titulo: "Seleccionar runtimes JavaScript"
+titulo: "Seleccionar runtimes JavaScript desde Python"
 ---
+
+# Construir el runtime JavaScript desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--js-runtimes", "deno"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--js-runtimes deno
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "deno"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--js-runtimes deno
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --js-runtimes
 
@@ -120,7 +152,10 @@ print(opcion)
 Empieza por el prefijo negativo `--no-`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó el runtime JavaScript representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 `--js-runtimes` habilita motores y puede indicar su ruta; la prioridad actual
 es Deno, Node, QuickJS y Bun. `--no-js-runtimes` reinicia la lista para poder
