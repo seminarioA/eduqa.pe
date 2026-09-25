@@ -1,7 +1,45 @@
 ---
 numero: 6
-titulo: "yt-dlp-ejs y los runtimes de JavaScript"
+titulo: "Verificar yt-dlp-ejs y runtimes JavaScript con Python"
 ---
+
+# Inspeccionar módulos y runtimes
+
+`importlib.util.find_spec()` comprueba si un módulo de Python puede importarse; `shutil.which()` comprueba si un runtime externo está disponible. Son dos mecanismos distintos porque yt-dlp-ejs es un paquete de Python y Deno, Node o Bun son ejecutables.
+
+```python
+import importlib.util
+import shutil
+
+ejs = importlib.util.find_spec("yt_dlp_ejs") is not None
+deno = shutil.which("deno")
+print(isinstance(ejs, bool))
+print(deno is None or isinstance(deno, str))
+```
+
+```salida
+True
+True
+```
+
+> Doc: [Dependencies](https://github.com/yt-dlp/yt-dlp#dependencies)
+
+```ejercicio
+# Enunciado
+Completa la función que comprueba si el módulo yt_dlp_ejs puede importarse.
+
+# Plantilla
+import importlib.util
+disponible = importlib.util.___("yt_dlp_ejs") is not None
+print(isinstance(disponible, bool))
+
+# Esperado
+True
+
+# Pista
+La función devuelve la especificación de importación del módulo.
+```
+
 
 # Para qué existe yt-dlp-ejs
 
@@ -143,7 +181,10 @@ deno
 Usa el runtime recomendado por el README.
 ```
 
-# Cierre
+# Cierre con Python
+
+La sesión distingue desde Python la disponibilidad de un paquete EJS y la de un runtime JavaScript externo.
+
 
 `yt-dlp-ejs` habilita parte del soporte de YouTube y necesita un runtime de
 JavaScript. Deno es el runtime recomendado actualmente; Node.js, Bun y QuickJS
