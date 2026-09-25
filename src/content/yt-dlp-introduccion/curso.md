@@ -1,8 +1,8 @@
 ---
 slug: yt-dlp-introduccion
 codigo: YDIN
-titulo: "Introducción a yt-dlp"
-resumen: "Uso de yt-dlp desde cero: instalación, dependencias, ejecución por línea de órdenes, selección de entradas, red, descargas, archivos, subtítulos, autenticación y postprocesamiento básico."
+titulo: "Introducción a yt-dlp con Python"
+resumen: "Uso de yt-dlp desde cero con Python como lenguaje de práctica: instalación, dependencias, construcción de invocaciones, opciones de línea de órdenes, selección de entradas, red, descargas, archivos, subtítulos, autenticación y postprocesamiento básico."
 area: "DevOps"
 nivel: INTRODUCCIÓN
 horas: 90
