@@ -17,6 +17,7 @@ const sandbox = readFileSync(
 );
 const quiz = readFileSync("src/components/curso/QuizPython.tsx", "utf8");
 const borrador = readFileSync("src/lib/borrador-python.ts", "utf8");
+const pyodide = readFileSync("src/lib/pyodide.ts", "utf8");
 
 assert.equal(preguntas.length, 16, "El quiz debe tener 16 preguntas");
 assert.equal(new Set(preguntas.map((p) => p.id)).size, preguntas.length);
@@ -76,6 +77,11 @@ assert.match(sandbox, /proyecto\.archivos\.map/);
 assert.match(sandbox, /activo\.nombre/);
 assert.match(sandbox, /enlace\.download = archivo\.nombre/);
 assert.match(sandbox, /PROYECTO_INICIAL_PYTHON/);
+assert.match(sandbox, /enviarEntradaTerminal/);
+assert.match(sandbox, /Entrada estándar de Python/);
+assert.match(pyodide, /__EDUQA_INPUT__/);
+assert.match(pyodide, /_builtins_eduqa\.input = _input_eduqa/);
+assert.doesNotMatch(pyodide, /\bprompt\s*\(/, "input() no debe abrir el prompt nativo del navegador");
 assert.doesNotMatch(quiz, /#[0-9a-f]{3,8}/i, "El quiz solo usa tokens de color");
 assert.match(quiz, /evento\.key !== "Enter"/);
 assert.match(quiz, /aria-keyshortcuts="Enter"/);
