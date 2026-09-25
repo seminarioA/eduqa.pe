@@ -1,7 +1,39 @@
 ---
 numero: 43
-titulo: "La plantilla de salida"
+titulo: "Construir output templates con Python"
 ---
+
+# Mantener la plantilla como un valor Python
+
+Una output template debe conservarse como una sola cadena. Python puede almacenarla, validarla y reutilizarla sin interpolar sus secuencias `%(...)s`.
+
+```python
+plantilla = "%(title)s [%(id)s].%(ext)s"
+argumentos = ["--output", plantilla]
+print(argumentos[1])
+```
+
+```salida
+%(title)s [%(id)s].%(ext)s
+```
+
+> Doc: [Filesystem Options — --output](https://github.com/yt-dlp/yt-dlp#filesystem-options)
+
+```ejercicio
+# Enunciado
+Completa el campo de extensión de la output template.
+
+# Plantilla
+plantilla = "%(title)s.%(____)s"
+print(plantilla)
+
+# Esperado
+%(title)s.%(ext)s
+
+# Pista
+El campo tiene tres letras.
+```
+
 
 # -o y --output
 
@@ -116,7 +148,10 @@ NA
 Son dos letras mayúsculas.
 ```
 
-# Cierre
+# Cierre con Python
+
+La plantilla de salida quedó representada como dato Python y no como una cadena de shell con quoting implícito.
+
 
 `--output` determina el nombre mediante una plantilla. Los campos básicos
 `%(title)s` y `%(ext)s` insertan título y extensión;
