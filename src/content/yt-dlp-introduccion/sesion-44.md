@@ -125,5 +125,5 @@ yt-dlp puede restringir el alfabeto del nombre, aplicar reglas de compatibilidad
 con Windows y recortar la longitud previa a la extensión. Son tres controles
 independientes.
 
-La última sesión del nivel introductorio cubre sobrescritura, reanudación,
-archivos `.part` y tiempos de modificación.
+La última sesión de **Introducción a yt-dlp con Python** cubre sobrescritura,
+reanudación, archivos `.part` y tiempos de modificación.
