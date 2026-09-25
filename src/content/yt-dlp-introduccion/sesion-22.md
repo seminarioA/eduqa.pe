@@ -1,7 +1,38 @@
 ---
 numero: 22
-titulo: "Dirección de origen, IPv4 e IPv6"
+titulo: "Configurar IPv4 e IPv6 desde Python"
 ---
+
+# Construir la familia de direcciones IP desde Python
+
+Python mantiene cada opción y cada valor como elementos independientes. `comando_yt_dlp()` añade el intérprete y el módulo, por lo que la automatización no necesita formar una cadena de shell.
+
+```python
+argumentos = ["--force-ipv4", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--force-ipv4 https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#network-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--force-ipv4 https://media.example/video
+
+# Pista
+La opción corresponde al mecanismo principal de esta sesión.
+```
+
 
 # --source-address
 
@@ -105,7 +136,10 @@ print(opcion)
 La opción contiene la palabra `force`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la familia de direcciones IP representada como datos que pueden validarse y ejecutarse mediante `ejecutar_yt_dlp()`.
+
 
 `--source-address` fija el origen local; `-4` y `-6` fuerzan IPv4 o IPv6.
 La elección de familia y la elección de dirección son decisiones de red
