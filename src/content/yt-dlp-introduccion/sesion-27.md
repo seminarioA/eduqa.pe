@@ -1,7 +1,38 @@
 ---
 numero: 27
-titulo: "Límites de tamaño de archivo"
+titulo: "Aplicar límites de tamaño desde Python"
 ---
+
+# Construir los límites de tamaño de archivo desde Python
+
+Las opciones de selección pueden componerse en Python antes de iniciar una descarga. Mantener el filtro, rango o límite como elemento de la lista evita que operadores como `&`, `:` o `<` dependan del quoting de un shell.
+
+```python
+argumentos = ["--min-filesize", "10M", "--max-filesize", "500M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--min-filesize 10M --max-filesize 500M https://media.example/video
+```
+
+> Doc: [yt-dlp — Video Selection](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta selección.
+
+# Plantilla
+argumentos = ["___", "10M", "--max-filesize", "500M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--min-filesize 10M --max-filesize 500M https://media.example/video
+
+# Pista
+La opción corresponde al criterio desarrollado en esta sesión.
+```
+
 
 # --min-filesize
 
@@ -93,7 +124,10 @@ print(" ".join(opciones))
 --min-filesize 10M --max-filesize 100M
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó los límites de tamaño de archivo encapsulada en una lista de argumentos reutilizable y sin interpolación de shell.
+
 
 `--min-filesize` rechaza archivos demasiado pequeños y `--max-filesize`
 rechaza archivos demasiado grandes. Ninguna de las dos opciones cambia el
