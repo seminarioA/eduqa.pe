@@ -1,7 +1,42 @@
 ---
 numero: 7
-titulo: "Dependencias de red e impersonación"
+titulo: "Verificar dependencias de red e impersonación con Python"
 ---
+
+# Comprobar capacidades opcionales por módulo
+
+Las capacidades de red opcionales dependen de paquetes instalados. Python puede inspeccionar el entorno antes de construir una operación que necesite, por ejemplo, `curl_cffi` para impersonación.
+
+```python
+import importlib.util
+
+modulos = ["certifi", "requests", "websockets", "curl_cffi"]
+estado = {nombre: importlib.util.find_spec(nombre) is not None for nombre in modulos}
+print(sorted(estado))
+```
+
+```salida
+['certifi', 'curl_cffi', 'requests', 'websockets']
+```
+
+> Doc: [Dependencies](https://github.com/yt-dlp/yt-dlp#dependencies)
+
+```ejercicio
+# Enunciado
+Completa el módulo asociado a impersonación HTTP.
+
+# Plantilla
+import importlib.util
+disponible = importlib.util.find_spec("___") is not None
+print(isinstance(disponible, bool))
+
+# Esperado
+True
+
+# Pista
+El nombre contiene curl y termina en cffi.
+```
+
 
 # certifi
 
@@ -156,7 +191,10 @@ Windows x86 de 32 bits.
 Por eso la presencia de yt-dlp no demuestra por sí sola que exista soporte de
 impersonación en esa instalación concreta.
 
-# Cierre
+# Cierre con Python
+
+Python puede detectar qué capacidades de red están instaladas antes de solicitar opciones que dependan de ellas.
+
 
 `certifi`, Brotli, WebSockets y `requests` amplían capacidades de red.
 `curl_cffi` habilita impersonación de navegadores y no está presente en todos
