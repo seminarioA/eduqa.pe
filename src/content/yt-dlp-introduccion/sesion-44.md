@@ -1,7 +1,38 @@
 ---
 numero: 44
-titulo: "Saneamiento y longitud de nombres de archivo"
+titulo: "Sanear y recortar nombres desde Python"
 ---
+
+# Componer políticas de nombres
+
+Python puede activar varias reglas de filesystem en una misma lista de argumentos. Cada regla sigue siendo independiente y puede añadirse o retirarse según el destino.
+
+```python
+argumentos = ["--restrict-filenames", "--trim-filenames", "100"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--restrict-filenames --trim-filenames 100
+```
+
+> Doc: [Filesystem Options](https://github.com/yt-dlp/yt-dlp#filesystem-options)
+
+```ejercicio
+# Enunciado
+Completa la opción que limita la longitud del nombre.
+
+# Plantilla
+argumentos = ["--restrict-filenames", "___", "100"]
+print(" ".join(argumentos))
+
+# Esperado
+--restrict-filenames --trim-filenames 100
+
+# Pista
+La opción contiene trim y filenames.
+```
+
 
 # --restrict-filenames
 
@@ -119,7 +150,10 @@ yt-dlp --trim-filenames 100
 La opción usa el verbo `trim`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python puede componer restricciones de nombres y longitud como políticas independientes antes de ejecutar yt-dlp.
+
 
 yt-dlp puede restringir el alfabeto del nombre, aplicar reglas de compatibilidad
 con Windows y recortar la longitud previa a la extensión. Son tres controles
