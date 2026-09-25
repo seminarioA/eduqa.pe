@@ -1,7 +1,38 @@
 ---
 numero: 35
-titulo: "Reintentos y espera entre reintentos"
+titulo: "Configurar reintentos desde Python"
 ---
+
+# Construir la política de reintentos y espera desde Python
+
+Python puede preparar estas políticas antes de ejecutar yt-dlp y conservarlas como datos. Esto permite combinar límites, condiciones y valores sin formar una cadena que deba reinterpretarse.
+
+```python
+argumentos = ["--retries", "10", "--retry-sleep", "5", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--retries 10 --retry-sleep 5 https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#download-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de la política.
+
+# Plantilla
+argumentos = ["___", "10", "--retry-sleep", "5", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--retries 10 --retry-sleep 5 https://media.example/video
+
+# Pista
+La opción corresponde al control principal de la sesión.
+```
+
 
 # -R y --retries
 
@@ -156,7 +187,10 @@ exp=1:20
 Son las tres primeras letras de exponential.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la política de reintentos y espera disponible como configuración programática reutilizable.
+
 
 yt-dlp separa reintentos generales, de filesystem y de fragmentos.
 `--retry-sleep` añade una política temporal fija, lineal o exponencial y puede
