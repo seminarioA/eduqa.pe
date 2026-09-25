@@ -1,7 +1,38 @@
 ---
 numero: 2
-titulo: "Instalar yt-dlp"
+titulo: "Instalar yt-dlp para usarlo desde Python"
 ---
+
+# Instalar en el intérprete correcto
+
+Cuando un programa Python va a automatizar yt-dlp, conviene instalar el paquete en el mismo intérprete que ejecutará el código. `sys.executable` identifica ese intérprete y `-m pip` ejecuta su módulo `pip`.
+
+```python
+comando = [sys.executable, "-m", "pip", "install", "-U", "yt-dlp"]
+print(" ".join(comando[1:]))
+```
+
+```salida
+-m pip install -U yt-dlp
+```
+
+> Doc: [Installation](https://github.com/yt-dlp/yt-dlp#installation)
+
+```ejercicio
+# Enunciado
+Completa el nombre del módulo que instala paquetes en el mismo intérprete.
+
+# Plantilla
+comando = [sys.executable, "-m", "___", "install", "yt-dlp"]
+print(" ".join(comando[1:]))
+
+# Esperado
+-m pip install yt-dlp
+
+# Pista
+Es el instalador de paquetes de Python.
+```
+
 
 # Tres vías de instalación
 
@@ -170,7 +201,10 @@ yt-dlp --version
 
 > Doc: [General Options — --version](https://github.com/yt-dlp/yt-dlp#general-options)
 
-# Cierre
+# Cierre con Python
+
+La instalación con Python quedó ligada al intérprete que ejecutará la automatización, en lugar de asumir un pip global.
+
 
 yt-dlp puede instalarse mediante binarios oficiales, `pip` o gestores de
 terceros. Windows x64, Linux/BSD y macOS tienen artefactos recomendados
