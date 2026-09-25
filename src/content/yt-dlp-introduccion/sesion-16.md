@@ -1,7 +1,39 @@
 ---
 numero: 16
-titulo: "Componentes remotos"
+titulo: "Controlar componentes remotos desde Python"
 ---
+
+# Construir los componentes remotos permitidos desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--remote-components", "ejs:github"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--remote-components ejs:github
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "ejs:github"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--remote-components ejs:github
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --remote-components
 
@@ -108,7 +140,10 @@ print(opcion)
 Usa el prefijo negativo `--no-`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó los componentes remotos permitidos representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 Los runtimes ejecutan JavaScript; los componentes remotos controlan de dónde
 puede obtener yt-dlp código adicional relacionado. Son dos permisos distintos.
