@@ -1,7 +1,38 @@
 ---
 numero: 25
-titulo: "Verificación geográfica y X-Forwarded-For"
+titulo: "Configurar X-Forwarded-For desde Python"
 ---
+
+# Construir la política geográfica X-Forwarded-For desde Python
+
+Python mantiene cada opción y cada valor como elementos independientes. `comando_yt_dlp()` añade el intérprete y el módulo, por lo que la automatización no necesita formar una cadena de shell.
+
+```python
+argumentos = ["--xff", "PE", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--xff PE https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#geo-restriction)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "PE", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--xff PE https://media.example/video
+
+# Pista
+La opción corresponde al mecanismo principal de esta sesión.
+```
+
 
 # --geo-verification-proxy
 
@@ -122,7 +153,10 @@ print(bloque.split("/")[1])
 24
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la política geográfica X-Forwarded-For representada como datos que pueden validarse y ejecutarse mediante `ejecutar_yt_dlp()`.
+
 
 `--geo-verification-proxy` separa el proxy de verificación del proxy de
 descarga. `--xff` controla el encabezado X-Forwarded-For mediante políticas,
