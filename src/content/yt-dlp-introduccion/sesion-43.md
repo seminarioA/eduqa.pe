@@ -24,7 +24,7 @@ print(argumentos[1])
 Completa el campo de extensión de la output template.
 
 # Plantilla
-plantilla = "%(title)s.%(____)s"
+plantilla = "%(title)s.%(___)s"
 print(plantilla)
 
 # Esperado
