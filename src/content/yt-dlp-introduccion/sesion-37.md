@@ -1,7 +1,38 @@
 ---
 numero: 37
-titulo: "Buffer y chunks HTTP"
+titulo: "Configurar buffer y chunks HTTP desde Python"
 ---
+
+# Construir el buffer y el tamaño de chunks HTTP desde Python
+
+Las opciones de descarga pueden componerse como una lista y entregarse después a `ejecutar_yt_dlp()`. Los valores que contienen espacios o separadores permanecen en un solo elemento, por lo que Python no necesita escapar una cadena para un shell.
+
+```python
+argumentos = ["--buffer-size", "16K", "--http-chunk-size", "10M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--buffer-size 16K --http-chunk-size 10M https://media.example/video
+```
+
+> Doc: [yt-dlp — Download Options](https://github.com/yt-dlp/yt-dlp#download-options)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta configuración de descarga.
+
+# Plantilla
+argumentos = ["___", "16K", "--http-chunk-size", "10M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--buffer-size 16K --http-chunk-size 10M https://media.example/video
+
+# Pista
+La opción aparece entre las Download Options de yt-dlp.
+```
+
 
 # --buffer-size
 
@@ -99,7 +130,10 @@ mecanismo correspondiente.
 
 Configurar uno no sustituye la función del otro.
 
-# Cierre
+# Cierre con Python
+
+Python dejó el buffer y el tamaño de chunks HTTP expresada como una configuración de descarga explícita y reutilizable.
+
 
 `--buffer-size` fija el valor inicial del buffer,
 `--resize-buffer` permite ajustarlo automáticamente y
