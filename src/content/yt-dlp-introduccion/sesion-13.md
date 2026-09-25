@@ -1,7 +1,39 @@
 ---
 numero: 13
-titulo: "Controlar los archivos de configuración"
+titulo: "Controlar archivos de configuración desde Python"
 ---
+
+# Construir la ubicación de configuración desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--config-locations", "yt-dlp.conf"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--config-locations yt-dlp.conf
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "yt-dlp.conf"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--config-locations yt-dlp.conf
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --ignore-config
 
@@ -111,7 +143,10 @@ print(valor)
 Es un único guion.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la ubicación de configuración representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 `--ignore-config` detiene la carga posterior, `--no-config-locations`
 descarta ubicaciones personalizadas y `--config-locations` añade archivos o
