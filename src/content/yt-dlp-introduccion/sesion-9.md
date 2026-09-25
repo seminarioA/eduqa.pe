@@ -1,7 +1,36 @@
 ---
 numero: 9
-titulo: "Ayuda y versión"
+titulo: "Ejecutar ayuda y versión desde Python"
 ---
+
+# Capturar stdout y returncode
+
+`ejecutar_yt_dlp()` devuelve un `CompletedProcess`. Sus atributos `stdout`, `stderr` y `returncode` permiten que Python inspeccione el resultado sin parsear la presentación de una terminal interactiva.
+
+```python !sin-consola
+resultado = ejecutar_yt_dlp("--version")
+print(resultado.returncode)
+print(resultado.stdout.strip())
+```
+
+> Doc: [General Options](https://github.com/yt-dlp/yt-dlp#general-options)
+> Doc: [subprocess.run()](https://docs.python.org/3/library/subprocess.html#subprocess.run)
+
+```ejercicio
+# Enunciado
+Completa la opción que imprime la versión.
+
+# Plantilla
+argumentos = ["___"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--version
+
+# Pista
+La opción larga contiene la palabra version.
+```
+
 
 # -h y --help
 
@@ -103,7 +132,10 @@ print(consultas["version"])
 --version
 ```
 
-# Cierre
+# Cierre con Python
+
+Python ya puede ejecutar una opción local de yt-dlp y observar su código de salida y su stdout de forma explícita.
+
 
 `-h` y `--help` consultan la ayuda disponible en la instalación;
 `--version` identifica la versión instalada. Ambas operaciones terminan sin
