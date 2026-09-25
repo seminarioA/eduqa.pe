@@ -1,7 +1,43 @@
 ---
 numero: 41
-titulo: "Archivos de URLs con --batch-file"
+titulo: "Crear batch files con Python"
 ---
+
+# Crear el archivo de URLs con pathlib
+
+`Path.write_text()` permite generar desde Python el archivo que después consume `--batch-file`. Cada URL ocupa una línea y el archivo puede versionarse o producirse dinámicamente.
+
+```python
+from pathlib import Path
+
+contenido = "https://media.example/a\nhttps://media.example/b\n"
+ruta = Path("urls.txt")
+print(contenido.count("\n"))
+```
+
+```salida
+2
+```
+
+> Doc: [Filesystem Options — --batch-file](https://github.com/yt-dlp/yt-dlp#filesystem-options)
+> Doc: [Path.write_text()](https://docs.python.org/3/library/pathlib.html#pathlib.Path.write_text)
+
+```ejercicio
+# Enunciado
+Completa el nombre del archivo que recibirá las URLs.
+
+# Plantilla
+from pathlib import Path
+ruta = Path("___")
+print(ruta.name)
+
+# Esperado
+urls.txt
+
+# Pista
+Usa un archivo de texto llamado urls.txt.
+```
+
 
 # -a y --batch-file
 
@@ -126,7 +162,10 @@ print("___")
 Niega directamente --batch-file.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python ya puede producir el archivo de entrada de --batch-file antes de construir la invocación de yt-dlp.
+
 
 `--batch-file` mueve las entradas a un archivo o a stdin. Cada URL ocupa una
 línea y los prefijos `#`, `;` y `]` identifican comentarios.
