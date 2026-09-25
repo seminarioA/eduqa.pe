@@ -1,7 +1,38 @@
 ---
 numero: 33
-titulo: "Límites y condiciones de corte"
+titulo: "Configurar límites y condiciones de corte desde Python"
 ---
+
+# Construir los límites de descarga y condiciones de corte desde Python
+
+Python puede preparar estas políticas antes de ejecutar yt-dlp y conservarlas como datos. Esto permite combinar límites, condiciones y valores sin formar una cadena que deba reinterpretarse.
+
+```python
+argumentos = ["--max-downloads", "20", "--break-on-existing", "https://media.example/playlist"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--max-downloads 20 --break-on-existing https://media.example/playlist
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de la política.
+
+# Plantilla
+argumentos = ["___", "20", "--break-on-existing", "https://media.example/playlist"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--max-downloads 20 --break-on-existing https://media.example/playlist
+
+# Pista
+La opción corresponde al control principal de la sesión.
+```
+
 
 # --max-downloads
 
@@ -136,7 +167,10 @@ yt-dlp --skip-playlist-after-errors 3
 El nombre menciona `playlist` y `errors`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó los límites de descarga y condiciones de corte disponible como configuración programática reutilizable.
+
 
 `--max-downloads` limita una cantidad, `--break-on-existing` reacciona al
 archive y `--skip-playlist-after-errors` reacciona a fallos. El modificador
