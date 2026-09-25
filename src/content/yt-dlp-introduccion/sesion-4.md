@@ -1,7 +1,38 @@
 ---
 numero: 4
-titulo: "Actualizar yt-dlp"
+titulo: "Actualizar yt-dlp desde Python"
 ---
+
+# Construir la actualización desde Python
+
+Una instalación compatible con self-update puede recibir `-U`. Desde Python, la opción se conserva como un argumento independiente y puede ejecutarse con `ejecutar_yt_dlp()`.
+
+```python
+argumentos = ["-U"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+-U
+```
+
+> Doc: [Update](https://github.com/yt-dlp/yt-dlp#update)
+
+```ejercicio
+# Enunciado
+Completa la opción corta de actualización.
+
+# Plantilla
+argumentos = ["___"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+-U
+
+# Pista
+Es una U mayúscula precedida por un guion.
+```
+
 
 # Actualizar un binario con -U
 
@@ -204,7 +235,10 @@ yt-dlp --no-update
 Empieza con el prefijo negativo `--no-`.
 ```
 
-# Cierre
+# Cierre con Python
+
+La actualización quedó expresada como una operación que Python puede construir y ejecutar sin formar una cadena de shell.
+
 
 Los binarios usan `-U` y `--update-to`; las instalaciones con `pip`
 se actualizan mediante `pip`. `stable`, `nightly` y `master` son
