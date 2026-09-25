@@ -1,7 +1,43 @@
 ---
 numero: 42
-titulo: "Rutas de descarga con -P"
+titulo: "Construir rutas de descarga con pathlib"
 ---
+
+# Representar rutas con Path
+
+`pathlib.Path` permite construir rutas sin concatenar separadores manualmente. Después, `str()` convierte la ruta al valor que recibe `--paths`.
+
+```python
+from pathlib import Path
+
+destino = Path("descargas") / "videos"
+argumentos = ["--paths", str(destino)]
+print(argumentos[1])
+```
+
+```salida
+descargas/videos
+```
+
+> Doc: [Filesystem Options — --paths](https://github.com/yt-dlp/yt-dlp#filesystem-options)
+> Doc: [pathlib](https://docs.python.org/3/library/pathlib.html)
+
+```ejercicio
+# Enunciado
+Completa el subdirectorio final.
+
+# Plantilla
+from pathlib import Path
+destino = Path("descargas") / "___"
+print(destino.as_posix())
+
+# Esperado
+descargas/videos
+
+# Pista
+El subdirectorio almacena los vídeos.
+```
+
 
 # -P y --paths
 
@@ -110,7 +146,10 @@ ruta absoluta.
 Una ruta absoluta ya determina directamente dónde se escribe el archivo y, por
 eso, no necesita combinarse con la base indicada por `--paths`.
 
-# Cierre
+# Cierre con Python
+
+Las rutas de descarga quedaron modeladas con pathlib y convertidas a argumentos solo al construir el comando.
+
 
 `--paths` controla directorios y puede diferenciarlos por tipo. `home`
 recibe el resultado final y `temp` recibe archivos intermedios antes del
