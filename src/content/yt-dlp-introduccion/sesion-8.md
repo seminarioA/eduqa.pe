@@ -1,7 +1,42 @@
 ---
 numero: 8
-titulo: "Dependencias de metadatos y capacidades opcionales"
+titulo: "Verificar dependencias opcionales con Python"
 ---
+
+# Inventariar dependencias opcionales
+
+Una automatización puede inspeccionar qué módulos opcionales están disponibles y adaptar su flujo. Esta comprobación no sustituye la documentación: únicamente describe el entorno donde se ejecuta el programa.
+
+```python
+import importlib.util
+
+modulos = ["mutagen", "Cryptodome", "secretstorage"]
+estado = {nombre: importlib.util.find_spec(nombre) is not None for nombre in modulos}
+print(list(estado))
+```
+
+```salida
+['mutagen', 'Cryptodome', 'secretstorage']
+```
+
+> Doc: [Dependencies](https://github.com/yt-dlp/yt-dlp#dependencies)
+
+```ejercicio
+# Enunciado
+Completa el módulo usado por pycryptodomex.
+
+# Plantilla
+import importlib.util
+modulo = "___"
+print(modulo)
+
+# Esperado
+Cryptodome
+
+# Pista
+pycryptodomex expone el namespace Cryptodome.
+```
+
 
 # mutagen
 
@@ -182,7 +217,10 @@ que para usar o redistribuir dependencias deben respetarse esas condiciones.
 
 Esta consideración es separada de la licencia del repositorio de yt-dlp.
 
-# Cierre
+# Cierre con Python
+
+Las dependencias opcionales quedaron tratadas como capacidades detectables desde Python, no como supuestos del entorno.
+
 
 Las dependencias opcionales habilitan operaciones específicas: miniaturas,
 atributos extendidos, descifrado, acceso a keyrings y descargadores externos.
