@@ -8,6 +8,7 @@ import {
   useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -41,7 +42,11 @@ import {
 const boton =
   "inline-flex items-center justify-center gap-2 rounded-md border border-borde-fuerte bg-fondo px-3 py-1.5 text-xs font-medium text-texto-suave transition-colors hover:border-rojo-acento hover:text-rojo-acento disabled:cursor-not-allowed disabled:opacity-50";
 
-type Resultado = { salida: string; error: boolean } | null;
+type Resultado = {
+  salida: string;
+  error: boolean;
+  entradaPendiente?: string;
+} | null;
 type Edicion =
   | { modo: "crear" }
   | { modo: "renombrar"; id: string }
@@ -139,6 +144,9 @@ export function SandboxPython() {
   const [nombreEdicion, setNombreEdicion] = useState("");
   const [menuArchivo, setMenuArchivo] = useState<MenuArchivo>(null);
   const [mensaje, setMensaje] = useState<string | null>(null);
+  const [entradasTerminal, setEntradasTerminal] = useState<string[]>([]);
+  const [entradaTerminal, setEntradaTerminal] = useState("");
+  const entradaTerminalRef = useRef<HTMLInputElement>(null);
 
   const lineas = useMemo(
     () =>
@@ -183,9 +191,29 @@ export function SandboxPython() {
     if (archivoId === proyecto.activoId) return;
     guardarProyecto({ ...proyecto, activoId: archivoId });
     setResultado(null);
+    setEntradasTerminal([]);
+    setEntradaTerminal("");
     setScrollEditor(0);
     setCursor({ linea: 1, columna: 1 });
     setMensaje(null);
+  }
+
+  async function ejecutarConEntradas(entradas: string[]) {
+    if (!activo || !activo.nombre.toLowerCase().endsWith(".py")) return;
+
+    setEjecutando(true);
+    const respuesta = await ejecutarProyectoPython(
+      proyecto.archivos.map(({ nombre, codigo }) => ({ nombre, codigo })),
+      activo.nombre,
+      entradas,
+    );
+    setEntradasTerminal(entradas);
+    setResultado(respuesta);
+    setEjecutando(false);
+
+    if (respuesta.entradaPendiente !== undefined) {
+      requestAnimationFrame(() => entradaTerminalRef.current?.focus());
+    }
   }
 
   async function ejecutar() {
@@ -197,14 +225,19 @@ export function SandboxPython() {
       return;
     }
 
-    setEjecutando(true);
     setResultado(null);
-    const respuesta = await ejecutarProyectoPython(
-      proyecto.archivos.map(({ nombre, codigo }) => ({ nombre, codigo })),
-      activo.nombre,
-    );
-    setResultado(respuesta);
-    setEjecutando(false);
+    setEntradasTerminal([]);
+    setEntradaTerminal("");
+    await ejecutarConEntradas([]);
+  }
+
+  async function enviarEntradaTerminal(evento: FormEvent) {
+    evento.preventDefault();
+    if (ejecutando || resultado?.entradaPendiente === undefined) return;
+
+    const siguientes = [...entradasTerminal, entradaTerminal];
+    setEntradaTerminal("");
+    await ejecutarConEntradas(siguientes);
   }
 
   function descargarArchivo(archivo: ArchivoProyectoPython) {
@@ -717,8 +750,40 @@ export function SandboxPython() {
                           : "whitespace-pre-wrap break-words text-texto"
                       }
                     >
-                      {resultado.salida || "El programa terminó sin imprimir salida."}
+                      {resultado.salida ||
+                        (resultado.entradaPendiente !== undefined
+                          ? ""
+                          : "El programa terminó sin imprimir salida.")}
                     </pre>
+
+                    {resultado.entradaPendiente !== undefined && (
+                      <form
+                        onSubmit={enviarEntradaTerminal}
+                        className="mt-1 flex min-w-0 items-center gap-1 text-texto"
+                      >
+                        {resultado.entradaPendiente && (
+                          <span className="whitespace-pre-wrap">
+                            {resultado.entradaPendiente}
+                          </span>
+                        )}
+                        <input
+                          ref={entradaTerminalRef}
+                          value={entradaTerminal}
+                          onChange={(evento) => setEntradaTerminal(evento.target.value)}
+                          disabled={ejecutando}
+                          autoComplete="off"
+                          autoCapitalize="off"
+                          autoCorrect="off"
+                          spellCheck={false}
+                          aria-label={
+                            resultado.entradaPendiente
+                              ? `Entrada para ${resultado.entradaPendiente}`
+                              : "Entrada estándar de Python"
+                          }
+                          className="min-w-24 flex-1 bg-transparent font-mono text-xs text-texto caret-rojo-acento outline-none"
+                        />
+                      </form>
+                    )}
                   </div>
                 ) : (
                   <p className="mt-1 text-texto-tenue">
