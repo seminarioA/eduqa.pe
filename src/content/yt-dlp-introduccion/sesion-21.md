@@ -1,7 +1,38 @@
 ---
 numero: 21
-titulo: "Proxy y timeout de socket"
+titulo: "Configurar proxy y timeout desde Python"
 ---
+
+# Construir proxy y timeout de socket desde Python
+
+Python mantiene cada opción y cada valor como elementos independientes. `comando_yt_dlp()` añade el intérprete y el módulo, por lo que la automatización no necesita formar una cadena de shell.
+
+```python
+argumentos = ["--proxy", "socks5://127.0.0.1:1080", "--socket-timeout", "20", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--proxy socks5://127.0.0.1:1080 --socket-timeout 20 https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#network-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "socks5://127.0.0.1:1080", "--socket-timeout", "20", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--proxy socks5://127.0.0.1:1080 --socket-timeout 20 https://media.example/video
+
+# Pista
+La opción corresponde al mecanismo principal de esta sesión.
+```
+
 
 # --proxy
 
@@ -112,7 +143,10 @@ yt-dlp --socket-timeout 30
 El nombre contiene `socket` y `timeout`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó proxy y timeout de socket representada como datos que pueden validarse y ejecutarse mediante `ejecutar_yt_dlp()`.
+
 
 `--proxy` cambia el intermediario de red y una cadena vacía solicita conexión
 directa. `--socket-timeout` controla cuánto espera una operación de socket
