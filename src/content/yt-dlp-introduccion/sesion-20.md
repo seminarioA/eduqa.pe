@@ -1,7 +1,39 @@
 ---
 numero: 20
-titulo: "Aliases y presets"
+titulo: "Aplicar aliases y presets desde Python"
 ---
+
+# Construir un preset incorporado desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["-t", "mp3", "https://media.example/video"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+-t mp3 https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#preset-aliases)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "mp3", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+-t mp3 https://media.example/video
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --alias
 
@@ -135,7 +167,10 @@ aplica una expansión que ya viene definida por yt-dlp.
 alias: restaura comportamientos históricos. Se estudia en el nivel avanzado
 junto con las diferencias frente a youtube-dl y youtube-dlc.
 
-# Cierre
+# Cierre con Python
+
+Python dejó un preset incorporado representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 Los aliases crean nombres nuevos para cadenas de opciones y pueden recibir
 argumentos; los presets aplican conjuntos predefinidos. Ninguno añade una
