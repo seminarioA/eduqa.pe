@@ -1,7 +1,40 @@
 ---
 numero: 1
-titulo: "La línea de órdenes y una URL"
+titulo: "Ejecutar yt-dlp desde Python"
 ---
+
+# La primera invocación desde Python
+
+El curso invoca yt-dlp como módulo de Python mediante `sys.executable -m yt_dlp`. Este patrón utiliza el mismo intérprete que ejecuta el programa y evita depender de que un ejecutable llamado `yt-dlp` esté disponible en `PATH`.
+
+`comando_yt_dlp()`, definido en el preludio del curso, recibe cada opción y cada URL como un argumento independiente.
+
+```python
+comando = comando_yt_dlp("https://media.example/video")
+print(" ".join(comando[1:]))
+```
+
+```salida
+-m yt_dlp https://media.example/video
+```
+
+> Doc: [Embedding yt-dlp](https://github.com/yt-dlp/yt-dlp#embedding-yt-dlp)
+
+```ejercicio
+# Enunciado
+Completa la URL entregada a comando_yt_dlp().
+
+# Plantilla
+comando = comando_yt_dlp("___")
+print(" ".join(comando[1:]))
+
+# Esperado
+-m yt_dlp https://media.example/video
+
+# Pista
+La URL es el único argumento de entrada de esta invocación.
+```
+
 
 # Qué es yt-dlp
 
@@ -193,7 +226,10 @@ desarrollo.
 
 > Doc: [Índice del README de yt-dlp](https://github.com/yt-dlp/yt-dlp#readme)
 
-# Cierre
+# Cierre con Python
+
+Python quedó establecido como la capa de automatización de la CLI: cada URL y cada opción se representan como elementos separados de una lista de argumentos.
+
 
 Una invocación mínima tiene la forma `yt-dlp URL`; la CLI admite varias URLs y
 opciones que modifican el procesamiento. Python permite representar esas
