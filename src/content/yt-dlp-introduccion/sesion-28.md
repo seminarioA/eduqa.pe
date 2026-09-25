@@ -1,7 +1,38 @@
 ---
 numero: 28
-titulo: "Seleccionar vídeos por fecha"
+titulo: "Filtrar vídeos por fecha desde Python"
 ---
+
+# Construir el intervalo de fechas desde Python
+
+Las opciones de selección pueden componerse en Python antes de iniciar una descarga. Mantener el filtro, rango o límite como elemento de la lista evita que operadores como `&`, `:` o `<` dependan del quoting de un shell.
+
+```python
+argumentos = ["--dateafter", "20260101", "--datebefore", "20261231", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--dateafter 20260101 --datebefore 20261231 https://media.example/video
+```
+
+> Doc: [yt-dlp — Video Selection](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta selección.
+
+# Plantilla
+argumentos = ["___", "20260101", "--datebefore", "20261231", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--dateafter 20260101 --datebefore 20261231 https://media.example/video
+
+# Pista
+La opción corresponde al criterio desarrollado en esta sesión.
+```
+
 
 # --date
 
@@ -114,7 +145,10 @@ print(" ".join(opciones))
 --dateafter 20260101 --datebefore 20261231
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó el intervalo de fechas encapsulada en una lista de argumentos reutilizable y sin interpolación de shell.
+
 
 `--date` exige una fecha concreta; `--datebefore` y `--dateafter` definen
 límites inclusivos. Las fechas pueden ser absolutas o relativas según la sintaxis
