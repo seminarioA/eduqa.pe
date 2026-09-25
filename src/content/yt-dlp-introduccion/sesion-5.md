@@ -1,7 +1,45 @@
 ---
 numero: 5
-titulo: "Python, FFmpeg y ffprobe"
+titulo: "Verificar Python, FFmpeg y ffprobe desde Python"
 ---
+
+# Detectar ejecutables externos con shutil
+
+`shutil.which()` busca un ejecutable usando las rutas configuradas en `PATH`. Esta comprobación permite detectar FFmpeg y ffprobe antes de iniciar un flujo que dependa de ellos.
+
+```python
+import shutil
+
+herramientas = {
+    "ffmpeg": shutil.which("ffmpeg"),
+    "ffprobe": shutil.which("ffprobe"),
+}
+print(set(herramientas))
+```
+
+```salida
+{'ffmpeg', 'ffprobe'}
+```
+
+> Doc: [Dependencies](https://github.com/yt-dlp/yt-dlp#dependencies)
+> Doc: [shutil.which()](https://docs.python.org/3/library/shutil.html#shutil.which)
+
+```ejercicio
+# Enunciado
+Completa la función que busca ffmpeg en PATH.
+
+# Plantilla
+import shutil
+ruta = shutil.___("ffmpeg")
+print(ruta is None or isinstance(ruta, str))
+
+# Esperado
+True
+
+# Pista
+La función pregunta qué ejecutable resolvería el sistema.
+```
+
 
 # Versiones de Python soportadas
 
@@ -129,7 +167,10 @@ siendo una dependencia externa ejecutada por yt-dlp.
 
 > Doc: [yt-dlp/FFmpeg-Builds](https://github.com/yt-dlp/FFmpeg-Builds)
 
-# Cierre
+# Cierre con Python
+
+Python puede comprobar previamente si FFmpeg y ffprobe están disponibles y decidir si una operación dependiente de ellos puede ejecutarse.
+
 
 El entorno soportado parte de una versión compatible de Python cuando el
 artefacto lo requiere. FFmpeg y ffprobe son ejecutables externos y habilitan
