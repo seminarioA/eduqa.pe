@@ -1,7 +1,38 @@
 ---
 numero: 36
-titulo: "Fragmentos no disponibles y conservación"
+titulo: "Controlar fragmentos no disponibles desde Python"
 ---
+
+# Construir la política ante fragmentos no disponibles desde Python
+
+Las opciones de descarga pueden componerse como una lista y entregarse después a `ejecutar_yt_dlp()`. Los valores que contienen espacios o separadores permanecen en un solo elemento, por lo que Python no necesita escapar una cadena para un shell.
+
+```python
+argumentos = ["--skip-unavailable-fragments", "--keep-fragments", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--skip-unavailable-fragments --keep-fragments https://media.example/video
+```
+
+> Doc: [yt-dlp — Download Options](https://github.com/yt-dlp/yt-dlp#download-options)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta configuración de descarga.
+
+# Plantilla
+argumentos = ["___", "--keep-fragments", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--skip-unavailable-fragments --keep-fragments https://media.example/video
+
+# Pista
+La opción aparece entre las Download Options de yt-dlp.
+```
+
 
 # --skip-unavailable-fragments
 
@@ -111,7 +142,10 @@ print("___")
 Niega --keep-fragments.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la política ante fragmentos no disponibles expresada como una configuración de descarga explícita y reutilizable.
+
 
 Una política decide si un fragmento ausente se omite o aborta el proceso; otra
 decide si los fragmentos ya descargados se conservan después del resultado
