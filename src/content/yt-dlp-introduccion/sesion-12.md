@@ -1,7 +1,39 @@
 ---
 numero: 12
-titulo: "Búsquedas y URLs no calificadas"
+titulo: "Configurar búsquedas y URLs no calificadas desde Python"
 ---
+
+# Construir la política de búsqueda predeterminada desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--default-search", "ytsearch"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--default-search ytsearch
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "ytsearch"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--default-search ytsearch
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --default-search
 
@@ -127,7 +159,10 @@ fixup_error
 Entre las dos palabras hay un guion bajo.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la política de búsqueda predeterminada representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 `--default-search` decide cómo interpretar entradas que no son URLs
 calificadas. Puede aplicar un prefijo, inferir, inferir con advertencia, rechazar
