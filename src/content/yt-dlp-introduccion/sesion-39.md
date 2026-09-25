@@ -1,7 +1,38 @@
 ---
 numero: 39
-titulo: "HLS y descarga de secciones"
+titulo: "Configurar HLS y secciones desde Python"
 ---
+
+# Construir la descarga de una sección temporal desde Python
+
+Las opciones de descarga pueden componerse como una lista y entregarse después a `ejecutar_yt_dlp()`. Los valores que contienen espacios o separadores permanecen en un solo elemento, por lo que Python no necesita escapar una cadena para un shell.
+
+```python
+argumentos = ["--download-sections", "*00:01:00-00:02:00", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--download-sections *00:01:00-00:02:00 https://media.example/video
+```
+
+> Doc: [yt-dlp — Download Options](https://github.com/yt-dlp/yt-dlp#download-options)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta configuración de descarga.
+
+# Plantilla
+argumentos = ["___", "*00:01:00-00:02:00", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--download-sections *00:01:00-00:02:00 https://media.example/video
+
+# Pista
+La opción aparece entre las Download Options de yt-dlp.
+```
+
 
 # --hls-use-mpegts
 
@@ -127,7 +158,10 @@ El README indica que `--download-sections` necesita FFmpeg. La selección
 temporal no debe presentarse como una operación independiente del entorno
 instalado.
 
-# Cierre
+# Cierre con Python
+
+Python dejó la descarga de una sección temporal expresada como una configuración de descarga explícita y reutilizable.
+
 
 HLS puede usar MPEG-TS durante la descarga y su valor predeterminado cambia para
 directos. `--download-sections` selecciona capítulos o rangos temporales y
