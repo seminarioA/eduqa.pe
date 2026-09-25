@@ -1,7 +1,43 @@
 ---
 numero: 3
-titulo: "Release files, hashes y firmas"
+titulo: "Verificar releases, hashes y firmas con Python"
 ---
+
+# Calcular un hash con hashlib
+
+Python puede verificar el hash de un artefacto descargado antes de ejecutarlo. `hashlib.sha256()` calcula SHA-256 sobre bytes; el valor obtenido se compara con el hash publicado para el release correspondiente.
+
+```python
+import hashlib
+
+contenido = b"yt-dlp"
+digest = hashlib.sha256(contenido).hexdigest()
+print(len(digest))
+```
+
+```salida
+64
+```
+
+> Doc: [Release Files](https://github.com/yt-dlp/yt-dlp#release-files)
+> Doc: [hashlib](https://docs.python.org/3/library/hashlib.html)
+
+```ejercicio
+# Enunciado
+Completa el constructor de SHA-256.
+
+# Plantilla
+import hashlib
+digest = hashlib.___(b"yt-dlp").hexdigest()
+print(len(digest))
+
+# Esperado
+64
+
+# Pista
+El nombre del constructor coincide con el algoritmo.
+```
+
 
 # Un artefacto para cada entorno
 
@@ -177,7 +213,10 @@ dependencias» no siempre describen el mismo conjunto de código.
 
 > Doc: [Release Files — Licensing](https://github.com/yt-dlp/yt-dlp#licensing)
 
-# Cierre
+# Cierre con Python
+
+La verificación de releases ahora incluye una operación reproducible desde Python para calcular hashes antes de confiar en un artefacto.
+
 
 Una release contiene artefactos para arquitecturas y entornos diferentes,
 tarballs, listas de hashes y firmas. El nombre del archivo determina el destino,
