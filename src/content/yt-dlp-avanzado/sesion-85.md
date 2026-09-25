@@ -61,7 +61,7 @@ El nivel avanzado cubrió argumentos específicos de extractores, YouTube/EJS/PO
 
 Con esta sesión termina la ruta **yt-dlp**:
 
-1. **Introducción a yt-dlp**: instalación y operación completa de la CLI fundamental.
+1. **Introducción a yt-dlp con Python**: instalación y operación de la CLI fundamental, con Python como lenguaje de práctica para construir y razonar sobre invocaciones.
 2. **yt-dlp intermedio**: filesystem auxiliar, salida estructurada, formatos, postprocesamiento, configuración, templates y metadata.
 3. **yt-dlp avanzado**: extractores, extensibilidad, API Python, builds, compatibilidad y desarrollo.
 
