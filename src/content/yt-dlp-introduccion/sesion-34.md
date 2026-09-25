@@ -1,7 +1,38 @@
 ---
 numero: 34
-titulo: "Concurrencia y límites de velocidad"
+titulo: "Configurar concurrencia y velocidad desde Python"
 ---
+
+# Construir la concurrencia de fragmentos y el límite de velocidad desde Python
+
+Python puede preparar estas políticas antes de ejecutar yt-dlp y conservarlas como datos. Esto permite combinar límites, condiciones y valores sin formar una cadena que deba reinterpretarse.
+
+```python
+argumentos = ["--concurrent-fragments", "4", "--limit-rate", "5M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--concurrent-fragments 4 --limit-rate 5M https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#download-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de la política.
+
+# Plantilla
+argumentos = ["___", "4", "--limit-rate", "5M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--concurrent-fragments 4 --limit-rate 5M https://media.example/video
+
+# Pista
+La opción corresponde al control principal de la sesión.
+```
+
 
 # -N y --concurrent-fragments
 
@@ -111,7 +142,10 @@ reextraerse información.
 
 No deben interpretarse como dos límites de una misma ventana de velocidad.
 
-# Cierre
+# Cierre con Python
+
+Python dejó la concurrencia de fragmentos y el límite de velocidad disponible como configuración programática reutilizable.
+
 
 `--concurrent-fragments` controla paralelismo dentro de streams fragmentados,
 `--limit-rate` impone un máximo y `--throttled-rate` detecta una tasa
