@@ -186,11 +186,14 @@ print("___")
 Niega --mtime.
 ```
 
-# Cierre del nivel introductorio
+# Cierre de Introducción a yt-dlp con Python
 
-El nivel introductorio terminó con el ciclo operativo básico: instalación,
-actualización, dependencias, opciones generales, red, georrestricción, selección,
-control de descargas y las decisiones fundamentales del filesystem.
+**Introducción a yt-dlp con Python** termina con el ciclo operativo básico:
+instalación, actualización, dependencias, opciones generales, red,
+georrestricción, selección, control de descargas y decisiones fundamentales del
+filesystem. Python se utilizó como lenguaje de práctica para construir comandos,
+representar argumentos e inspeccionar resultados deterministas sin convertir este
+nivel en un curso de la API interna.
 
 El curso intermedio continúa desde aquí con archivos auxiliares de metadatos,
 cookies, caché, miniaturas, shortcuts, simulación y salida estructurada,
