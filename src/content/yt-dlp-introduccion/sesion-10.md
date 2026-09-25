@@ -1,7 +1,38 @@
 ---
 numero: 10
-titulo: "Políticas de error"
+titulo: "Controlar políticas de error desde Python"
 ---
+
+# Representar la política como argumentos
+
+Las políticas de error se expresan como argumentos de yt-dlp. Mantenerlos en una lista permite que Python construya variantes del mismo flujo sin concatenar una cadena de shell.
+
+```python
+argumentos = ["--ignore-errors"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--ignore-errors
+```
+
+> Doc: [General Options](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la opción que ignora errores y continúa.
+
+# Plantilla
+argumentos = ["___"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--ignore-errors
+
+# Pista
+La opción contiene las palabras ignore y errors.
+```
+
 
 # -i y --ignore-errors
 
@@ -109,7 +140,10 @@ print(politica)
 El README menciona explícitamente download and postprocessing errors.
 ```
 
-# Cierre
+# Cierre con Python
+
+Las políticas de error quedan modeladas como datos que Python puede seleccionar antes de ejecutar yt-dlp.
+
 
 yt-dlp diferencia ignorar errores, continuar después de errores de descarga y
 abortar ante el primer error. Elegir una política determina tanto el flujo como,
