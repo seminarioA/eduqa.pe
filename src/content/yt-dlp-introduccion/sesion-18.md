@@ -1,7 +1,39 @@
 ---
 numero: 18
-titulo: "Directos y emisiones programadas"
+titulo: "Controlar directos y emisiones programadas desde Python"
 ---
+
+# Construir la espera de una emisión programada desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--wait-for-video", "60", "https://media.example/live"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--wait-for-video 60 https://media.example/live
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "60", "https://media.example/live"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--wait-for-video 60 https://media.example/live
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --live-from-start
 
@@ -103,7 +135,10 @@ yt-dlp --no-wait-for-video
 Empieza por `--no-`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la espera de una emisión programada representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 El punto temporal de un directo y la espera de una emisión futura son controles
 distintos. `--live-from-start` cambia dónde comienza un directo;
