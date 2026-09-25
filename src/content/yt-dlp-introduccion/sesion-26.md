@@ -1,7 +1,38 @@
 ---
 numero: 26
-titulo: "Seleccionar elementos de una playlist"
+titulo: "Seleccionar elementos de playlist desde Python"
 ---
+
+# Construir la selección de elementos de playlist desde Python
+
+Las opciones de selección pueden componerse en Python antes de iniciar una descarga. Mantener el filtro, rango o límite como elemento de la lista evita que operadores como `&`, `:` o `<` dependan del quoting de un shell.
+
+```python
+argumentos = ["--playlist-items", "1:10:2", "https://media.example/playlist"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--playlist-items 1:10:2 https://media.example/playlist
+```
+
+> Doc: [yt-dlp — Video Selection](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta selección.
+
+# Plantilla
+argumentos = ["___", "1:10:2", "https://media.example/playlist"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--playlist-items 1:10:2 https://media.example/playlist
+
+# Pista
+La opción corresponde al criterio desarrollado en esta sesión.
+```
+
 
 # -I y --playlist-items
 
@@ -117,7 +148,10 @@ El ejemplo oficial `1:3,7,-5::2` combina un rango, un índice individual y un
 
 > Doc: [Video Selection — --playlist-items](https://github.com/yt-dlp/yt-dlp#video-selection)
 
-# Cierre
+# Cierre con Python
+
+Python dejó la selección de elementos de playlist encapsulada en una lista de argumentos reutilizable y sin interpolación de shell.
+
 
 `--playlist-items` acepta posiciones individuales, rangos, pasos e índices
 negativos. La coma combina selecciones y los dos puntos estructuran un rango.
