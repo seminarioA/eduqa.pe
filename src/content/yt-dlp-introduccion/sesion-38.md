@@ -1,7 +1,38 @@
 ---
 numero: 38
-titulo: "Orden aleatorio y playlists perezosas"
+titulo: "Controlar orden aleatorio y lazy playlists desde Python"
 ---
+
+# Construir la extracción perezosa de playlists desde Python
+
+Las opciones de descarga pueden componerse como una lista y entregarse después a `ejecutar_yt_dlp()`. Los valores que contienen espacios o separadores permanecen en un solo elemento, por lo que Python no necesita escapar una cadena para un shell.
+
+```python
+argumentos = ["--lazy-playlist", "https://media.example/playlist"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--lazy-playlist https://media.example/playlist
+```
+
+> Doc: [yt-dlp — Download Options](https://github.com/yt-dlp/yt-dlp#download-options)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta configuración de descarga.
+
+# Plantilla
+argumentos = ["___", "https://media.example/playlist"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--lazy-playlist https://media.example/playlist
+
+# Pista
+La opción aparece entre las Download Options de yt-dlp.
+```
+
 
 # --playlist-random
 
@@ -98,7 +129,10 @@ print("___")
 Niega --lazy-playlist.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la extracción perezosa de playlists expresada como una configuración de descarga explícita y reutilizable.
+
 
 `--playlist-random` cambia el orden. `--lazy-playlist` cambia cuándo se
 empiezan a procesar las entradas y, por esa razón, desactiva operaciones que
