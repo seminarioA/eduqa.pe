@@ -1,7 +1,39 @@
 ---
 numero: 14
-titulo: "Directorios de plugins"
+titulo: "Configurar directorios de plugins con Python"
 ---
+
+# Construir los directorios de plugins desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--plugin-dirs", "plugins"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--plugin-dirs plugins
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "plugins"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--plugin-dirs plugins
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --plugin-dirs
 
@@ -105,7 +137,10 @@ yt-dlp --no-plugin-dirs
 Anteponer `--no-` niega la lista de directorios.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó los directorios de plugins representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 `--plugin-dirs` añade ubicaciones, `default` representa las ubicaciones
 predeterminadas y `--no-plugin-dirs` limpia toda la lista activa.
