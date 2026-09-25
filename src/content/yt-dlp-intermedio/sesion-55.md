@@ -24,7 +24,7 @@ print("___")
 --config-locations
 
 # Pista
-Ya se estudió en el nivel introductorio.
+Ya se estudió en Introducción a yt-dlp con Python.
 ```
 
 # Configuración portable
