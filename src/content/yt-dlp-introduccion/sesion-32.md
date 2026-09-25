@@ -1,7 +1,38 @@
 ---
 numero: 32
-titulo: "El archivo de descargas"
+titulo: "Gestionar el download archive con Python"
 ---
+
+# Construir el archivo persistente de descargas desde Python
+
+Python puede preparar estas políticas antes de ejecutar yt-dlp y conservarlas como datos. Esto permite combinar límites, condiciones y valores sin formar una cadena que deba reinterpretarse.
+
+```python
+argumentos = ["--download-archive", "descargas.txt", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--download-archive descargas.txt https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de la política.
+
+# Plantilla
+argumentos = ["___", "descargas.txt", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--download-archive descargas.txt https://media.example/video
+
+# Pista
+La opción corresponde al control principal de la sesión.
+```
+
 
 # --download-archive
 
@@ -86,7 +117,10 @@ print(opcion)
 Niega directamente --download-archive.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó el archivo persistente de descargas disponible como configuración programática reutilizable.
+
 
 `--download-archive` persiste IDs descargados y permite omitirlos en
 ejecuciones posteriores. `--no-download-archive` deja el procesamiento sin ese
