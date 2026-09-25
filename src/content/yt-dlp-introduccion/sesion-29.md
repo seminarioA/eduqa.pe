@@ -1,7 +1,38 @@
 ---
 numero: 29
-titulo: "Filtros genéricos con --match-filters"
+titulo: "Construir --match-filters con Python"
 ---
+
+# Construir el filtro compuesto de metadatos desde Python
+
+Las opciones de selección pueden componerse en Python antes de iniciar una descarga. Mantener el filtro, rango o límite como elemento de la lista evita que operadores como `&`, `:` o `<` dependan del quoting de un shell.
+
+```python
+argumentos = ["--match-filters", "duration > 60 & filesize < 500M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--match-filters duration > 60 & filesize < 500M https://media.example/video
+```
+
+> Doc: [yt-dlp — Video Selection](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta selección.
+
+# Plantilla
+argumentos = ["___", "duration > 60 & filesize < 500M", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--match-filters duration > 60 & filesize < 500M https://media.example/video
+
+# Pista
+La opción corresponde al criterio desarrollado en esta sesión.
+```
+
 
 # --match-filters
 
@@ -147,7 +178,10 @@ Es un único guion.
 `--no-match-filters` elimina los filtros de coincidencia y es el comportamiento
 predeterminado.
 
-# Cierre
+# Cierre con Python
+
+Python dejó el filtro compuesto de metadatos encapsulada en una lista de argumentos reutilizable y sin interpolación de shell.
+
 
 `--match-filters` filtra mediante campos y expresiones. `!` comprueba
 ausencia, `&` combina condiciones y repetir la opción crea alternativas. El
