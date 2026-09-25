@@ -1,7 +1,38 @@
 ---
 numero: 24
-titulo: "URLs file:// y su límite de seguridad"
+titulo: "Controlar URLs file:// desde Python"
 ---
+
+# Construir el acceso explícito a URLs locales desde Python
+
+Python mantiene cada opción y cada valor como elementos independientes. `comando_yt_dlp()` añade el intérprete y el módulo, por lo que la automatización no necesita formar una cadena de shell.
+
+```python
+argumentos = ["--enable-file-urls", "file:///tmp/video.mp4"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--enable-file-urls file:///tmp/video.mp4
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#network-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "file:///tmp/video.mp4"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--enable-file-urls file:///tmp/video.mp4
+
+# Pista
+La opción corresponde al mecanismo principal de esta sesión.
+```
+
 
 # El esquema file
 
@@ -91,7 +122,10 @@ El esquema file:// apunta al sistema de archivos local y amplía qué recursos p
 Compara el origen de un recurso file:// con uno https://.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó el acceso explícito a URLs locales representada como datos que pueden validarse y ejecutarse mediante `ejecutar_yt_dlp()`.
+
 
 `file://` referencia recursos locales y yt-dlp lo desactiva por defecto por
 seguridad. `--enable-file-urls` debe aparecer de forma explícita para ampliar
