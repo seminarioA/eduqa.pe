@@ -1,7 +1,39 @@
 ---
 numero: 19
-titulo: "Marcar vistos y controlar el color"
+titulo: "Controlar vistos y color desde Python"
 ---
+
+# Construir la política de color desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--color", "always", "https://media.example/video"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--color always https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "always", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--color always https://media.example/video
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --mark-watched
 
@@ -114,7 +146,10 @@ terminal, según la ayuda actual.
 `--color` puede repetirse, lo que permite asignar políticas distintas a
 `stdout` y `stderr`.
 
-# Cierre
+# Cierre con Python
+
+Python dejó la política de color representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 `--mark-watched` controla un efecto sobre el estado del vídeo cuando el
 extractor lo soporta; `--color` controla secuencias de salida y puede
