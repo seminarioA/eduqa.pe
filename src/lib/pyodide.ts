@@ -138,7 +138,19 @@ export function preludioAplicado(preludio?: string) {
   return !preludio || preparados.has(preludio);
 }
 
-export type Ejecucion = { salida: string; error: boolean };
+export type Ejecucion = {
+  salida: string;
+  error: boolean;
+  entradaPendiente?: string;
+};
+
+function decodificarPromptHex(hex: string) {
+  if (!hex) return "";
+  const bytes = new Uint8Array(
+    hex.match(/.{1,2}/g)?.map((par) => Number.parseInt(par, 16)) ?? [],
+  );
+  return new TextDecoder().decode(bytes);
+}
 
 /*
  * Cola de ejecución.
@@ -246,8 +258,20 @@ export async function ejecutarPython(
 
     return { salida: lineas.join("\n"), error: false };
   } catch (e) {
+    // El sandbox reemplaza input() para pedir la entrada desde su terminal.
+    // La excepción marcada pausa esta ejecución sin tratarla como un error.
+    const mensaje = (e as Error).message;
+    const entrada = mensaje.match(/__EDUQA_INPUT__([0-9a-f]*)/i);
+    if (entrada) {
+      return {
+        salida: lineas.join("\n"),
+        error: false,
+        entradaPendiente: decodificarPromptHex(entrada[1]),
+      };
+    }
+
     // El traceback de Python llega como mensaje de la excepción de JavaScript.
-    const traza = limpiarTraceback((e as Error).message);
+    const traza = limpiarTraceback(mensaje);
     return { salida: [...lineas, traza].join("\n"), error: true };
   } finally {
     liberar();
@@ -266,6 +290,7 @@ export async function ejecutarPython(
 export async function ejecutarProyectoPython(
   archivos: Array<{ nombre: string; codigo: string }>,
   activo: string,
+  entradas: string[] = [],
 ): Promise<Ejecucion> {
   const serializado = JSON.stringify(
     JSON.stringify(
@@ -276,8 +301,10 @@ export async function ejecutarProyectoPython(
     ),
   );
   const nombreActivo = JSON.stringify(activo);
+  const entradasSerializadas = JSON.stringify(JSON.stringify(entradas));
 
   const programa = `
+import builtins as _builtins_eduqa
 import json as _json_eduqa
 import os as _os_eduqa
 import pathlib as _pathlib_eduqa
@@ -287,6 +314,25 @@ import sys as _sys_eduqa
 
 _archivos_eduqa = _json_eduqa.loads(${serializado})
 _activo_eduqa = ${nombreActivo}
+_entradas_eduqa = _json_eduqa.loads(${entradasSerializadas})
+_indice_entrada_eduqa = 0
+_input_original_eduqa = _builtins_eduqa.input
+
+
+def _input_eduqa(prompt=""):
+    global _indice_entrada_eduqa
+    _prompt_eduqa = str(prompt)
+
+    if _indice_entrada_eduqa >= len(_entradas_eduqa):
+        raise RuntimeError("__EDUQA_INPUT__" + _prompt_eduqa.encode("utf-8").hex())
+
+    _valor_eduqa = _entradas_eduqa[_indice_entrada_eduqa]
+    _indice_entrada_eduqa += 1
+    print(_prompt_eduqa, end="", flush=True)
+    print(_valor_eduqa, flush=True)
+    return _valor_eduqa
+
+
 _base_eduqa = _pathlib_eduqa.Path("/tmp/eduqa_python_sandbox")
 _base_eduqa.mkdir(parents=True, exist_ok=True)
 
@@ -313,8 +359,10 @@ for _modulo_nombre_eduqa, _modulo_eduqa in list(_sys_eduqa.modules.items()):
 try:
     _os_eduqa.chdir(_base_eduqa)
     _sys_eduqa.path.insert(0, _ruta_eduqa)
+    _builtins_eduqa.input = _input_eduqa
     _runpy_eduqa.run_path(_activo_eduqa, run_name="__main__")
 finally:
+    _builtins_eduqa.input = _input_original_eduqa
     _os_eduqa.chdir(_cwd_eduqa)
     if _sys_eduqa.path and _sys_eduqa.path[0] == _ruta_eduqa:
         _sys_eduqa.path.pop(0)
