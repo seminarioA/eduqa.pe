@@ -10,9 +10,14 @@ lo describe como un descargador con soporte para miles de sitios y lo mantiene c
 un fork de `youtube-dl`, basado a su vez en `youtube-dlc`.
 
 La palabra **CLI** significa *command-line interface*, «interfaz de línea de
-órdenes». En este curso, una invocación de yt-dlp es un proceso iniciado desde una
-terminal: el programa recibe opciones y una o más entradas, procesa esas entradas y
-termina con un código de salida.
+órdenes». En **Introducción a yt-dlp con Python**, una invocación de yt-dlp es un
+proceso iniciado desde una terminal: el programa recibe opciones y una o más
+entradas, procesa esas entradas y termina con un código de salida.
+
+Python se utiliza como lenguaje de práctica para representar comandos, listas de
+argumentos y pequeñas transformaciones de datos. La CLI sigue siendo el objeto
+principal de este nivel; la integración directa mediante la API de Python se
+desarrolla en el nivel avanzado.
 
 > Doc: [yt-dlp — README](https://github.com/yt-dlp/yt-dlp#readme)
 
@@ -180,7 +185,8 @@ plugins, uso desde Python, diferencias con youtube-dl y contribución. La ruta d
 EDUQA conserva esa cobertura, pero distribuye cada operación en puntos y sesiones
 más pequeños para que cada opción tenga explicación, ejemplo y práctica propios.
 
-El nivel introductorio empieza por instalación y operación cotidiana de la CLI.
+**Introducción a yt-dlp con Python** empieza por instalación y operación cotidiana
+de la CLI, usando Python en las prácticas para construir y razonar sobre comandos.
 El nivel intermedio profundiza en selección, transformación y configuración. El
 nivel avanzado cubre extensibilidad, API de Python, plugins, compatibilidad y
 desarrollo.
@@ -190,8 +196,9 @@ desarrollo.
 # Cierre
 
 Una invocación mínima tiene la forma `yt-dlp URL`; la CLI admite varias URLs y
-opciones que modifican el procesamiento. Los extractores determinan qué entradas
-puede interpretar la versión instalada.
+opciones que modifican el procesamiento. Python permite representar esas
+invocaciones de forma explícita y verificable durante las prácticas. Los extractores
+determinan qué entradas puede interpretar la versión instalada.
 
 La sesión siguiente instala yt-dlp mediante los métodos oficiales y comprueba qué
 ejecutable queda disponible en el sistema.
