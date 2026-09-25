@@ -1,7 +1,38 @@
 ---
 numero: 30
-titulo: "Detener el proceso con --break-match-filters"
+titulo: "Detener con --break-match-filters desde Python"
 ---
+
+# Construir la condición de corte por filtro desde Python
+
+Las opciones de selección pueden componerse en Python antes de iniciar una descarga. Mantener el filtro, rango o límite como elemento de la lista evita que operadores como `&`, `:` o `<` dependan del quoting de un shell.
+
+```python
+argumentos = ["--break-match-filters", "duration < 60", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--break-match-filters duration < 60 https://media.example/video
+```
+
+> Doc: [yt-dlp — Video Selection](https://github.com/yt-dlp/yt-dlp#video-selection)
+
+```ejercicio
+# Enunciado
+Completa la opción principal de esta selección.
+
+# Plantilla
+argumentos = ["___", "duration < 60", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--break-match-filters duration < 60 https://media.example/video
+
+# Pista
+La opción corresponde al criterio desarrollado en esta sesión.
+```
+
 
 # --break-match-filters
 
@@ -88,7 +119,10 @@ print(normal[1] == ruptura[1])
 True
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la condición de corte por filtro encapsulada en una lista de argumentos reutilizable y sin interpolación de shell.
+
 
 `--match-filters` decide si un elemento se acepta; `--break-match-filters`
 puede convertir un rechazo en la terminación del proceso. Ambos comparten la
