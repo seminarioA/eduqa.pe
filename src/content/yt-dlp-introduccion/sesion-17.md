@@ -1,7 +1,39 @@
 ---
 numero: 17
-titulo: "Extracción plana de playlists"
+titulo: "Extraer playlists en modo plano desde Python"
 ---
+
+# Construir la extracción plana de playlists desde Python
+
+En Python, cada opción y cada valor se mantienen como elementos independientes de una lista. `comando_yt_dlp()` añade el intérprete y el módulo de yt-dlp; de este modo no es necesario concatenar una orden para que después la interprete un shell.
+
+```python
+argumentos = ["--flat-playlist", "https://media.example/playlist"]
+comando = comando_yt_dlp(*argumentos)
+print(" ".join(comando[3:]))
+```
+
+```salida
+--flat-playlist https://media.example/playlist
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#general-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "https://media.example/playlist"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--flat-playlist https://media.example/playlist
+
+# Pista
+La opción aparece en el título del punto principal de esta sesión.
+```
+
 
 # --flat-playlist
 
@@ -75,7 +107,10 @@ yt-dlp --no-flat-playlist
 Es la negación directa de --flat-playlist.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó la extracción plana de playlists representada como una lista explícita de argumentos que puede reutilizarse, validarse o ejecutarse con `ejecutar_yt_dlp()`.
+
 
 `--flat-playlist` evita resolver completamente cada entrada y puede perder
 metadatos; `--no-flat-playlist` realiza la extracción completa y es el valor
