@@ -1,7 +1,38 @@
 ---
 numero: 23
-titulo: "Impersonar clientes HTTP"
+titulo: "Impersonar clientes HTTP desde Python"
 ---
+
+# Construir el cliente HTTP a impersonar desde Python
+
+Python mantiene cada opción y cada valor como elementos independientes. `comando_yt_dlp()` añade el intérprete y el módulo, por lo que la automatización no necesita formar una cadena de shell.
+
+```python
+argumentos = ["--impersonate", "chrome", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+```
+
+```salida
+--impersonate chrome https://media.example/video
+```
+
+> Doc: [yt-dlp — opción documentada](https://github.com/yt-dlp/yt-dlp#network-options)
+
+```ejercicio
+# Enunciado
+Completa la primera opción de esta invocación.
+
+# Plantilla
+argumentos = ["___", "chrome", "https://media.example/video"]
+print(" ".join(comando_yt_dlp(*argumentos)[3:]))
+
+# Esperado
+--impersonate chrome https://media.example/video
+
+# Pista
+La opción corresponde al mecanismo principal de esta sesión.
+```
+
 
 # --impersonate
 
@@ -116,7 +147,10 @@ yt-dlp --list-impersonate-targets
 Empieza con `--list-`.
 ```
 
-# Cierre
+# Cierre con Python
+
+Python dejó el cliente HTTP a impersonar representada como datos que pueden validarse y ejecutarse mediante `ejecutar_yt_dlp()`.
+
 
 `--impersonate` selecciona un cliente y opcionalmente un sistema operativo;
 el valor vacío permite cualquier target. `--list-impersonate-targets`
